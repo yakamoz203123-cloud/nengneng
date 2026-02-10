@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>银川创业服务一站式</title>
+    <style>
+      :root {
+        --bg: #f7f9fc;
+        --card: #ffffff;
+        --text: #1f2937;
+        --sub: #6b7280;
+        --primary: #2f6fed;
+        --border: #e5e7eb;
+        --shadow: 0 8px 24px rgba(31, 41, 55, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      .container {
+        width: min(1040px, 92vw);
+        margin: 0 auto;
+      }
+
+      header {
+        padding: 72px 0 38px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 44px);
+        letter-spacing: 0.6px;
+      }
+
+      .subtitle {
+        margin-top: 14px;
+        max-width: 760px;
+        color: var(--sub);
+        font-size: clamp(15px, 2vw, 18px);
+      }
+
+      .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        padding-bottom: 28px;
+      }
+
+      .service-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 18px;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .service-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(31, 41, 55, 0.12);
+      }
+
+      .service-card h3 {
+        margin: 0 0 8px;
+        font-size: 19px;
+      }
+
+      .service-card p {
+        margin: 0 0 14px;
+        color: var(--sub);
+        font-size: 14px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-ghost {
+        background: #eef2ff;
+        color: #264ecf;
+      }
+
+      .section-title {
+        margin: 28px 0 14px;
+        font-size: 20px;
+      }
+
+      .form-wrap,
+      .list-wrap {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 10px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+        font: inherit;
+        background: #fff;
+      }
+
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .submit-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .submit-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: #fbfdff;
+      }
+
+      .meta {
+        color: var(--sub);
+        font-size: 12px;
+      }
+
+      .contact-fixed {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(6px);
+        border-top: 1px solid var(--border);
+        box-shadow: 0 -6px 20px rgba(31, 41, 55, 0.08);
+        z-index: 20;
+      }
+
+      .contact-inner {
+        width: min(1040px, 92vw);
+        margin: 0 auto;
+        padding: 12px 0;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .contact-text {
+        font-size: 14px;
+        color: #111827;
+      }
+
+      .contact-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      main {
+        padding-bottom: 115px;
+      }
+
+      dialog {
+        border: none;
+        border-radius: 16px;
+        width: min(560px, 92vw);
+        box-shadow: 0 20px 45px rgba(17, 24, 39, 0.22);
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-content h3 {
+        margin-top: 0;
+      }
+
+      .modal-content ul {
+        margin: 10px 0 16px;
+        padding-left: 20px;
+      }
+
+      @media (max-width: 620px) {
+        .contact-inner {
+          justify-content: center;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="container">
+      <h1>银川创业服务一站式</h1>
+      <p class="subtitle">
+        覆盖工商、财税、资质、金融咨询协助、软件开发、广告与企业团建，帮助创业团队更快落地、少走弯路。
+      </p>
+    </header>
+
+    <main class="container">
+      <section class="services" id="serviceGrid"></section>
+
+      <h2 class="section-title">提交需求（本机保存）</h2>
+      <section class="form-wrap">
+        <form id="needForm" class="form-grid">
+          <input name="name" placeholder="姓名" required />
+          <input name="company" placeholder="公司名称" required />
+          <input name="wechat" placeholder="微信号" required />
+          <textarea class="full" name="need" placeholder="需求描述" required></textarea>
+          <div class="full">
+            <button class="btn btn-primary" type="submit">提交需求</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="list-wrap">
+        <strong>已提交列表（仅本机可见）</strong>
+        <div id="submitList" class="submit-list" style="margin-top: 12px"></div>
+      </section>
+    </main>
+
+    <dialog id="detailDialog">
+      <div class="modal-content">
+        <h3 id="dialogTitle"></h3>
+        <p id="dialogDesc" class="meta"></p>
+        <ul id="dialogItems"></ul>
+        <button class="btn btn-ghost" id="closeDialog">关闭</button>
+      </div>
+    </dialog>
+
+    <footer class="contact-fixed">
+      <div class="contact-inner">
+        <div class="contact-text">
+          <strong>立即联系：</strong> 微信 WECHAT_ID ｜ 电话 188xxxxxxx
+        </div>
+        <div class="contact-actions">
+          <button class="btn btn-ghost" id="copyWechat">复制微信号</button>
+          <a class="btn btn-primary" href="tel:188xxxxxxx" style="text-decoration: none">拨打电话</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const services = [
+        {
+          title: "工商",
+          intro: "公司全生命周期服务",
+          details: ["公司注册", "变更", "注销", "地址托管", "年报"]
+        },
+        {
+          title: "财税",
+          intro: "规范财务和税务流程",
+          details: ["代理记账", "报税", "发票服务", "税务筹划", "财务外包"]
+        },
+        {
+          title: "资质",
+          intro: "常见资质办理咨询与跟进",
+          details: ["食品经营许可", "劳务/建筑相关", "ICP/软著", "常见资质办理"]
+        },
+        {
+          title: "金融",
+          intro: "金融咨询与协助，不承诺必过",
+          details: ["对公开户协助", "融资咨询", "贷款匹配（咨询/协助）"]
+        },
+        {
+          title: "软件开发",
+          intro: "定制数字化工具",
+          details: ["企业官网", "小程序/公众号", "内部管理系统", "自动化工具"]
+        },
+        {
+          title: "广告",
+          intro: "线上线下品牌传播",
+          details: ["门头招牌", "设计印刷", "短视频代运营", "活动策划"]
+        },
+        {
+          title: "企业团建",
+          intro: "提升组织活力与协作",
+          details: ["团建活动", "党建活动"]
+        }
+      ];
+
+      const grid = document.getElementById("serviceGrid");
+      const detailDialog = document.getElementById("detailDialog");
+      const dialogTitle = document.getElementById("dialogTitle");
+      const dialogDesc = document.getElementById("dialogDesc");
+      const dialogItems = document.getElementById("dialogItems");
+      const closeDialog = document.getElementById("closeDialog");
+      const copyWechat = document.getElementById("copyWechat");
+      const needForm = document.getElementById("needForm");
+      const submitList = document.getElementById("submitList");
+      const STORAGE_KEY = "yc-startup-needs";
+
+      function renderServices() {
+        grid.innerHTML = services
+          .map(
+            (service, idx) => `
+              <article class="service-card">
+                <h3>${service.title}</h3>
+                <p>${service.intro}</p>
+                <button class="btn btn-primary" data-index="${idx}">查看详情</button>
+              </article>
+            `
+          )
+          .join("");
+
+        grid.querySelectorAll("button[data-index]").forEach((btn) => {
+          btn.addEventListener("click", () => openDetail(Number(btn.dataset.index)));
+        });
+      }
+
+      function openDetail(index) {
+        const service = services[index];
+        dialogTitle.textContent = service.title;
+        dialogDesc.textContent = service.intro;
+        dialogItems.innerHTML = service.details.map((d) => `<li>${d}</li>`).join("");
+        detailDialog.showModal();
+      }
+
+      closeDialog.addEventListener("click", () => detailDialog.close());
+      detailDialog.addEventListener("click", (e) => {
+        const rect = detailDialog.getBoundingClientRect();
+        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+          detailDialog.close();
+        }
+      });
+
+      copyWechat.addEventListener("click", async () => {
+        const id = "WECHAT_ID";
+        try {
+          await navigator.clipboard.writeText(id);
+          copyWechat.textContent = "已复制";
+        } catch {
+          copyWechat.textContent = "复制失败，请手动复制";
+        }
+        setTimeout(() => (copyWechat.textContent = "复制微信号"), 1400);
+      });
+
+      function getNeeds() {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      }
+
+      function setNeeds(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function renderNeeds() {
+        const needs = getNeeds();
+        if (!needs.length) {
+          submitList.innerHTML = '<div class="meta">暂无提交记录。</div>';
+          return;
+        }
+
+        submitList.innerHTML = needs
+          .slice()
+          .reverse()
+          .map(
+            (item) => `
+              <article class="submit-item">
+                <div><strong>${item.name}</strong> · ${item.company}</div>
+                <div>${item.need}</div>
+                <div class="meta">微信：${item.wechat} ｜ ${item.time}</div>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      needForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(needForm);
+        const record = {
+          name: formData.get("name").toString().trim(),
+          company: formData.get("company").toString().trim(),
+          wechat: formData.get("wechat").toString().trim(),
+          need: formData.get("need").toString().trim(),
+          time: new Date().toLocaleString()
+        };
+        const all = getNeeds();
+        all.push(record);
+        setNeeds(all);
+        needForm.reset();
+        renderNeeds();
+      });
+
+      renderServices();
+      renderNeeds();
+    </script>
+  </body>
+</html>
