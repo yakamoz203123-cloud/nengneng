@@ -109,12 +109,63 @@
       body { padding: 18px; }
       .grid { grid-template-columns: 1fr; }
     }
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.tags span {
+  background: #eef4ff;
+  color: #1d39c4;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+.nav {
+  max-width: 920px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0 18px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #1d39c4;
+  background: #eef4ff;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+.nav a:hover {
+  background: #d6e4ff;
+}
+
   </style>
 </head>
 
 <body>
   <h1>银川创业服务</h1>
-  <p class="tagline">工商 · 财税 · 资质 · 金融 · 软件开发 · 广告 · 企业团建</p>
+<div class="nav">
+  <a href="./index.html">首页</a>
+  <a href="./gongshang.html">工商</a>
+  <a href="./caishui.html">财税</a>
+  <a href="./ruanjian.html">软件开发</a>
+</div>
+
+  <div class="tags">
+  <span>工商</span>
+  <span>财税</span>
+  <span>资质</span>
+  <span>金融</span>
+  <span>软件开发</span>
+  <span>广告</span>
+  <span>团建</span>
+</div>
+
 
   <div class="services">
     <h2>我们的服务</h2>
@@ -164,3 +215,5 @@
   </div>
 </body>
 </html>
+
+
