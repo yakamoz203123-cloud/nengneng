@@ -81,6 +81,8 @@ description: Use when a user asks to turn a vague, emotional, or everyday social
 
 ## 最小验收
 
+开发验证案例见 [evals/evals.json](evals/evals.json)；它们检查可观察的机制、边界和事实处理行为，不要求固定标题或句式。
+
 交付前确认：
 
 - 开头是具体场景，不是理论名词；

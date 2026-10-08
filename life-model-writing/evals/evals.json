@@ -1,0 +1,235 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.1",
+  "evals": [
+    {
+      "id": 1,
+      "name": "large-group-silence",
+      "prompt": "微信群人越多，为什么越没人说话？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；至少比较两个候选解释，讨论公共品/搭便车、表达风险或网络结构，并说明边界。",
+      "assertions": [
+        "开头从具体群聊场景进入",
+        "没有把现象直接归因于人变冷漠",
+        "至少呈现两个候选解释或说明排除理由",
+        "展示人数、发言收益、回应概率或社会风险如何形成机制链",
+        "英文术语第一次出现时紧跟中文释义",
+        "至少包含一个边界或替代解释",
+        "输出只有一个版本"
+      ],
+      "files": [
+        "references/theory-02-externalities-public-goods.md",
+        "references/theory-08-networks-tipping-points-emergence.md",
+        "references/structure-patterns.md"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "experienced-person-silence",
+      "prompt": "为什么会议里最有经验的人反而最少发言？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；比较信号成本、声誉风险、信息结构或重复互动等解释。",
+      "assertions": [
+        "没有把少发言直接解释成缺乏责任感或傲慢",
+        "区分发言收益、出错成本、声誉风险和信息优势",
+        "至少比较两个候选解释",
+        "讨论会议是否重复、发言是否可观察以及回应是否可信",
+        "说明经验本身不能推出沉默的唯一原因",
+        "输出一个完整版本而不是多个风格版本"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-06-repeated-games-credible-commitments.md",
+        "references/theory-misuse.md"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "gym-membership-persistence",
+      "prompt": "为什么健身房办卡的人很多，坚持下来的人很少？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论时间偏好、启动成本、沉没成本、即时奖励和反馈延迟。",
+      "assertions": [
+        "不把坚持失败只归因为自律差",
+        "区分办卡时的预期收益与实际持续行动的边际成本",
+        "解释即时奖励、延迟收益和反馈延迟如何改变选择",
+        "正确处理沉没成本，不把已付会费当成继续行动的充分理由",
+        "至少包含一个环境或目标差异的边界",
+        "没有把模型推论写成所有人必然如此"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-07-feedback-loops-path-dependence.md",
+        "references/spoken-script-style.md"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "habit-startup-cost",
+      "prompt": "为什么一个好习惯刚开始最难坚持？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论启动成本、反馈回路、复利或环境约束，并说明早期反馈弱的原因。",
+      "assertions": [
+        "把习惯拆成触发、行动成本、即时反馈和延迟收益",
+        "至少比较意志力解释与环境/反馈回路解释",
+        "展示条件变化到行动变化的中间步骤",
+        "不把任何积累都称为指数增长",
+        "说明初期最难并非证明个体缺乏道德品质",
+        "至少给出一个反馈可能中断或失效的边界"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-04-exponential-logistic-growth.md",
+        "references/theory-07-feedback-loops-path-dependence.md"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "short-video-stopping",
+      "prompt": "为什么短视频越刷越停不下来？请写一篇生活建模长口播文案，并谨慎处理研究证据。",
+      "expected_output": "一版完整中文长口播文案；讨论即时奖励、变动反馈、注意力竞争和环境设计，不把未经核查的研究写成确定因果。",
+      "assertions": [
+        "至少比较即时奖励/变动反馈与缺少自然终点或环境设计等解释",
+        "明确区分个体选择机制、平台排序机制和群体注意力机制",
+        "没有把短视频使用直接写成所有人都会上瘾",
+        "研究、数字或实验若出现，标注来源、范围或待核查状态",
+        "不把相关关系直接写成因果证明",
+        "回到普通人的具体选择而不是停留在理论名词"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-07-feedback-loops-path-dependence.md",
+        "references/fact-checking.md"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "queue-cutting",
+      "prompt": "为什么大家都知道排队更公平，却还是有人插队？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；比较一次性博弈、惩罚概率、规范执行和重复互动。",
+      "assertions": [
+        "不把所有插队行为归因为人格缺陷",
+        "写出插队即时收益、守规矩成本和他人回应之间的关系",
+        "检查收益排序是否真的构成囚徒困境或类似结构",
+        "区分一次性互动与重复互动",
+        "讨论惩罚可见性、规范执行或退出机制的边界",
+        "至少有一个替代解释或反例"
+      ],
+      "files": [
+        "references/theory-05-prisoners-dilemma-nash-equilibrium.md",
+        "references/theory-06-repeated-games-credible-commitments.md",
+        "references/theory-02-externalities-public-goods.md"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "neighborhood-maintenance",
+      "prompt": "为什么小区公共区域经常没人愿意维护？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论公共品、搭便车、责任边界和重复博弈，并说明收费不是自动答案。",
+      "assertions": [
+        "区分公共品与共同资源，说明排他性和竞争性",
+        "展示私人贡献成本与集体收益如何分离",
+        "至少比较搭便车与责任边界/重复互动等解释",
+        "没有直接推出收费一定能解决",
+        "提到规范、自组织或可观察贡献的可能作用",
+        "明确制度效果需要具体事实或数据支持"
+      ],
+      "files": [
+        "references/theory-02-externalities-public-goods.md",
+        "references/theory-06-repeated-games-credible-commitments.md",
+        "references/fact-checking.md"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "busy-and-more-tasks",
+      "prompt": "为什么越忙的人越容易继续加任务？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论机会成本、沉没成本、反馈回路和局部优化，不把忙碌等同于生产率。",
+      "assertions": [
+        "区分任务的即时象征收益与真正产出",
+        "解释机会成本如何随着任务增加而变化",
+        "讨论沉没成本和任务堆积可能形成的增强回路",
+        "没有把忙碌直接等同于高生产率或责任感",
+        "至少包含一个关于优先级、信息或制度约束的边界",
+        "给出条件性而非宿命式收束"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-07-feedback-loops-path-dependence.md",
+        "references/theory-misuse.md"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "small-brand-sudden-awareness",
+      "prompt": "为什么一个小品牌有时会突然被很多人知道？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论网络效应、临界质量、扩散结构和路径依赖，并保留偶然性。",
+      "assertions": [
+        "区分节点数量、连接质量、曝光和转发机制",
+        "至少比较网络扩散与路径依赖/资源或事件冲击等解释",
+        "说明临界变量或可观察迹象，而不是只使用临界点一词",
+        "没有把偶然爆红写成必然规律",
+        "讨论承载上限、平台排序或受众结构的边界",
+        "明确具体案例需要时间和网络证据"
+      ],
+      "files": [
+        "references/theory-04-exponential-logistic-growth.md",
+        "references/theory-08-networks-tipping-points-emergence.md",
+        "references/theory-07-feedback-loops-path-dependence.md"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "too-many-team-rules",
+      "prompt": "为什么团队规则越多，执行起来反而越差？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论激励扭曲、信息成本、调节回路或目标替代，并避免规则越少越好的绝对结论。",
+      "assertions": [
+        "区分规则的协调收益与遵守成本",
+        "至少比较信息成本、激励扭曲和目标替代等候选机制",
+        "写出规则增加如何改变行动和反馈，而不是只批评规则多",
+        "没有未经证据断言规则越少越好",
+        "讨论规则质量、执行一致性和情境复杂度的边界",
+        "回到团队成员的具体选择与处境"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-07-feedback-loops-path-dependence.md",
+        "references/theory-misuse.md"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "bad-news-diffusion",
+      "prompt": "为什么一个坏消息更容易在群体中扩散？请写一篇生活建模长口播文案，区分传播倾向与传播速度。",
+      "expected_output": "一版完整中文长口播文案；讨论基率、证据强度、网络结构和注意力激励，不把更容易偷换成速度一定更快。",
+      "assertions": [
+        "明确区分分享概率、到达范围、传播速度和注意力停留",
+        "至少比较威胁注意力、基率/证据与网络结构等解释",
+        "没有把‘更容易’写成‘一定更快’",
+        "数字或研究若出现，标注来源、样本、时间或待核查状态",
+        "讨论坏消息也可能因网络结构、可信度或反例而不扩散",
+        "英文术语第一次出现时紧跟中文释义"
+      ],
+      "files": [
+        "references/theory-03-bayes-base-rates.md",
+        "references/theory-08-networks-tipping-points-emergence.md",
+        "references/fact-checking.md"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "late-night-phone-scrolling",
+      "prompt": "为什么大家都想早睡，却总在晚上继续刷手机？请写一篇生活建模长口播文案。",
+      "expected_output": "一版完整中文长口播文案；讨论即时与延迟收益、机会成本、重复决策和环境设计，不停止在自控力评价。",
+      "assertions": [
+        "写出睡眠延迟收益与刷手机即时收益的差异",
+        "至少比较机会成本、重复决策和环境线索等解释",
+        "展示一次又一次继续刷如何形成反馈或无终点机制",
+        "不把行为直接归结为缺乏自控力",
+        "至少包含一个个体差异、工作安排或健康边界",
+        "最终回到条件性选择和可观察环境，而不是宿命论"
+      ],
+      "files": [
+        "references/theory-01-incentives-opportunity-cost.md",
+        "references/theory-07-feedback-loops-path-dependence.md",
+        "references/spoken-script-style.md"
+      ]
+    }
+  ]
+}
