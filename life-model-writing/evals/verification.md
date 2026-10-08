@@ -7,7 +7,7 @@
 - Skill 状态：先读取 `life-model-writing/SKILL.md`，按需读取 references；未读取 `baseline.md`
 - 对照场景：与 RED 完全相同的微信群沉默、短视频停不下来、坏消息扩散
 - 运行模型：`gpt-5.6-terra`
-- GREEN 运行时 HEAD：`34a6542`
+- GREEN 运行时 HEAD：`34a6542`；审阅修订后的最终静态校验基线 HEAD：`fc5d1bf`
 - 精确提示与原始输出：见 [green-trace.md](green-trace.md)
 - 精确提示要求子代理在三篇文案后附逐项检查表；检查表不是文案交付内容，而是本次行为验证的可审计结果。
 - 显式多版本回归：见 [green-trace.md](green-trace.md) 末尾；用户明确要求三个版本时实际输出 3 个版本，并保持每个版本的机制与边界要求。
@@ -47,4 +47,4 @@
 
 ## 最终静态校验
 
-最终 HEAD 的命令与结果在交付前追加：`quick_validate.py` → `Skill is valid!`；JSON 评测 → `evals: 12 valid`；`SKILL.md` 行数 ≤ 500；理论卡 8 张；规则文件 4 份。
+最终静态校验（基线 HEAD：`fc5d1bf`）：`review_fix_tests.py` → `REVIEW_FIX_ASSERTIONS=PASS`；`quick_validate.py` → `Skill is valid!`；JSON 评测 → `evals: 12 valid; shared assertions: 12/12`；`SKILL.md` → 98 行；理论卡 → 8 张；规则文件 → 4 份。
