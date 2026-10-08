@@ -27,7 +27,7 @@
 - 表面类比或单理论硬套：必须展示候选理论比较与适用边界；由 Task 6 的 12 个案例 assertions 覆盖。
 - 未核查的数字、人物、研究结论和范围性判断：必须标记状态或降级表达；由 Task 5 的 fact-checking 规则与 Task 6 的短视频案例覆盖。
 - 个体模型解释群体结果或相关替代因果：必须补足连接机制并声明不确定性；由 Task 4 的 theory-misuse 规则覆盖。
-- 用户要求多个版本、金句或直接给行动建议时：默认输出合同仍只允许一版完整文案，并保持非医疗、非法律、非投资咨询边界；由 Task 3 与 Task 6 覆盖。
+- 用户未明确要求时默认只交付一版；用户明确要求多个版本时，视为对默认交付范围的明确修改，同时保持非医疗、非法律、非投资咨询边界；由 Task 3 与 Task 6 覆盖。
 
 ### Task 1: 建立基线压力测试并记录 RED 证据
 
@@ -279,4 +279,3 @@
   git add life-model-writing docs/superpowers/plans/2026-10-08-life-model-writing.md
   git commit -m "feat: complete life model writing skill v0.1"
   ```
-
