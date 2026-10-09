@@ -64,7 +64,7 @@ python -m unittest discover -s life-model-writing/tests -v
 
 2026-10-09 创建了两轮不付费的前向证据：
 
-- [v0.2-run-1](baselines/v0.2-run-1/) 使用显式 `$life-model-writing` 路径。当前 Codex 上下文实际导入了 3 个 smoke 输出：一个直接请求、一个间接机制问题和一个普通广告口号负例；其余激活案例没有伪造输出。运行摘要为 `pass=0 fail=0 unverified=15`，因为没有独立评分。
-- [v0.2-run-2](baselines/v0.2-run-2/) 记录了自动发现路径尝试，但当前宿主无法证明自动发现，未导入输出；摘要同样为 `pass=0 fail=0 unverified=15`。
+- [v0.2-run-1 summary](baselines/v0.2-run-1/summary.json) 使用显式 `$life-model-writing` 路径。当前 Codex 上下文实际导入了 3 个 smoke 输出：一个直接请求、一个间接机制问题和一个普通广告口号负例；其余激活案例没有伪造输出。运行摘要为 `pass=0 fail=0 unverified=15`，因为没有独立评分。
+- [v0.2-run-2 summary](baselines/v0.2-run-2/summary.json) 记录了自动发现路径尝试，但当前宿主无法证明自动发现，未导入输出；摘要同样为 `pass=0 fail=0 unverified=15`。
 
 两轮的模型元数据、提示哈希、人工干预说明、原始输出、确定性检查和汇总都已固化。它们证明评测管线可以记录“已运行”和“无法验证”，不证明自动发现可用，也不证明内容质量通过。当前没有独立评分文件，因此不执行发布级通过结论。
