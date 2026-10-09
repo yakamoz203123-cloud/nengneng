@@ -25,6 +25,12 @@ description: Use when a user asks to turn a vague, emotional, or everyday social
 | 声誉、重复互动、惩罚、合作、承诺 | [theory-06-repeated-games-credible-commitments.md](references/theory-06-repeated-games-credible-commitments.md) | `theory-05-prisoners-dilemma-nash-equilibrium.md` |
 | 越来越多、越做越难、历史惯性、反馈 | [theory-07-feedback-loops-path-dependence.md](references/theory-07-feedback-loops-path-dependence.md) | `theory-04-exponential-logistic-growth.md` |
 | 扩散、爆红、群体模式、临界点 | [theory-08-networks-tipping-points-emergence.md](references/theory-08-networks-tipping-points-emergence.md) | `theory-02-externalities-public-goods.md` |
+| 隐瞒、筛选、信号、可信度、质量判断 | [theory-09-information-asymmetry-signaling-screening.md](references/theory-09-information-asymmetry-signaling-screening.md) | `theory-03-bayes-base-rates.md` |
+| 搜索、等待、停止、匹配、选项价值 | [theory-10-search-stopping-matching.md](references/theory-10-search-stopping-matching.md) | `theory-01-incentives-opportunity-cost.md` |
+| 协调、惯例、局部最优、瓶颈 | [theory-11-coordination-local-optima-bottlenecks.md](references/theory-11-coordination-local-optima-bottlenecks.md) | `theory-05-prisoners-dilemma-nash-equilibrium.md` |
+| 延迟满足、即时奖励、注意力、时间偏好 | [theory-12-time-preference-attention.md](references/theory-12-time-preference-attention.md) | `theory-01-incentives-opportunity-cost.md` |
+| 存量、流量、容量、积压、恢复速度 | [theory-13-stocks-flows-capacity.md](references/theory-13-stocks-flows-capacity.md) | `theory-07-feedback-loops-path-dependence.md` |
+| 扩散、阈值、传播、级联、临界转变 | [theory-14-diffusion-thresholds-propagation.md](references/theory-14-diffusion-thresholds-propagation.md) | `theory-08-networks-tipping-points-emergence.md` |
 
 写作结构与审查规则按需读取：
 
@@ -49,6 +55,8 @@ description: Use when a user asks to turn a vague, emotional, or everyday social
 
 至少提出两个候选解释，再比较它们各自解释的变量、核心假设、推演能力、事实依赖、适用边界和类比风险。若两个理论作用于不同层面，指定一个主模型和一个补充模型，不强行制造唯一赢家。若理论只改变措辞、不改变解释，删掉理论名词。
 
+候选比较必须留下可复核的选择记录：至少写出主模型、补充模型和淘汰理由；若使用理论卡以外的概念，明确标记为库外知识，并说明来源或待核查状态。联合模型不能只把两个名词并排放置，必须写出连接变量，以及在什么条件下会出现什么条件性预测。
+
 ### 3. 机制推演
 
 关键结论必须能复述出中间步骤：
@@ -68,6 +76,8 @@ description: Use when a user asks to turn a vague, emotional, or everyday social
 ### 5. 叙事转换
 
 默认只交付一版完整、可直接朗读的中文长口播文案，按以下顺序组织：具体生活场景 → 反常识问题 → 重新描述人物和限制 → 引入模型 → 逐步推演 → 理论边界或反例 → 回到生活选择 → 条件性收束判断。第一次出现英文术语时，紧跟中文释义。用户明确要求多个版本时，视为对默认交付范围的明确修改；未明确要求时，不主动生成多个版本。
+
+长度契约：短版 400-600 字；标准版 800-1200 字（默认）；长版 1500-2200 字。证据或机制不足时，不为了凑字数扩写；如果用户没有指定长度，按标准版交付。
 
 ## 停止写作条件
 

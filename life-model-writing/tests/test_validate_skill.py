@@ -22,6 +22,29 @@ class StaticValidationTests(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
+    def test_skill_routes_all_numbered_theory_cards(self):
+        text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+
+        for index in range(1, 15):
+            self.assertIn(f"references/theory-{index:02d}-", text)
+
+    def test_skill_contract_names_selection_integration_and_lengths(self):
+        text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        required_contracts = (
+            "主模型",
+            "补充模型",
+            "淘汰理由",
+            "库外知识",
+            "连接变量",
+            "条件性预测",
+            "400-600",
+            "800-1200",
+            "1500-2200",
+        )
+
+        for contract in required_contracts:
+            self.assertIn(contract, text)
+
     def test_parse_frontmatter_reads_flat_name_and_description(self):
         text = "---\nname: example-skill\ndescription: Use when testing.\n---\n"
 

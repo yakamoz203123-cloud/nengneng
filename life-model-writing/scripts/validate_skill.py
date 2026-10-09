@@ -39,6 +39,7 @@ FRONTMATTER_LINE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$")
 MARKDOWN_LINK = re.compile(r"!??\[[^\]]*\]\(([^)]+)\)")
 HEADING = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
 NUMBERED_THEORY_CARD = re.compile(r"theory-(\d{2})-")
+THEORY_ROUTE = re.compile(r"references/(theory-\d{2}-[^)\s`]+\.md)")
 STANDALONE_MARKER = re.compile(r"^\s*(TODO|TBD|FIXME)\s*$", re.IGNORECASE)
 CASE_SET_NAMES = ("evals.json", "real-cases.json", "activation-cases.json")
 IGNORED_SCAN_DIRS = {"tests", "__pycache__", ".git"}
@@ -139,6 +140,19 @@ def _validate_theory_card_inventory(
         )
 
 
+def _validate_theory_routes(
+    skill_file: Path, card_paths: list[Path], root: Path, errors: list[str]
+) -> None:
+    text = _read_text(skill_file, root, errors)
+    if text is None:
+        return
+
+    routed_names = set(THEORY_ROUTE.findall(text))
+    for path in card_paths:
+        if path.name not in routed_names:
+            errors.append(f"SKILL.md: missing theory route {path.name}")
+
+
 def _validate_case_files(root: Path, errors: list[str]) -> None:
     eval_dir = root / "evals"
     for name in CASE_SET_NAMES:
@@ -186,6 +200,7 @@ def validate_skill_root(skill_root: Path) -> list[str]:
     references = root / "references"
     card_paths = sorted(references.glob("theory-[0-9][0-9]-*.md"))
     _validate_theory_card_inventory(card_paths, root, errors)
+    _validate_theory_routes(skill_file, card_paths, root, errors)
     for path in card_paths:
         _validate_theory_card(path, root, errors)
 
