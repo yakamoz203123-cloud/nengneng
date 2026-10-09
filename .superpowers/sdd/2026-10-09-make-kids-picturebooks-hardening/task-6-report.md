@@ -536,3 +536,164 @@ The self-review re-read the round-2 transcript against the task constraints and 
 - Declined to judge: all 34 behavior cases, because no run successfully read the staged `SKILL.md`.
 
 No subagent or external reviewer was dispatched. The only round-2 commit target is this report; local CLI/runtime and probe directories remain untracked diagnostic scratch.
+
+---
+
+## Fix round 3/5 — WSL/Linux route availability probe
+
+### Scope and hypothesis
+
+This round investigated one route distinct from both Windows Codex CLI probes: run the same configured `gpt-5.6-luna` model from a Linux Codex CLI under WSL, with the candidate skill discovered from a fresh case workspace under `.codex/skills/make-kids-picturebooks`.
+
+Before any possible prompt, the linked worktree and protected inputs were rechecked:
+
+```text
+HEAD=da79b4f8abc46e926406c12973e3ecca88a75d04
+BRANCH=codex/make-kids-picturebooks-hardening
+SKILL.md SHA-256:           4C02275C632864227BA463CBD71A4352C21075025F09413193B48512D7FD97F2
+agents/openai.yaml SHA-256: 14A69FDE26261BB7938DEC7803D76ECD80A7FBEEE352B458AE5D0DB152C40BD8
+PROTECTED_DIFF_EXIT=0
+BASELINE_LINES=34
+NON_NULL_FIELDS=0
+```
+
+No model prompt was submitted in this round.
+
+### WSL availability result
+
+Read-only discovery commands:
+
+```powershell
+Get-Command wsl.exe
+wsl.exe --status
+wsl.exe --list --verbose
+Get-ChildItem 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Lxss'
+(Get-Item "$env:WINDIR\System32\wsl.exe").VersionInfo.FileVersion
+```
+
+The native WSL output was captured as UTF-16 to preserve the Chinese diagnostic text. Material results:
+
+```text
+WSL_COMMAND=C:\Windows\system32\wsl.exe
+WSL_FILE_VERSION=10.0.19041.2311 (WinBuild.160101.0800)
+
+wsl.exe --status
+exit_code=-444
+默认版本：2
+Windows 更新已暂停。
+未找到 WSL 2 内核文件。若要更新或恢复内核，请运行“wsl --update”。
+
+wsl.exe --list --verbose
+exit_code=-1
+适用于 Linux 的 Windows 子系统没有已安装的分发版。
+
+LXSS_DISTRO_KEYS=0
+```
+
+The distinct Linux route is therefore unavailable on this host: the WSL 2 kernel is absent and there is no installed distribution. There is no Linux shell in which to install or invoke a worktree-local Linux Codex package, verify its model/config propagation, stage the repo-scoped skill, or run the canary.
+
+`wsl --update`, enabling Windows optional components, and installing a distribution were not attempted. Those operations change machine-level state outside this worktree and exceed this fix round's authorization. This was an environment-availability probe, not a third Codex model attempt, so it produced no behavior that can be scored.
+
+### Reproducible handoff and canary gate
+
+On a host where WSL already has a working kernel and distribution, first rerun these non-mutating gates from PowerShell:
+
+```powershell
+wsl.exe --status
+wsl.exe --list --verbose
+Get-FileHash -Algorithm SHA256 -LiteralPath 'make-kids-picturebooks/SKILL.md','make-kids-picturebooks/agents/openai.yaml'
+git diff --exit-code HEAD -- make-kids-picturebooks/SKILL.md make-kids-picturebooks/agents/openai.yaml
+```
+
+Required preconditions are: a listed running-capable Linux distribution, the two hashes above, a clean protected-file diff, and an already-authenticated Linux Codex configuration whose model is `gpt-5.6-luna`. Do not copy credentials into the repository or change the Linux configuration for this evaluation. From that distribution, use this worktree-local setup and canary sequence (replace only `CODEX_HOME` if that environment uses a non-default existing location):
+
+```bash
+set -euo pipefail
+repo='/mnt/c/Users/Windows/Documents/ChatGPT/绘本skill/.worktrees/make-kids-picturebooks-hardening'
+cd "$repo"
+codex_home="${CODEX_HOME:-$HOME/.codex}"
+rg -n '^\s*model\s*=\s*"gpt-5\.6-luna"' "$codex_home/config.toml"
+
+npm install \
+  --prefix .superpowers/task-6-cli-runtime-linux \
+  --cache .superpowers/task-6-cli-npm-cache-linux \
+  --no-audit --no-fund --save-exact @openai/codex@0.162.0
+.superpowers/task-6-cli-runtime-linux/node_modules/.bin/codex --version
+
+probe='.superpowers/task-6-eval-probe-linux/direct_01'
+mkdir -p "$probe/.codex/skills"
+cp -a make-kids-picturebooks "$probe/.codex/skills/make-kids-picturebooks"
+expected_skill='4c02275c632864227ba463cbd71a4352c21075025f09413193b48512d7fd97f2'
+expected_agent='14a69fde26261bb7938dec7803d76ecd80a7fbeee352b458ae5d0db152c40bd8'
+test "$(sha256sum make-kids-picturebooks/SKILL.md | cut -d' ' -f1)" = "$expected_skill"
+test "$(sha256sum "$probe/.codex/skills/make-kids-picturebooks/SKILL.md" | cut -d' ' -f1)" = "$expected_skill"
+test "$(sha256sum make-kids-picturebooks/agents/openai.yaml | cut -d' ' -f1)" = "$expected_agent"
+test "$(sha256sum "$probe/.codex/skills/make-kids-picturebooks/agents/openai.yaml" | cut -d' ' -f1)" = "$expected_agent"
+
+prompt="$(python3 -c 'import csv,sys; print(next(r["prompt"] for r in csv.DictReader(open(sys.argv[1], encoding="utf-8")) if r["id"] == "direct_01"))' make-kids-picturebooks/evals/prompts.csv)"
+.superpowers/task-6-cli-runtime-linux/node_modules/.bin/codex exec \
+  --ephemeral --json -s read-only --skip-git-repo-check \
+  -C "$probe" "$prompt" \
+  2>&1 | tee "$probe/transcript.jsonl"
+```
+
+Use a fresh case directory for `direct_01`; copy `make-kids-picturebooks` to `<case>/.codex/skills/make-kids-picturebooks`, recompute and compare both hashes from Linux, and invoke the worktree-local Linux CLI with `--ephemeral --json -s read-only --skip-git-repo-check -C <case>` and the exact `direct_01` prompt loaded from `prompts.csv`. Do not continue unless the raw transcript contains a successful command execution that reads the staged `SKILL.md`, uses `gpt-5.6-luna`, and contains no helper/setup error.
+
+Only after that canary gate passes should all 34 cases be run in separate fresh workspaces, with raw JSONL transcripts retained. Populate `baseline.jsonl` solely from manually observed actions, manually inspect every validator flag, then run the unchanged validator. Do not install WSL as part of the evaluation, inject skill text into prompts, reuse case workspaces, infer actions from promises, change the model, or score a turn that did not read the staged skill.
+
+### Baseline integrity and round-3 ruling
+
+Fresh audit result after the availability probe:
+
+```text
+BASELINE_EXIT=2
+PASSED=False
+RECORDS_COUNT=0
+SCHEMA_ERRORS=171
+CASE_FAILURES=0
+PROMPTS=34
+BASELINE_LINES=34
+NON_NULL_FIELDS=0
+```
+
+Ruling: keep the baseline null and unscored because no skill-loaded model turn occurred; installing or repairing WSL would be a machine-level side effect outside the authorized worktree. Cost if wrong: the Critical before-change baseline remains open until an already-functional Linux runner or repaired safe Windows helper is available.
+
+Only this report is changed in round 3. `baseline.jsonl`, `SKILL.md`, `agents/openai.yaml`, the registry, validator, rubric, and tests remain untouched. No subagent or external reviewer was used.
+
+### Round-3 verification and self-review
+
+Commands:
+
+```powershell
+python -X utf8 -m unittest discover -s make-kids-picturebooks/tests -p "test_eval_results.py" -v
+python -X utf8 -m compileall -q make-kids-picturebooks/scripts
+python -X utf8 -W error::DeprecationWarning -m unittest discover -s make-kids-picturebooks/tests -q
+git diff --check
+git diff --exit-code HEAD -- make-kids-picturebooks/SKILL.md make-kids-picturebooks/agents/openai.yaml
+python make-kids-picturebooks/scripts/check_eval_results.py make-kids-picturebooks/evals/results/baseline.jsonl
+```
+
+Observed output summary:
+
+```text
+Ran 16 tests in 2.346s
+OK
+Ran 103 tests in 40.992s
+OK (skipped=1)
+FOCUSED_EXIT=0
+COMPILE_EXIT=0
+FULL_EXIT=0
+DIFF_CHECK_EXIT=0
+PROTECTED_DIFF_EXIT=0
+BASELINE_EXIT=2
+BASELINE_ERRORS=171
+```
+
+The self-review compared the complete round-3 diff with the user constraints, brief, and accumulated report, and verified that every claimed diagnostic appears in the captured command output. Findings:
+
+- Critical: the actual before-change behavior baseline remains unavailable; this round does not claim otherwise.
+- Important: none introduced by round 3.
+- Minor: none introduced by round 3.
+- Declined to judge: all 34 behavior cases, because WSL availability failed before a model prompt and no skill-loaded turn occurred.
+
+No subagent or external reviewer was dispatched, per the user instruction. The round-3 commit target is only this report; verification logs and prior local runner/probe directories remain untracked diagnostic scratch.
