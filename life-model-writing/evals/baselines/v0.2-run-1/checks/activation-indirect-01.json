@@ -1,0 +1,21 @@
+{
+  "case_id": "activation-indirect-01",
+  "checks": [
+    {
+      "name": "output-exists",
+      "status": "pass"
+    },
+    {
+      "name": "output-non-empty",
+      "status": "pass"
+    },
+    {
+      "name": "length-contract",
+      "status": "review"
+    }
+  ],
+  "review_flags": [
+    "absolute-language"
+  ],
+  "status": "review"
+}

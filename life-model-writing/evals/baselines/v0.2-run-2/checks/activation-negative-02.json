@@ -1,0 +1,13 @@
+{
+  "case_id": "activation-negative-02",
+  "checks": [
+    {
+      "name": "output-exists",
+      "status": "unverified"
+    }
+  ],
+  "review_flags": [
+    "missing-output"
+  ],
+  "status": "unverified"
+}

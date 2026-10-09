@@ -1,0 +1,262 @@
+{
+  "average_total": null,
+  "cases": [
+    {
+      "case_id": "activation-direct-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "name": "length-contract",
+          "status": "review"
+        }
+      ],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "review"
+    },
+    {
+      "case_id": "activation-direct-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-indirect-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "name": "length-contract",
+          "status": "review"
+        }
+      ],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "review"
+    },
+    {
+      "case_id": "activation-indirect-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-incomplete-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-incomplete-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-incomplete-03",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-negative-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "name": "length-contract",
+          "status": "review"
+        }
+      ],
+      "review_flags": [
+        "boundary-language"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "review"
+    },
+    {
+      "case_id": "activation-negative-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-negative-03",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-negative-04",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-negative-05",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-edge-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-edge-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    },
+    {
+      "case_id": "activation-edge-03",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "unverified"
+        }
+      ],
+      "review_flags": [
+        "missing-output"
+      ],
+      "score_error": "missing-score",
+      "score_status": "unverified",
+      "status": "unverified"
+    }
+  ],
+  "counts": {
+    "fail": 0,
+    "pass": 0,
+    "skipped": 0,
+    "unverified": 15
+  },
+  "run_id": "v0.2-run-1",
+  "verified_case_count": 0
+}

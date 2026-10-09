@@ -1,0 +1,158 @@
+{
+  "case_sets": [
+    "life-model-writing\\evals\\activation-cases.json"
+  ],
+  "cases": [
+    {
+      "expected_activation": true,
+      "id": "activation-direct-01",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "direct-01",
+      "prompt_sha256": "9f2a8a91e36dbfe8a52a3da9a3a5ffa446204cf5edaa0d94f45e7f5057a3a480",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-direct-02",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "direct-02",
+      "prompt_sha256": "de6536bfcbf004cf698d6ee9fcf8adeec84ca2ca626d4a6001f670b67bf386d0",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-indirect-01",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "indirect-01",
+      "prompt_sha256": "8a7a095809e16bd84e81aa130eef3e8d648eec8c40a8f1c48b0e69e734ba0756",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-indirect-02",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "indirect-02",
+      "prompt_sha256": "df60db0fd539b36fe99ac217fec83ced036fd3419d393bbe95532a663941dfbe",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-incomplete-01",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "incomplete-01",
+      "prompt_sha256": "9e8cd62a32f6883a6de1e09df988e30540bed611be2e7e9e1efcfbfab36a14e9",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-incomplete-02",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "incomplete-02",
+      "prompt_sha256": "69c95ec1a14ef67b9fbbc6c6787375299df537b7a9f2db746dbc49f7a3475630",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-incomplete-03",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "incomplete-03",
+      "prompt_sha256": "1aa3cb50f887ff556cd848330dd1eded80ba9b8f29eaa4122f2e413797726a01",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": false,
+      "id": "activation-negative-01",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "negative-01",
+      "prompt_sha256": "abcd91032097c7fe5b460f36029c3f9e5453e022d549aebc85355d82983721aa",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": false,
+      "id": "activation-negative-02",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "negative-02",
+      "prompt_sha256": "937a535e203b8695951174847fea7a0cae42e5d5928478978dd70b658c6176e3",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": false,
+      "id": "activation-negative-03",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "negative-03",
+      "prompt_sha256": "dd7ae74ba983cc1b2b67edfa329302dbcc7ff6c12b658f045b68835349865345",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": false,
+      "id": "activation-negative-04",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "negative-04",
+      "prompt_sha256": "4f358d22658c6040c83c0c5533333e2d3825853653f7e661a3e0ac75dcb4286d",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": false,
+      "id": "activation-negative-05",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "negative-05",
+      "prompt_sha256": "9580e5b8951c1a4f5b50c8acce8e77dfc66e4e5fb6fb2f89656617238a18fe67",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-edge-01",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "edge-01",
+      "prompt_sha256": "a9ab7ad97f8266a34f030a2baf4c4850d5ced82f0cf30bd5b7df9b5d07345fe6",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-edge-02",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "edge-02",
+      "prompt_sha256": "ecb19e938563a700176c2765a9b343aba92dc5b017d936a0e6e80f2faa20d4fe",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    },
+    {
+      "expected_activation": true,
+      "id": "activation-edge-03",
+      "kind": "activation",
+      "length_contract": null,
+      "name": "edge-03",
+      "prompt_sha256": "22d44df19a48333ab72620ee31c06a3ce3d9d19aa95274f0b7a0211383d3af4a",
+      "source": "life-model-writing\\evals\\activation-cases.json"
+    }
+  ],
+  "created_at": "2026-10-09T10:11:58.177999+00:00",
+  "git_commit": "ea39c5d231b08f056c3b36fe0e1a5856c28c3e16",
+  "human_intervention": "No output generated because automatic discovery could not be exercised; retained as unverified evidence.",
+  "invocation_mode": "automatic discovery path unavailable in current host; manifest-only attempt",
+  "model": {
+    "backend_version": "unknown",
+    "name": "unknown",
+    "parameters": {
+      "automatic_discovery": false,
+      "fresh_context": false,
+      "paid_api": false
+    }
+  },
+  "run_id": "v0.2-run-2",
+  "schema_version": "1",
+  "skill_name": "life-model-writing"
+}

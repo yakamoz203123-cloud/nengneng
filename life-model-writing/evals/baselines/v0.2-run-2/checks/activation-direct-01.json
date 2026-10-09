@@ -1,0 +1,13 @@
+{
+  "case_id": "activation-direct-01",
+  "checks": [
+    {
+      "name": "output-exists",
+      "status": "unverified"
+    }
+  ],
+  "review_flags": [
+    "missing-output"
+  ],
+  "status": "unverified"
+}
