@@ -69,3 +69,22 @@ dN/dt = rN(1 - N/K)
 - [Wolfram MathWorld: Logistic Equation](https://mathworld.wolfram.com/LogisticEquation.html)
 - [MIT OpenCourseWare: Principles of Microeconomics](https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2023/resources/lecture-notes/)
 
+## 候选理论评分
+
+当问题有时间序列、增长率随规模变化或明确上限时，本卡才有较高匹配度；只有“突然变快”而没有阶段和数据时，应优先考虑扩散或反馈模型。
+
+## 排除条件
+
+不能把任何快速增长称为指数增长，也不能从一张 S 型图直接推出现实系统存在固定承载上限。
+
+## 可观察预测
+
+指数阶段要求相对增长率在一段时间内近似稳定；逻辑斯蒂阶段要求增长率随接近容量上限而下降。偏离这些迹象时，模型应被降级为类比。
+
+## 可联合理论
+
+可与反馈回路、网络扩散和容量约束联合使用，用来解释增长来源、传播结构和上限压力，但必须保留各自的变量定义。
+
+## 连接变量
+
+使用“单位规模增长率”和“可用容量”连接局部增长与系统阶段变化。

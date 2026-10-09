@@ -57,3 +57,22 @@
 - [Stanford Encyclopedia of Philosophy: Game Theory](https://plato.stanford.edu/entries/game-theory/)
 - [Stanford Encyclopedia of Philosophy: Prisoner’s Dilemma](https://plato.stanford.edu/entries/prisoner-dilemma/)
 
+## 候选理论评分
+
+只有当参与者、策略和收益排序能构成互相背叛的稳定最佳回应，同时合作结果对所有人更好时，囚徒困境才是高匹配模型；一般冲突不能直接套用。
+
+## 排除条件
+
+若收益排序不符合困境结构，或行动不是相互依赖的策略选择，应排除本卡；纳什均衡也不能替代对信息、执行和制度的描述。
+
+## 可观察预测
+
+在单次互动、惩罚弱且背叛收益明确时，背叛诱因更强；加入可见惩罚、重复互动或改变收益排序后，稳定结果可能改变。
+
+## 可联合理论
+
+可与重复博弈、公共品、协调博弈联合使用，分别解释未来回应、溢出收益和行动匹配。
+
+## 连接变量
+
+使用“最佳回应与集体收益的差距”连接个体策略和群体结果。

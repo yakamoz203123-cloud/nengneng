@@ -61,3 +61,22 @@ P(假设|证据) ∝ P(证据|假设) × P(假设)
 - [Stanford Encyclopedia of Philosophy: Bayesian Epistemology](https://plato.stanford.edu/entries/epistemology-bayesian/)
 - [Stanford Encyclopedia of Philosophy: Bayes’ Theorem](https://plato.stanford.edu/entries/bayes-theorem/)
 
+## 候选理论评分
+
+当问题包含新证据、先验概率、误判或信号可靠性时，本卡匹配度高；如果问题没有可区分的证据和假设，只讲“更新认知”会变成装饰。
+
+## 排除条件
+
+不能用贝叶斯公式替代因果识别、数据质量审查或对先验来源的说明，也不能把后验概率写成事实确定性。
+
+## 可观察预测
+
+当证据在不同状态下的出现概率差异更大时，合理更新幅度应更大；如果先验、证据质量和选择性传播改变，判断结果也应改变。
+
+## 可联合理论
+
+可与信号理论、搜索理论和网络扩散联合使用，用来说明信号如何改变信念、继续寻找信息的价值，以及传播选择如何扭曲可见样本。
+
+## 连接变量
+
+使用“证据似然比”连接外部信号与主体后验判断。

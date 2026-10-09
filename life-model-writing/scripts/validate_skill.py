@@ -25,10 +25,20 @@ CORE_HEADINGS = frozenset(
         "可靠来源",
     }
 )
+SELECTION_HEADINGS = frozenset(
+    {
+        "候选理论评分",
+        "排除条件",
+        "可观察预测",
+        "可联合理论",
+        "连接变量",
+    }
+)
 
 FRONTMATTER_LINE = re.compile(r"^([A-Za-z_][A-Za-z0-9_-]*):\s*(.*)$")
 MARKDOWN_LINK = re.compile(r"!??\[[^\]]*\]\(([^)]+)\)")
 HEADING = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
+NUMBERED_THEORY_CARD = re.compile(r"theory-(\d{2})-")
 STANDALONE_MARKER = re.compile(r"^\s*(TODO|TBD|FIXME)\s*$", re.IGNORECASE)
 CASE_SET_NAMES = ("evals.json", "real-cases.json", "activation-cases.json")
 IGNORED_SCAN_DIRS = {"tests", "__pycache__", ".git"}
@@ -106,8 +116,27 @@ def _validate_theory_card(path: Path, root: Path, errors: list[str]) -> None:
     if text is None:
         return
     headings = set(HEADING.findall(text))
-    for heading in sorted(CORE_HEADINGS - headings):
+    required_headings = CORE_HEADINGS | SELECTION_HEADINGS
+    card_match = NUMBERED_THEORY_CARD.search(path.name)
+    card_number = int(card_match.group(1)) if card_match else None
+    if card_number in {13, 14}:
+        required_headings = required_headings | {"社会机制桥接"}
+    for heading in sorted(required_headings - headings):
         errors.append(f"{_relative(path, root)}: missing theory heading {heading}")
+
+
+def _validate_theory_card_inventory(
+    card_paths: list[Path], root: Path, errors: list[str]
+) -> None:
+    numbers = {
+        int(match.group(1))
+        for path in card_paths
+        if (match := NUMBERED_THEORY_CARD.search(path.name))
+    }
+    for number in sorted(set(range(1, 15)) - numbers):
+        errors.append(
+            f"references: missing theory card theory-{number:02d}-*.md"
+        )
 
 
 def _validate_case_files(root: Path, errors: list[str]) -> None:
@@ -155,7 +184,9 @@ def validate_skill_root(skill_root: Path) -> list[str]:
         _validate_links(path, root, errors)
 
     references = root / "references"
-    for path in sorted(references.glob("theory-[0-9][0-9]-*.md")):
+    card_paths = sorted(references.glob("theory-[0-9][0-9]-*.md"))
+    _validate_theory_card_inventory(card_paths, root, errors)
+    for path in card_paths:
         _validate_theory_card(path, root, errors)
 
     _validate_case_files(root, errors)

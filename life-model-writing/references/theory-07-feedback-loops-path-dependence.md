@@ -58,3 +58,22 @@
 - [MIT OpenCourseWare: Causal Loop Diagrams](https://ocw.mit.edu/courses/esd-00-introduction-to-engineering-systems-spring-2011/816df198baedb3b544ab4148ce86927d_MITESD_00S11_lec02.pdf)
 - [MIT: John Sterman, Business Dynamics](https://web.mit.edu/jsterman/www/BusDyn2.html)
 
+## 候选理论评分
+
+当变量随时间相互影响、结果会反过来改变后续条件，或历史投入改变当前选择空间时，本卡匹配度高；静态一次性结果不应强行画反馈回路。
+
+## 排除条件
+
+箭头图只是待检验的因果假设；没有时间顺序、变量定义或替代解释时，不能把反馈回路当作已证明的机制。
+
+## 可观察预测
+
+增强回路应表现为变化被放大，调节回路应表现为偏离被压回；如果改变初始条件后轨迹不变，路径依赖解释需要重新审查。
+
+## 可联合理论
+
+可与激励、容量约束、网络扩散和重复博弈联合使用，把个体行动、系统限制、传播结构和历史回应接入同一时间链。
+
+## 连接变量
+
+使用“存量、流量和延迟”连接局部行动与系统轨迹。

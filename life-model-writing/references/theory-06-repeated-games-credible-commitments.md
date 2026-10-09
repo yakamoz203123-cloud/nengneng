@@ -56,3 +56,22 @@
 - [Stanford Encyclopedia of Philosophy: Game Theory](https://plato.stanford.edu/entries/game-theory/)
 - [Stanford Encyclopedia of Philosophy: Evolutionary Game Theory](https://plato.stanford.edu/entries/game-evolutionary/)
 
+## 候选理论评分
+
+当主体会重复相遇、行动可观察、未来收益重要且回应机制可执行时，本卡优先级高；一次性互动或完全匿名场景应降低其权重。
+
+## 排除条件
+
+不能因为两个人认识很久就假定存在可信承诺；如果惩罚不可执行、行动不可观察或未来权重接近零，合作机制可能不成立。
+
+## 可观察预测
+
+提高互动频率、可见性和未来收益，或降低退出和惩罚成本，可能提高合作稳定性；最后一轮、信息误判和无法执行的威胁会削弱预测。
+
+## 可联合理论
+
+可与囚徒困境、公共品、信息不对称和信号理论联合使用，用来解释收益结构、集体贡献、承诺可信度和声誉信息。
+
+## 连接变量
+
+使用“未来收益权重”和“回应可信度”连接单次策略与重复互动结果。

@@ -61,3 +61,22 @@
 - [MIT OpenCourseWare: Principles of Microeconomics](https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2023/resources/lecture-notes/)
 - [OpenStax: Public Goods and Free Riders](https://openstax.org/books/principles-economics-3e/pages/13-3-public-goods)
 
+## 候选理论评分
+
+当私人行动的收益或成本溢出给未参与者，或贡献难排他、共同资源承受压力时，本卡优先级高；若结果主要由双方策略回应决定，应同时比较博弈论模型。
+
+## 排除条件
+
+如果成本和收益只由行动者自己承担，不能把普通的个人激励问题直接叫外部性或公共品问题。
+
+## 可观察预测
+
+当贡献的私人回报下降、搭便车更容易或拥挤成本增加时，个体贡献可能减少；提高可见回应、责任边界或排他性可能改变贡献率，但方向需由具体制度验证。
+
+## 可联合理论
+
+可与重复博弈、协调博弈、拥挤模型和网络扩散联合使用，分别解释回应机制、行动匹配、容量压力和参与传播。
+
+## 连接变量
+
+使用“私人收益与社会收益的差额”连接个体选择和群体结果。

@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from validate_skill import (  # noqa: E402
     CORE_HEADINGS,
+    SELECTION_HEADINGS,
     parse_frontmatter,
     validate_skill_root,
 )
@@ -92,6 +93,7 @@ class StaticValidationTests(unittest.TestCase):
     def test_core_headings_remain_the_validator_contract(self):
         self.assertIn("可靠来源", CORE_HEADINGS)
         self.assertIn("事实与证据边界", CORE_HEADINGS)
+        self.assertIn("连接变量", SELECTION_HEADINGS)
 
 
 if __name__ == "__main__":

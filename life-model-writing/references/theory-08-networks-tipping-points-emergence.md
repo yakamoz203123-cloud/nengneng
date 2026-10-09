@@ -56,3 +56,22 @@
 - [MIT OpenCourseWare: Causal Loop Diagrams](https://ocw.mit.edu/courses/esd-00-introduction-to-engineering-systems-spring-2011/816df198baedb3b544ab4148ce86927d_MITESD_00S11_lec02.pdf)
 - [Santa Fe Institute: Marten Scheffer and Tipping Points](https://santafe.edu/people/profile/marten-scheffer)
 
+## 候选理论评分
+
+当结果取决于节点之间的连接、扩散路径、局部阈值或个体行为的聚合时，本卡匹配度高；没有关系结构或传播过程时，网络词汇只是修辞。
+
+## 排除条件
+
+不能从“突然流行”倒推一定存在临界点，也不能把宏观模式直接归因于所有个体具有同一动机。
+
+## 可观察预测
+
+改变连接密度、关键节点、阈值分布或传播顺序，应改变扩散速度和覆盖范围；若结果对网络结构不敏感，应比较非网络解释。
+
+## 可联合理论
+
+可与贝叶斯更新、激励、增长模型和外部性联合使用，解释信号判断、参与动力、扩散阶段和拥挤成本。
+
+## 连接变量
+
+使用“节点连接结构、局部阈值和传播概率”连接个体行动与群体模式。

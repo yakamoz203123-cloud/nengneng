@@ -63,3 +63,22 @@
 - [MIT OpenCourseWare: Principles of Microeconomics](https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2023/resources/lecture-notes/)
 - [OpenStax: Opportunity Cost and Marginal Analysis](https://openstax.org/books/principles-microeconomics-3e/pages/2-1-how-individuals-make-choices-based-on-their-budget-constraint)
 
+## 候选理论评分
+
+当问题明确涉及稀缺资源、选择排序或放弃其他选项的代价时，激励与机会成本的机制匹配度高；若核心变量是信念更新、策略回应或网络扩散，应降低本卡优先级。
+
+## 排除条件
+
+如果没有可识别的资源约束、行动选项或收益成本变化，不能只因为出现“选择”一词就使用本卡。
+
+## 可观察预测
+
+在其他条件相近时，改变一个行动的即时收益、时间成本或替代选项，应改变选择概率；若改变这些变量却没有行为变化，需要考虑偏好、身份、信息或制度因素。
+
+## 可联合理论
+
+可与贝叶斯更新、搜索停止、时间偏好和外部性联合使用，但本卡不替代这些理论对信念、未来折扣或溢出成本的解释。
+
+## 连接变量
+
+使用“感知到的净收益”和“继续行动的边际机会成本”连接个体选择与后续反馈。
