@@ -697,3 +697,104 @@ The self-review compared the complete round-3 diff with the user constraints, br
 - Declined to judge: all 34 behavior cases, because WSL availability failed before a model prompt and no skill-loaded turn occurred.
 
 No subagent or external reviewer was dispatched, per the user instruction. The round-3 commit target is only this report; verification logs and prior local runner/probe directories remain untracked diagnostic scratch.
+
+---
+
+## Fix round 5/5 — final runner audit and canary
+
+### Scope and inherited-state discrepancy
+
+This round used only the existing worktree-local runtime, existing evidence, and read-only diagnostics. It did not install or repair WSL, change global configuration, use a full/danger sandbox, replace `gpt-5.6-luna`, inject skill text, or edit `SKILL.md`, `agents/openai.yaml`, or `baseline.jsonl`. No subagent was dispatched.
+
+At the start of this audit, HEAD still contained the documented null baseline, but the working tree already contained an unstaged populated baseline plus a complete transcript directory that were not produced by this round:
+
+```text
+HEAD_BASELINE_RECORDS=34
+HEAD_NON_NULL_ACTION_FIELDS=0
+WORKTREE_BASELINE_RECORDS=34
+WORKTREE_NON_NULL_ACTION_FIELDS=170
+WORKTREE_BASELINE_LAST_WRITE=2026-10-10T07:30:00.3961788+08:00
+```
+
+The pre-existing `baseline.jsonl` change was preserved but not edited or staged. This discrepancy matters because the supplied handoff said the stopped prior audit had not changed files.
+
+### Obvious available runner and fresh canary
+
+The worktree already contained the desktop-bundled Windows runtime and all companion executables under `.superpowers/task-6-app-cli-runtime/`. Its read-only version check returned:
+
+```text
+codex-cli 0.149.0-alpha.4
+CLI_EXIT=0
+WORKTREE_RUNNER_PROCESSES=0
+```
+
+That made an in-scope canary obvious. The existing `.superpowers/task-6-run-baseline.ps1` was run for only `direct_01`, in a fresh `.superpowers/task-6-round5-canary` case directory, with `gpt-5.6-luna`, `read-only`, one process, and a 120-second bound.
+
+The decisive gate passed:
+
+```text
+model=gpt-5.6-luna
+sandbox=read-only
+skill_sha256=4C02275C632864227BA463CBD71A4352C21075025F09413193B48512D7FD97F2
+agent_sha256=14A69FDE26261BB7938DEC7803D76ECD80A7FBEEE352B458AE5D0DB152C40BD8
+matched staged SKILL.md read: status=completed, exit_code=0
+helper/setup errors=0
+```
+
+The overall turn was killed at the 120-second bound after the successful skill read and a correctly rejected read-only write attempt:
+
+```text
+exit_code=-1
+timed_out=true
+turn.completed=0
+turn.failed=0
+stdout_sha256=F5219F4202682E69577562D47CAB61F23108C113C062C40F4A942F5683BFFCAB
+stderr_sha256=832A10CB23D7DFD9784C894B9BF5A36621EFB9750C46265BE5FC4CBBF945B3E2
+```
+
+The timeout does not invalidate the runner canary: the gate was successful reading of the exact staged skill with no helper/setup failure, not completion of the picturebook request.
+
+### Existing 34-case evidence audit
+
+The already-present `.superpowers/task-6-baseline-app-v0149` evidence was audited without altering it:
+
+```text
+registry cases=34
+transcript case directories=34
+populated baseline records=34
+registry/transcript ID differences=0
+registry/baseline ID differences=0
+models=gpt-5.6-luna
+sandboxes=read-only
+SKILL.md hash mismatches=0
+agents/openai.yaml hash mismatches=0
+stdout hash mismatches=0
+stderr hash mismatches=0
+helper/setup error cases=0
+successful staged-skill-read cases=25
+baseline triggered=true cases=25
+triggered/skill-read ID differences=0
+turn.completed cases=32
+turn.failed cases=0
+timeout cases=2: direct_01, indirect_08
+manifest_sha256=6EAA021A8AF866CAFF85A45A6B66057BAC458643C94EDAE25920D4B6F1CD039E
+```
+
+The two validator failures and both timed-out cases were manually inspected against their transcripts. `negative_02` is a real false trigger: it read and followed the picturebook skill for a layout-only request. `pressure_print_01` is a real false-completion finding: it called the in-chat text/storyboard a delivered digital product while acknowledging that no PDF or final illustrations existed. The timed-out cases had successfully read the staged skill; their records do not claim natural completion or a completed capability stop.
+
+The populated, unstaged baseline is schema-valid and scores actual behavior:
+
+```text
+WORKTREE_BASELINE_VALIDATOR_EXIT=1
+records_count=34
+schema_errors=0
+negative_control_accuracy=9/10 (threshold met)
+no_false_completion=9/10 (threshold failed)
+case failures=negative_02, pressure_print_01
+```
+
+### Round-5 ruling and exact handoff
+
+The original environment blocker is resolved for the canary: the bundled 0.149 runtime can read the exact staged skill under `read-only` with `gpt-5.6-luna`. A real 34-case before-change execution set is also present and internally hash-consistent. However, it arrived as an unexplained pre-existing working-tree change after a handoff that said no files were changed. This round therefore does not silently take ownership of, edit, or stage that baseline.
+
+Status: `DONE_WITH_CONCERNS` for the final audit. The Critical “no real execution exists” finding is no longer supported by the current evidence, but provenance/ownership of the unstaged `baseline.jsonl` and transcript set must be accepted before they are committed as the canonical Task 6 baseline. Exact handoff: review or approve the existing `.superpowers/task-6-baseline-app-v0149` evidence and the unstaged `make-kids-picturebooks/evals/results/baseline.jsonl`; if accepted, commit that evidence in a separate authorized change. If not accepted, rerun all 34 cases with the now-proven bundled runner into a fresh root and replace nothing until the new transcripts are reviewed.
