@@ -1,0 +1,181 @@
+{
+  "case_sets": [
+    "life-model-writing\\evals\\real-cases.json"
+  ],
+  "cases": [
+    {
+      "expected_activation": null,
+      "id": "real-01",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "choice-overload",
+      "prompt_sha256": "8cdadf734ba90ec45360400b22fc4ebb41b1a2db117c08ec782bc83e1997b5ef",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-02",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "free-event-attendance",
+      "prompt_sha256": "14cea10a11fd9c77708499fadc0ba36a146f85190703be1783aecee85cf4b7d2",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-03",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "price-trust",
+      "prompt_sha256": "65b4c85e1685c1089a883e5b9e5d660dc853f2fa742146d25178cf523408b1c2",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-04",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "busy-efficiency",
+      "prompt_sha256": "b8d7d272c6f10b7b746085f68b4244342bfdf5a82dcfb352731f54f70fe1798c",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-05",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "dating-information-asymmetry",
+      "prompt_sha256": "a1f73f2683d22b532a04033d0afdb9cb2b23d2b25e771582e018822989b965fc",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-06",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "long-queue-sunk-cost",
+      "prompt_sha256": "ada9135106bb90a21faf731029a427f92486d7489492b56246d7e9fbb22121a0",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-07",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "short-video-attention",
+      "prompt_sha256": "44e1c92d687fd602bc520158da67ac32e9356889caaece6c5507f27bbaf8a091",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-08",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "team-effort-coordination",
+      "prompt_sha256": "69669771017c0d0ebd1226b162b75bdf3adf15988befc05faf895028be569cb0",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-09",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "failed-project-escalation",
+      "prompt_sha256": "7d92cdbe0c569fdf4d7e8e7d029e841874af96038473adabca4f838af9e59107",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "real-10",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "large-social-event-congestion",
+      "prompt_sha256": "1c4b43de6a474cb21d1677b00a36d1f2b3f8f0105c36c25448b74b955e7abedc",
+      "source": "life-model-writing\\evals\\real-cases.json"
+    }
+  ],
+  "created_at": "2026-10-09T10:05:04.580670+00:00",
+  "git_commit": "601d6def1233ddd6769dec31ce9b6651bed5b474",
+  "human_intervention": "none",
+  "invocation_mode": "manual-explicit",
+  "model": {
+    "backend_version": "unknown",
+    "name": "GPT-5",
+    "parameters": {}
+  },
+  "outputs": [
+    {
+      "byte_length": 1258,
+      "case_id": "real-01",
+      "imported_at": "2026-10-09T10:05:24.536797+00:00",
+      "sha256": "8afd66482055e2dac443b6cb853cfa878776b2641af4fb2623e96209135149f0",
+      "source_filename": "real-01.md"
+    },
+    {
+      "byte_length": 1285,
+      "case_id": "real-02",
+      "imported_at": "2026-10-09T10:05:24.537847+00:00",
+      "sha256": "89f8f458b42e536d6015dd9a80fe6159a8dc5ab1dcf23670492eb6472da0cd6d",
+      "source_filename": "real-02.md"
+    },
+    {
+      "byte_length": 1300,
+      "case_id": "real-03",
+      "imported_at": "2026-10-09T10:05:24.539117+00:00",
+      "sha256": "6b6dd39da7880c1113ed3cca778972fa08d44865dc5916a888c6f4e7779b0385",
+      "source_filename": "real-03.md"
+    },
+    {
+      "byte_length": 1225,
+      "case_id": "real-04",
+      "imported_at": "2026-10-09T10:05:24.540103+00:00",
+      "sha256": "f73652b2cdd404ff43e9a2111355ef4dad1ecf7aa7a85b9c9ccc86f13e24b9f4",
+      "source_filename": "real-04.md"
+    },
+    {
+      "byte_length": 1393,
+      "case_id": "real-05",
+      "imported_at": "2026-10-09T10:05:24.541259+00:00",
+      "sha256": "03a3a2937da527da705725fdfdeb64c1206cc2adb2a8e883c6a36d87fbd1bfff",
+      "source_filename": "real-05.md"
+    },
+    {
+      "byte_length": 1243,
+      "case_id": "real-06",
+      "imported_at": "2026-10-09T10:05:24.542270+00:00",
+      "sha256": "2d0c8cd4a87300212983112836a1fb3f1b0d7aeb76a3ed49645665269c6f8ed4",
+      "source_filename": "real-06.md"
+    },
+    {
+      "byte_length": 1297,
+      "case_id": "real-07",
+      "imported_at": "2026-10-09T10:05:24.543540+00:00",
+      "sha256": "1f6e2fde531e908f4c533c8e204af341beb8319006163fb8d365703da98a92b2",
+      "source_filename": "real-07.md"
+    },
+    {
+      "byte_length": 1285,
+      "case_id": "real-08",
+      "imported_at": "2026-10-09T10:05:24.544494+00:00",
+      "sha256": "85a5a08a1a1312be424af01d1c840a7c1ce26044aefbd653135d8035fdd24ae6",
+      "source_filename": "real-08.md"
+    },
+    {
+      "byte_length": 1324,
+      "case_id": "real-09",
+      "imported_at": "2026-10-09T10:05:24.545487+00:00",
+      "sha256": "acde0b2918c5f255d769c8a4ac60611bd935ec427f8213c4ac1c2e49feb65c42",
+      "source_filename": "real-09.md"
+    },
+    {
+      "byte_length": 1252,
+      "case_id": "real-10",
+      "imported_at": "2026-10-09T10:05:24.546525+00:00",
+      "sha256": "2dc78ef40e3513f2cf71fff1764b3511d30575283aab7f9058d413dcfd6165d5",
+      "source_filename": "real-10.md"
+    }
+  ],
+  "run_id": "audit-2026-10-09",
+  "schema_version": "1",
+  "skill_name": "life-model-writing"
+}

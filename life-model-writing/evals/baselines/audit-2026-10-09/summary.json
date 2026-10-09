@@ -1,0 +1,275 @@
+{
+  "average_total": null,
+  "cases": [
+    {
+      "case_id": "real-01",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 416,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 24
+    },
+    {
+      "case_id": "real-02",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 425,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 24
+    },
+    {
+      "case_id": "real-03",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 430,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 24
+    },
+    {
+      "case_id": "real-04",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 405,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 25
+    },
+    {
+      "case_id": "real-05",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 461,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 24
+    },
+    {
+      "case_id": "real-06",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 411,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 24
+    },
+    {
+      "case_id": "real-07",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 429,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 26
+    },
+    {
+      "case_id": "real-08",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 425,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 25
+    },
+    {
+      "case_id": "real-09",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 438,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 26
+    },
+    {
+      "case_id": "real-10",
+      "checks": [
+        {
+          "name": "output-exists",
+          "status": "pass"
+        },
+        {
+          "name": "output-non-empty",
+          "status": "pass"
+        },
+        {
+          "character_count": 414,
+          "lower": 800,
+          "name": "length-contract",
+          "status": "fail",
+          "upper": 1200
+        }
+      ],
+      "critical_errors": [],
+      "review_flags": [
+        "absolute-language"
+      ],
+      "score_status": "unverified",
+      "status": "fail",
+      "total": 25
+    }
+  ],
+  "counts": {
+    "fail": 0,
+    "pass": 0,
+    "skipped": 0,
+    "unverified": 10
+  },
+  "run_id": "audit-2026-10-09",
+  "verified_case_count": 0
+}

@@ -1,0 +1,22 @@
+{
+  "case_id": "real-03",
+  "checks": [
+    {
+      "name": "output-exists",
+      "status": "pass"
+    },
+    {
+      "name": "output-non-empty",
+      "status": "pass"
+    },
+    {
+      "character_count": 430,
+      "lower": 800,
+      "name": "length-contract",
+      "status": "fail",
+      "upper": 1200
+    }
+  ],
+  "review_flags": [],
+  "status": "fail"
+}

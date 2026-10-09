@@ -19,6 +19,37 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 
 class EvaluationSchemaTests(unittest.TestCase):
+    def test_real_cases_and_activation_cases_have_versioned_coverage(self):
+        product_evals = ROOT / "evals"
+        real_cases = load_case_sets([product_evals / "real-cases.json"])
+        activation_cases = load_case_sets([product_evals / "activation-cases.json"])
+
+        self.assertEqual(len(real_cases), 10)
+        self.assertGreaterEqual(len(activation_cases), 12)
+        self.assertEqual({case["id"] for case in real_cases}, {
+            f"real-{index:02d}" for index in range(1, 11)
+        })
+        self.assertTrue(all(case["length_contract"] == "standard" for case in real_cases))
+        self.assertEqual(
+            {case["expected_activation"] for case in activation_cases},
+            {True, False},
+        )
+
+        categories = {case["name"].split("-")[0] for case in activation_cases}
+        self.assertTrue({"direct", "indirect", "incomplete", "negative", "edge"} <= categories)
+
+        all_ids = [
+            case["id"]
+            for case in load_case_sets(
+                [
+                    product_evals / "evals.json",
+                    product_evals / "real-cases.json",
+                    product_evals / "activation-cases.json",
+                ]
+            )
+        ]
+        self.assertEqual(len(all_ids), len(set(all_ids)))
+
     def test_existing_case_shape_normalizes_integer_ids(self):
         data = read_json(FIXTURES / "valid-content-cases.json")
 

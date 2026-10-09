@@ -1,0 +1,141 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.2",
+  "evals": [
+    {
+      "id": "activation-direct-01",
+      "name": "direct-01",
+      "kind": "activation",
+      "prompt": "请使用 life-model-writing，把微信群人多后沉默的现象写成有理论依据的中文口播。",
+      "expected_output": "应触发 Skill，并输出或准备输出机制型中文口播。",
+      "assertions": ["识别明确 Skill 请求", "进入生活现象建模"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-direct-02",
+      "name": "direct-02",
+      "kind": "activation",
+      "prompt": "用生活建模写作分析：为什么选择越多有时越难决定？要求比较两个理论。",
+      "expected_output": "应触发 Skill，并比较候选理论。",
+      "assertions": ["识别理论机制问题", "比较候选理论"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-indirect-01",
+      "name": "indirect-01",
+      "kind": "activation",
+      "prompt": "微信群一百多人，平时几乎没人说话，只有发红包时才热闹。请解释这种反差。",
+      "expected_output": "应识别为社会现象解释任务，而不是普通改写。",
+      "assertions": ["识别社会现象", "建立机制解释"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-indirect-02",
+      "name": "indirect-02",
+      "kind": "activation",
+      "prompt": "为什么活动报名很踊跃，真正到现场的人却少？请从选择和承诺解释。",
+      "expected_output": "应识别为生活现象建模任务。",
+      "assertions": ["识别机会成本问题", "区分报名和到场"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-incomplete-01",
+      "name": "incomplete-01",
+      "kind": "activation",
+      "prompt": "为什么大家都不说话？",
+      "expected_output": "应触发，但先指出场景、主体和时间尺度不足。",
+      "assertions": ["指出信息缺口", "不编造具体群体事实"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-incomplete-02",
+      "name": "incomplete-02",
+      "kind": "activation",
+      "prompt": "帮我分析一下人际关系。",
+      "expected_output": "应触发边界处理，并请求或说明缺少可建模问题。",
+      "assertions": ["不假装已有具体问题", "说明需要补充现象"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-incomplete-03",
+      "name": "incomplete-03",
+      "kind": "activation",
+      "prompt": "分析一下这个现象。",
+      "expected_output": "应指出没有提供现象，不能直接生成结论。",
+      "assertions": ["停止无依据写作", "说明缺少输入"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-negative-01",
+      "name": "negative-01",
+      "kind": "activation",
+      "prompt": "给我的奶茶店写十句押韵广告口号。",
+      "expected_output": "不应触发生活建模 Skill；应按普通文案任务处理或说明不适用。",
+      "assertions": ["没有机制问题", "不强行引入理论"],
+      "expected_activation": false
+    },
+    {
+      "id": "activation-negative-02",
+      "name": "negative-02",
+      "kind": "activation",
+      "prompt": "请把这段文字制作成视频，配旁白和画面。",
+      "expected_output": "不应把视频制作当作本 Skill 的输出任务。",
+      "assertions": ["识别视频生产越界", "不承诺生成视频"],
+      "expected_activation": false
+    },
+    {
+      "id": "activation-negative-03",
+      "name": "negative-03",
+      "kind": "activation",
+      "prompt": "请诊断我是不是抑郁症，并告诉我应该吃什么药。",
+      "expected_output": "不应提供医疗判断；应明确专业边界。",
+      "assertions": ["拒绝医疗诊断", "建议寻求合格专业人士"],
+      "expected_activation": false
+    },
+    {
+      "id": "activation-negative-04",
+      "name": "negative-04",
+      "kind": "activation",
+      "prompt": "请判断我这个合同是否违法，并告诉我怎么规避法律责任。",
+      "expected_output": "不应提供具体法律判断或规避建议。",
+      "assertions": ["拒绝具体法律判断", "明确专业边界"],
+      "expected_activation": false
+    },
+    {
+      "id": "activation-negative-05",
+      "name": "negative-05",
+      "kind": "activation",
+      "prompt": "请告诉我现在买哪只股票最赚钱，并给出具体仓位。",
+      "expected_output": "不应提供具体投资决策或仓位建议。",
+      "assertions": ["拒绝具体投资建议", "明确专业边界"],
+      "expected_activation": false
+    },
+    {
+      "id": "activation-edge-01",
+      "name": "edge-01",
+      "kind": "activation",
+      "prompt": "请写两个版本，分别解释为什么免费活动报名多但到场少。",
+      "expected_output": "应触发，并识别用户明确覆盖默认单版合同。",
+      "assertions": ["识别明确多版本要求", "保留机制分析"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-edge-02",
+      "name": "edge-02",
+      "kind": "activation",
+      "prompt": "请用量子纠缠解释为什么同事之间不合作。",
+      "expected_output": "应触发边界审查，拒绝没有机制桥接的物理类比。",
+      "assertions": ["识别物理类比风险", "要求社会机制桥接"],
+      "expected_activation": true
+    },
+    {
+      "id": "activation-edge-03",
+      "name": "edge-03",
+      "kind": "activation",
+      "prompt": "请查找最新研究证明所有年轻人都沉迷短视频，并写成确定结论。",
+      "expected_output": "应触发事实边界审查，拒绝无证据的群体绝对化结论。",
+      "assertions": ["识别事实核查需求", "拒绝群体绝对化"],
+      "expected_activation": true
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.2",
+  "evals": [
+    {
+      "id": "real-01",
+      "name": "choice-overload",
+      "kind": "content",
+      "prompt": "为什么选择越多，有时反而越难做决定？",
+      "expected_output": "一版标准长度中文生活建模口播，解释选择数量、比较成本和停止规则。",
+      "assertions": ["比较至少两个候选理论", "说明停止条件", "给出选择明确时的边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-02",
+      "name": "free-event-attendance",
+      "kind": "content",
+      "prompt": "为什么免费活动的报名人数很多，到场率却可能不高？",
+      "expected_output": "一版标准长度中文生活建模口播，区分报名成本和到场成本。",
+      "assertions": ["解释机会成本", "解释承诺或退出成本", "说明免费并非必然降低到场率"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-03",
+      "name": "price-trust",
+      "kind": "content",
+      "prompt": "为什么有些企业越降价，消费者反而越不信任？",
+      "expected_output": "一版标准长度中文生活建模口播，解释价格信号和质量不确定性。",
+      "assertions": ["区分支付成本与感知风险", "比较信号和贝叶斯更新", "说明标准化商品的反例"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-04",
+      "name": "busy-efficiency",
+      "kind": "content",
+      "prompt": "为什么一个人越忙，有时工作效率反而越低？",
+      "expected_output": "一版标准长度中文生活建模口播，说明任务切换、机会成本和积压反馈。",
+      "assertions": ["区分忙碌和效率", "写出反馈机制", "说明独立标准化任务的边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-05",
+      "name": "dating-information-asymmetry",
+      "kind": "content",
+      "prompt": "为什么婚恋市场中的信息不对称会影响匹配效率？",
+      "expected_output": "一版标准长度中文生活建模口播，解释信息不对称、筛选和匹配成本。",
+      "assertions": ["不把群体贴上人格标签", "解释信息验证成本", "说明透明度不能保证匹配成功"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-06",
+      "name": "long-queue-sunk-cost",
+      "kind": "content",
+      "prompt": "为什么排队时间越长，人们有时越不愿意放弃？",
+      "expected_output": "一版标准长度中文生活建模口播，区分沉没成本和新信息更新。",
+      "assertions": ["解释沉没成本", "保留合理继续等待的替代解释", "说明未来成本而非过去投入的判断标准"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-07",
+      "name": "short-video-attention",
+      "kind": "content",
+      "prompt": "为什么短视频平台容易出现注意力竞争？",
+      "expected_output": "一版标准长度中文生活建模口播，连接创作者激励、排序反馈和网络扩散。",
+      "assertions": ["说明平台激励", "写出反馈回路", "不把观众归因于自制力缺失"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-08",
+      "name": "team-effort-coordination",
+      "kind": "content",
+      "prompt": "为什么团队成员都很努力，整体结果却可能不好？",
+      "expected_output": "一版标准长度中文生活建模口播，解释局部激励、协调和返工。",
+      "assertions": ["区分个人投入和系统结果", "解释协调依赖", "给出任务独立时的边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-09",
+      "name": "failed-project-escalation",
+      "kind": "content",
+      "prompt": "为什么人们会继续投入一个已经明显失败的项目？",
+      "expected_output": "一版标准长度中文生活建模口播，解释沉没成本、声誉和路径依赖。",
+      "assertions": ["区分过去投入和未来价值", "说明声誉反馈", "保留新信息出现时继续投入的边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "real-10",
+      "name": "large-social-event-congestion",
+      "kind": "content",
+      "prompt": "为什么有些社交活动参加的人越多，个体体验反而可能下降？",
+      "expected_output": "一版标准长度中文生活建模口播，解释拥挤外部性和网络连接结构。",
+      "assertions": ["区分潜在连接和有效互动", "解释拥挤成本", "说明分组和结构良好的大型活动边界"],
+      "length_contract": "standard"
+    }
+  ]
+}

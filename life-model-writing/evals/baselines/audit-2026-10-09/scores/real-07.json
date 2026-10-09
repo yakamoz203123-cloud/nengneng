@@ -1,0 +1,6 @@
+{
+  "case_id": "real-07",
+  "evaluator": {"type": "audit-self-score", "name": "same-generation-session", "independent": false},
+  "scores": {"theory_selection": 5, "causal_reasoning": 4, "cross_disciplinary_integration": 4, "spoken_naturalness": 4, "content_completeness": 4, "factual_accuracy_and_boundaries": 5},
+  "critical_errors": []
+}
