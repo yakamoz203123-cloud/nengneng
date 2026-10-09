@@ -1,1 +1,4 @@
 .superpowers/
+__pycache__/
+*.py[cod]
+life-model-writing/evals/runs/
