@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "dimensions": [
+    {
+      "id": "theory_selection",
+      "label": "理论选择准确性",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "id": "causal_reasoning",
+      "label": "因果推理严密性",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "id": "cross_disciplinary_integration",
+      "label": "跨学科整合能力",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "id": "spoken_naturalness",
+      "label": "口播自然度",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "id": "content_completeness",
+      "label": "内容完整性",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "id": "factual_accuracy_and_boundaries",
+      "label": "事实准确与边界意识",
+      "min": 0,
+      "max": 5
+    }
+  ],
+  "pass": {
+    "min_total": 24,
+    "critical_floor": 4,
+    "critical_dimensions": [
+      "theory_selection",
+      "causal_reasoning",
+      "factual_accuracy_and_boundaries"
+    ],
+    "critical_errors": [
+      "severe_theory_misuse",
+      "fabricated_research",
+      "unsupported_causality",
+      "group_stigmatization"
+    ]
+  }
+}
