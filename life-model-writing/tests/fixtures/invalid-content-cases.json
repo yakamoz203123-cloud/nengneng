@@ -1,0 +1,12 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.1",
+  "evals": [
+    {
+      "id": "missing-prompt",
+      "name": "invalid",
+      "expected_output": "输出",
+      "assertions": ["检查"]
+    }
+  ]
+}

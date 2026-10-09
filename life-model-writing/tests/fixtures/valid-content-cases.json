@@ -1,0 +1,13 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.1",
+  "evals": [
+    {
+      "id": 1,
+      "name": "one-case",
+      "prompt": "请解释一个生活现象。",
+      "expected_output": "一版完整中文口播文案。",
+      "assertions": ["有机制", "有边界"]
+    }
+  ]
+}
