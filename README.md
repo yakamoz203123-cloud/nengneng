@@ -61,6 +61,14 @@ python -m unittest discover -s life-model-writing/tests -v
 
 评测运行器位于 `life-model-writing/scripts/`，案例、评分规则、历史基线位于 `life-model-writing/evals/`。运行产物默认写入被 Git 忽略的 `life-model-writing/evals/runs/`；不可变的发布证据应复制到 `evals/baselines/` 并保留 manifest、原始输出、检查结果和评分。
 
+需要独立评审时，先生成一个不带既有分数和预期激活结论的盲评包：
+
+```sh
+python life-model-writing/scripts/create_review_packet.py --run-dir life-model-writing/evals/runs/<run-id> --skill-root life-model-writing --rubric life-model-writing/evals/rubric.json --output-dir life-model-writing-review
+```
+
+把评审员返回的 score JSON 放回对应运行的 `scores/` 后，再运行 `score_eval_run.py`。评审员必须把 `evaluator.independent` 设为 `true`；没有这个字段的结果只能保持未验证。
+
 ## Skill 与基础模型各自贡献什么
 
 Skill 提供入口边界、理论卡片、候选理论竞争、变量和机制链模板、反例/事实状态检查、口播长度契约以及可复现评测约束。基础模型仍负责自然语言理解、理论选择的实际判断、推理执行和最终措辞；外部检索或人工审阅若未实际发生，不能假定已经发生。

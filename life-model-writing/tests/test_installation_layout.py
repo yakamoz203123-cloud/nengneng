@@ -34,6 +34,7 @@ class InstallationLayoutTests(unittest.TestCase):
                 "SKILL.md",
                 "references/theory-14-diffusion-thresholds-propagation.md",
                 "scripts/validate_skill.py",
+                "scripts/create_review_packet.py",
                 "evals/rubric.json",
             ):
                 self.assertTrue(

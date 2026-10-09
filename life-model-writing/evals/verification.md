@@ -68,3 +68,5 @@ python -m unittest discover -s life-model-writing/tests -v
 - [v0.2-run-2 summary](baselines/v0.2-run-2/summary.json) 记录了自动发现路径尝试，但当前宿主无法证明自动发现，未导入输出；摘要同样为 `pass=0 fail=0 unverified=15`。
 
 两轮的模型元数据、提示哈希、人工干预说明、原始输出、确定性检查和汇总都已固化。它们证明评测管线可以记录“已运行”和“无法验证”，不证明自动发现可用，也不证明内容质量通过。当前没有独立评分文件，因此不执行发布级通过结论。
+
+为完成后续独立评审，仓库现在提供 `scripts/create_review_packet.py`。它只复制有原始输出的案例、脱敏后的提示、Skill 理论入口、rubric 和字节校验，不复制既有 scores、模型配置或 `expected_activation`；生成包本身仍不是评分结果。

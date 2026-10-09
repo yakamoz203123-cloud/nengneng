@@ -12,3 +12,4 @@ This project is not yet a stable release. Content-quality claims require indepen
 ## 2026-10-09 evidence note
 
 - Added two v0.2 forward-run baselines. Both are explicitly marked unverified: one used the current Codex context with three smoke outputs, and the automatic-discovery run could not be exercised in the available host.
+- Added a blinded review-packet generator so an independent evaluator can score fresh outputs without receiving prior scores or expected activation conclusions.
