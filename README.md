@@ -67,7 +67,14 @@ python -m unittest discover -s life-model-writing/tests -v
 python life-model-writing/scripts/create_review_packet.py --run-dir life-model-writing/evals/runs/<run-id> --skill-root life-model-writing --rubric life-model-writing/evals/rubric.json --output-dir life-model-writing-review
 ```
 
-把评审员返回的 score JSON 放回对应运行的 `scores/` 后，再运行 `score_eval_run.py`。评审员必须把 `evaluator.independent` 设为 `true`；没有这个字段的结果只能保持未验证。
+评审员把 score JSON 写入盲评包的 `scores/` 后，用导入器安全导回原始运行：
+
+```sh
+python life-model-writing/scripts/import_review_scores.py --run-dir life-model-writing/evals/runs/<run-id> --packet-dir life-model-writing-review --rubric life-model-writing/evals/rubric.json
+python life-model-writing/scripts/score_eval_run.py --run-dir life-model-writing/evals/runs/<run-id> --rubric life-model-writing/evals/rubric.json
+```
+
+评审员必须把 `evaluator.independent` 设为 `true`；没有这个字段的结果只能保持未验证，已有评分也不会被覆盖。
 
 ## Skill 与基础模型各自贡献什么
 
