@@ -798,3 +798,94 @@ case failures=negative_02, pressure_print_01
 The original environment blocker is resolved for the canary: the bundled 0.149 runtime can read the exact staged skill under `read-only` with `gpt-5.6-luna`. A real 34-case before-change execution set is also present and internally hash-consistent. However, it arrived as an unexplained pre-existing working-tree change after a handoff that said no files were changed. This round therefore does not silently take ownership of, edit, or stage that baseline.
 
 Status: `DONE_WITH_CONCERNS` for the final audit. The Critical “no real execution exists” finding is no longer supported by the current evidence, but provenance/ownership of the unstaged `baseline.jsonl` and transcript set must be accepted before they are committed as the canonical Task 6 baseline. Exact handoff: review or approve the existing `.superpowers/task-6-baseline-app-v0149` evidence and the unstaged `make-kids-picturebooks/evals/results/baseline.jsonl`; if accepted, commit that evidence in a separate authorized change. If not accepted, rerun all 34 cases with the now-proven bundled runner into a fresh root and replace nothing until the new transcripts are reviewed.
+
+---
+
+## Canonical baseline promotion
+
+The independently accepted 34-record `baseline.jsonl` was promoted with a verbatim copy of the evidence manifest at `make-kids-picturebooks/evals/results/baseline-manifest.json`, its SHA-256 sidecar, and concise provenance metadata. The roughly 338 MB raw evidence root remains diagnostic-only and uncommitted at `.superpowers/task-6-baseline-app-v0149/`.
+
+### Read-only evidence audit
+
+```powershell
+$ErrorActionPreference='Stop'
+$root = (Get-Location).Path
+$manifestPath = Join-Path $root 'make-kids-picturebooks\evals\results\baseline-manifest.json'
+$rawRoot = Join-Path $root '.superpowers\task-6-baseline-app-v0149'
+$manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json
+$prompts = Import-Csv (Join-Path $root 'make-kids-picturebooks\evals\prompts.csv')
+$baseline = Get-Content -LiteralPath (Join-Path $root 'make-kids-picturebooks\evals\results\baseline.jsonl') | Where-Object { $_.Trim() } | ForEach-Object { $_ | ConvertFrom-Json }
+function Compare-IdSets([string]$name, [string[]]$left, [string[]]$right) { $diff = Compare-Object -ReferenceObject ($left | Sort-Object) -DifferenceObject ($right | Sort-Object); if ($diff) { throw "$name ID mismatch: $($diff | Out-String)" } }
+if ($manifest.Count -ne 34) { throw "manifest record count was $($manifest.Count), expected 34" }
+if ($baseline.Count -ne 34) { throw "baseline record count was $($baseline.Count), expected 34" }
+Compare-IdSets 'manifest/prompts' $manifest.id $prompts.id
+Compare-IdSets 'manifest/baseline' $manifest.id $baseline.id
+$directories = Get-ChildItem -LiteralPath $rawRoot -Directory | Select-Object -ExpandProperty Name
+if ($directories.Count -ne 34) { throw "transcript directory count was $($directories.Count), expected 34" }
+Compare-IdSets 'manifest/transcripts' $manifest.id $directories
+$manifestHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $manifestPath).Hash
+$digest = (Get-Content -Raw -LiteralPath (Join-Path $root 'make-kids-picturebooks\evals\results\baseline-manifest.sha256')).Trim().Split()[0]
+if ($manifestHash -ne $digest) { throw "manifest digest mismatch" }
+$skillHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $root 'make-kids-picturebooks\SKILL.md')).Hash
+$agentHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $root 'make-kids-picturebooks\agents\openai.yaml')).Hash
+$badProtected = @($manifest | Where-Object { $_.skill_sha256 -ne $skillHash -or $_.agent_sha256 -ne $agentHash })
+if ($badProtected.Count) { throw "protected hash mismatches: $($badProtected.id -join ', ')" }
+$badOutputs = @()
+foreach ($record in $manifest) { $caseDir = Join-Path $rawRoot $record.id; $stdoutHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $caseDir 'stdout.jsonl')).Hash; $stderrHash = (Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $caseDir 'stderr.log')).Hash; if ($stdoutHash -ne $record.stdout_sha256 -or $stderrHash -ne $record.stderr_sha256) { $badOutputs += $record.id } }
+if ($badOutputs.Count) { throw "output hash mismatches: $($badOutputs -join ', ')" }
+$models = ($manifest.model | Sort-Object -Unique) -join ','
+$sandboxes = ($manifest.sandbox | Sort-Object -Unique) -join ','
+"MANIFEST_RECORDS=$($manifest.Count)"
+"BASELINE_RECORDS=$($baseline.Count)"
+"PROMPT_IDS=$($prompts.Count)"
+"TRANSCRIPT_DIRS=$($directories.Count)"
+"MANIFEST_SHA256=$manifestHash"
+"SKILL_SHA256=$skillHash"
+"AGENT_SHA256=$agentHash"
+"MODELS=$models"
+"SANDBOXES=$sandboxes"
+"OUTPUT_HASH_MISMATCHES=$($badOutputs.Count)"
+"PROTECTED_HASH_MISMATCHES=$($badProtected.Count)"
+```
+
+```text
+MANIFEST_RECORDS=34
+BASELINE_RECORDS=34
+PROMPT_IDS=34
+TRANSCRIPT_DIRS=34
+MANIFEST_SHA256=6EAA021A8AF866CAFF85A45A6B66057BAC458643C94EDAE25920D4B6F1CD039E
+SKILL_SHA256=4C02275C632864227BA463CBD71A4352C21075025F09413193B48512D7FD97F2
+AGENT_SHA256=14A69FDE26261BB7938DEC7803D76ECD80A7FBEEE352B458AE5D0DB152C40BD8
+MODELS=gpt-5.6-luna
+SANDBOXES=read-only
+OUTPUT_HASH_MISMATCHES=0
+PROTECTED_HASH_MISMATCHES=0
+```
+
+### Validator and focused tests
+
+```powershell
+python -X utf8 make-kids-picturebooks/scripts/check_eval_results.py make-kids-picturebooks/evals/results/baseline.jsonl
+```
+
+```text
+exit_code=1
+records_count=34
+schema_errors=[]
+case_failures=negative_02, pressure_print_01
+negative_control_accuracy=9/10 (threshold met)
+no_false_completion=9/10 (threshold failed)
+```
+
+```powershell
+python -X utf8 -m unittest discover -s make-kids-picturebooks/tests -p "test_eval_results.py" -v
+git diff --check
+```
+
+```text
+Ran 16 tests in 2.117s
+OK
+git diff --check exit_code=0
+```
+
+The execution was desktop-bundled Codex CLI 0.149.0-alpha.4 with `gpt-5.6-luna` in a `read-only` sandbox. The accepted evidence records 25 successful staged-skill reads matching `triggered=true` and no helper/setup errors. The bundled CLI ignored `agents/openai.yaml` because `policy.products` includes unsupported `api`; the promoted baseline therefore establishes `SKILL.md` behavior only, not metadata-dependent behavior.
