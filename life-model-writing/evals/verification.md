@@ -45,6 +45,17 @@
 
 三个压力场景均从“单一、确定、传播优先”的自然倾向，转为问题建模、候选理论竞争、机制链和边界校验。逐项断言结果见 [green-trace.md](green-trace.md)：3/3 场景的问题建模、理论竞争、机制链、边界、事实状态和单版输出均为通过。新合理化：无（无新合理化）；目前不需要为假想问题继续增加入口规则。
 
-## 最终静态校验
+## 历史静态校验（不可直接复现）
 
-最终静态校验（基线 HEAD：`fc5d1bf`）：`review_fix_tests.py` → `REVIEW_FIX_ASSERTIONS=PASS`；`quick_validate.py` → `Skill is valid!`；JSON 评测 → `evals: 12 valid; shared assertions: 12/12`；`SKILL.md` → 98 行；理论卡 → 8 张；规则文件 → 4 份。
+最终静态校验（基线 HEAD：`fc5d1bf`）曾记录：`review_fix_tests.py` → `REVIEW_FIX_ASSERTIONS=PASS`；`quick_validate.py` → `Skill is valid!`；JSON 评测 → `evals: 12 valid; shared assertions: 12/12`；`SKILL.md` → 98 行；理论卡 → 8 张；规则文件 → 4 份。当前仓库中未发现这些旧脚本，因此本节只作为历史证据，不能声称当前已经重现。
+
+## 当前可复现验证
+
+当前以仓库内的标准库校验器和测试套件为准：
+
+```sh
+python life-model-writing/scripts/validate_skill.py life-model-writing
+python -m unittest discover -s life-model-writing/tests -v
+```
+
+这两条命令验证当前文件结构、理论卡路由、评测数据形状、运行器不变量和清洁安装布局；它们不能替代独立的内容质量评分。历史基线 `evals/baselines/audit-2026-10-09/` 的十个内容案例仍标记为 `independent=false`，因此汇总状态是 `unverified`。

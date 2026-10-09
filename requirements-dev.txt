@@ -1,0 +1,2 @@
+# No third-party development dependency is required for the current checks.
+# The validator and test suite use the Python standard library only.
