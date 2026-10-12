@@ -27,6 +27,26 @@
       "knowledge_check": {
         "status": "pending",
         "evidence": ""
+      },
+      "previous_page_state": {
+        "state_id": "story_start",
+        "summary": "故事尚未开始。"
+      },
+      "current_page_entry": {
+        "state_id": "page-01-entry",
+        "summary": "三个积木散放在地面上。"
+      },
+      "next_page_hook": {
+        "state_id": "story_end",
+        "summary": "单页模板在此结束；多页故事请使用下一页的入口状态。"
+      },
+      "text_image_match": {
+        "status": "pending",
+        "evidence": ""
+      },
+      "continuity_review": {
+        "status": "pending",
+        "evidence": ""
       }
     }
   ]

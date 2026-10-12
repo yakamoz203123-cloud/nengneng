@@ -89,6 +89,44 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
                 error(where + '.knowledge_check.evidence', 'expected a string')
             if require_images and (check.get('status') != 'passed' or not nonempty(check.get('evidence'))):
                 error(where + '.knowledge_check', 'completion requires passed status and actual evidence')
+        for field in ('previous_page_state', 'current_page_entry', 'next_page_hook'):
+            record = page.get(field)
+            record_where = where + '.' + field
+            if record is None:
+                if require_images:
+                    error(record_where, 'completion requires an object')
+                continue
+            if not isinstance(record, dict):
+                error(record_where, 'expected an object')
+                continue
+            for key in ('state_id', 'summary'):
+                if not nonempty(record.get(key)):
+                    error(record_where + '.' + key, 'expected a nonempty string')
+        for field in ('text_image_match', 'continuity_review'):
+            review = page.get(field)
+            review_where = where + '.' + field
+            if review is None:
+                if require_images:
+                    error(review_where, 'completion requires an object')
+                continue
+            if not isinstance(review, dict):
+                error(review_where, 'expected an object')
+                continue
+            if review.get('status') not in ('pending', 'passed', 'failed'):
+                error(review_where + '.status', 'expected pending, passed or failed')
+            if not isinstance(review.get('evidence'), str):
+                error(review_where + '.evidence', 'expected a string')
+            if require_images and (review.get('status') != 'passed' or not nonempty(review.get('evidence'))):
+                error(review_where, 'completion requires passed status and actual evidence')
+        if number > 1:
+            previous_hook = pages[number - 2].get('next_page_hook')
+            current_entry = page.get('current_page_entry')
+            if (isinstance(previous_hook, dict) and isinstance(current_entry, dict)
+                    and nonempty(previous_hook.get('state_id'))
+                    and nonempty(current_entry.get('state_id'))
+                    and previous_hook['state_id'] != current_entry['state_id']):
+                error(f'pages[{number - 1}].next_page_hook.state_id',
+                      f'must equal pages[{number}].current_page_entry.state_id')
     return errors
 
 

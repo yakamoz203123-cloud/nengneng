@@ -36,6 +36,13 @@ class ManifestTests(unittest.TestCase):
         (self.base / 'new.png').write_bytes(b'asset')
         self.data['pages'][0]['current_image_path'] = 'new.png'
         self.data['pages'][0]['knowledge_check'] = {'status': 'passed', 'evidence': 'viewed page 1; exactly 3 blocks'}
+        self.data['pages'][0].update({
+            'previous_page_state': {'state_id': 'story_start', 'summary': 'The story has not begun.'},
+            'current_page_entry': {'state_id': 'page-01-entry', 'summary': 'Three blocks are on the floor.'},
+            'next_page_hook': {'state_id': 'story_end', 'summary': 'The single-page story is complete.'},
+            'text_image_match': {'status': 'passed', 'evidence': 'Reviewed text and image for page 1.'},
+            'continuity_review': {'status': 'passed', 'evidence': 'Reviewed the story boundaries for page 1.'},
+        })
 
     def test_selected_new_asset_only(self):
         self.complete()
@@ -55,6 +62,70 @@ class ManifestTests(unittest.TestCase):
             with self.subTest(check=check):
                 self.data['pages'][0]['knowledge_check'] = check
                 self.assertTrue(self.validate(self.data, self.base, True))
+
+    def test_planning_allows_pending_continuity_reviews(self):
+        self.data['pages'][0].update({
+            'previous_page_state': {'state_id': 'story_start', 'summary': 'The story has not begun.'},
+            'current_page_entry': {'state_id': 'page-01-entry', 'summary': 'Three blocks are on the floor.'},
+            'next_page_hook': {'state_id': 'story_end', 'summary': 'The single-page story is complete.'},
+            'text_image_match': {'status': 'pending', 'evidence': ''},
+            'continuity_review': {'status': 'pending', 'evidence': ''},
+        })
+        self.assertEqual([], self.validate(self.data, self.base))
+
+    def test_completion_requires_all_continuity_records(self):
+        self.complete()
+        del self.data['pages'][0]['previous_page_state']
+        del self.data['pages'][0]['current_page_entry']
+        del self.data['pages'][0]['next_page_hook']
+        del self.data['pages'][0]['text_image_match']
+        del self.data['pages'][0]['continuity_review']
+        errors = self.validate(self.data, self.base, True)
+        for field in ('previous_page_state', 'current_page_entry', 'next_page_hook',
+                      'text_image_match', 'continuity_review'):
+            with self.subTest(field=field):
+                self.assertTrue(any(f'pages[1].{field}' in error for error in errors), errors)
+
+    def test_continuity_records_require_their_declared_shapes(self):
+        self.data['pages'][0].update({
+            'previous_page_state': {'state_id': '', 'summary': 'The story has not begun.'},
+            'current_page_entry': {'state_id': 'page-01-entry', 'summary': ''},
+            'next_page_hook': {'state_id': 'story_end'},
+            'text_image_match': {'status': 'unknown', 'evidence': 1},
+            'continuity_review': [],
+        })
+        errors = self.validate(self.data, self.base)
+        for field in ('previous_page_state.state_id', 'current_page_entry.summary',
+                      'next_page_hook.summary', 'text_image_match.status',
+                      'text_image_match.evidence', 'continuity_review'):
+            with self.subTest(field=field):
+                self.assertTrue(any(f'pages[1].{field}' in error for error in errors), errors)
+
+    def test_completion_requires_passed_continuity_reviews_with_evidence(self):
+        self.complete()
+        for field, review in (
+            ('text_image_match', {'status': 'pending', 'evidence': 'still reviewing'}),
+            ('continuity_review', {'status': 'failed', 'evidence': 'state mismatch'}),
+            ('text_image_match', {'status': 'passed', 'evidence': ''}),
+        ):
+            with self.subTest(field=field, review=review):
+                self.complete()
+                self.data['pages'][0][field] = review
+                errors = self.validate(self.data, self.base, True)
+                self.assertTrue(any(f'pages[1].{field}' in error for error in errors), errors)
+
+    def test_adjacent_hook_must_match_next_page_entry(self):
+        self.complete()
+        second_page = copy.deepcopy(self.data['pages'][0])
+        second_page.update({
+            'page': 2,
+            'previous_page_state': {'state_id': 'page-01-entry', 'summary': 'Three blocks are on the floor.'},
+            'current_page_entry': {'state_id': 'different-state', 'summary': 'The next scene begins differently.'},
+            'next_page_hook': {'state_id': 'story_end', 'summary': 'The story is complete.'},
+        })
+        self.data['pages'].append(second_page)
+        errors = self.validate(self.data, self.base, True)
+        self.assertTrue(any('pages[1].next_page_hook.state_id' in error for error in errors), errors)
 
     def test_duplicate_or_gap_page(self):
         for number in (1, 3):
