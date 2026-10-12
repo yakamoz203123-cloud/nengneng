@@ -65,6 +65,27 @@ class ValidateExportTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'reading page 4: expected text is not extractable'):
                 self.validate(reading, printing, texts)
 
+    def test_rejects_empty_or_whitespace_expected_page_text(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading, printing, _ = write_valid_exports(root)
+            with self.assertRaisesRegex(ValueError, 'expected page text must be non-empty'):
+                self.validate(reading, printing, ['', '  ', '\t', '\n'])
+
+    def test_rejects_reading_and_booklet_pages_without_extractable_text(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading = root / 'reading.pdf'
+            printing = root / 'print.pdf'
+            write_pdf(reading, ['', '', '', ''], 148 * MM, 210 * MM)
+            document = fitz.open()
+            for _ in range(2):
+                document.new_page(width=297 * MM, height=210 * MM)
+            document.save(printing)
+            document.close()
+            with self.assertRaisesRegex(ValueError, 'reading page 1: no extractable text'):
+                self.validate(reading, printing, ['page-one', 'page-two', 'page-three', 'page-four'])
+
     def test_rejects_wrong_page_count_and_page_dimensions(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -74,7 +95,13 @@ class ValidateExportTests(unittest.TestCase):
                 self.validate(reading, printing, texts)
             write_pdf(reading, texts, 150 * MM, 210 * MM)
             with self.assertRaisesRegex(ValueError, 'reading page 1: expected A5 dimensions'):
-                self.validate(reading, printing, texts)
+                self.validate(reading, printing, texts, page_mm=(150, 210))
+
+    def test_rejects_malformed_minimum_print_text_size_configuration(self):
+        from validate_exports import minimum_print_text_size
+
+        with self.assertRaisesRegex(ValueError, 'minimum_print_text_size_pt must be a finite number'):
+            minimum_print_text_size({'minimum_print_text_size_pt': '18'})
 
     def test_rejects_final_print_text_smaller_than_default_threshold(self):
         with tempfile.TemporaryDirectory() as td:

@@ -1,5 +1,6 @@
 """Validate final reading and booklet PDFs before publication or acceptance."""
 from pathlib import Path
+import math
 import re
 
 import pymupdf as fitz
@@ -17,8 +18,8 @@ def normal(text):
 
 def minimum_print_text_size(layout):
     value = layout.get('minimum_print_text_size_pt', DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT)
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        value = DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise ValueError('minimum_print_text_size_pt must be a finite number')
     return max(DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT, float(value))
 
 
@@ -62,25 +63,37 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
     try:
         expected_page_texts = list(expected_page_texts)
         expected_pages = len(expected_page_texts)
+        for index, text in enumerate(expected_page_texts, 1):
+            if not normal(text):
+                errors.append(f'expected page text must be non-empty for page {index}')
         pairs = booklet_pairs(expected_pages)
         if len(reading) != expected_pages:
             errors.append(f'reading PDF page count: expected {expected_pages}, got {len(reading)}')
         if len(printing) != len(pairs):
             errors.append(f'print PDF page count: expected {len(pairs)}, got {len(printing)}')
-        expected_width, expected_height = (float(value) * MM for value in page_mm)
+        expected_width, expected_height = 148 * MM, 210 * MM
         for index, page in enumerate(reading, 1):
             if abs(page.rect.width - expected_width) > DIMENSION_TOLERANCE_PT or abs(page.rect.height - expected_height) > DIMENSION_TOLERANCE_PT:
                 errors.append(f'reading page {index}: expected A5 dimensions')
-            if index <= expected_pages and normal(expected_page_texts[index - 1]) not in normal(page.get_text()):
-                errors.append(f'reading page {index}: expected text is not extractable')
+            if index <= expected_pages:
+                extracted = normal(page.get_text())
+                if not extracted:
+                    errors.append(f'reading page {index}: no extractable text')
+                elif normal(expected_page_texts[index - 1]) not in extracted:
+                    errors.append(f'reading page {index}: expected text is not extractable')
         for index, page in enumerate(printing, 1):
             if abs(page.rect.width - 297 * MM) > DIMENSION_TOLERANCE_PT or abs(page.rect.height - 210 * MM) > DIMENSION_TOLERANCE_PT:
                 errors.append(f'print page {index}: expected landscape A4 dimensions')
             if index <= len(pairs):
                 for side, page_number in enumerate(pairs[index - 1]):
                     clip = fitz.Rect(side * page.rect.width / 2, 0, (side + 1) * page.rect.width / 2, page.rect.height)
-                    if normal(expected_page_texts[page_number - 1]) not in normal(page.get_text(clip=clip)):
+                    extracted = normal(page.get_text(clip=clip))
+                    if not extracted:
+                        errors.append(f'print page {index} half {side + 1}: no extractable text')
+                    elif normal(expected_page_texts[page_number - 1]) not in extracted:
                         errors.append(f'print page {index}: expected text for page {page_number} is not extractable')
+            if isinstance(minimum_print_text_size_pt, bool) or not isinstance(minimum_print_text_size_pt, (int, float)) or not math.isfinite(minimum_print_text_size_pt):
+                raise ValueError('minimum_print_text_size_pt must be a finite number')
             threshold = max(DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT, float(minimum_print_text_size_pt))
             for size in _text_sizes(page):
                 if size < threshold:
