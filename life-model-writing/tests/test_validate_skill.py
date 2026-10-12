@@ -174,6 +174,19 @@ class StaticValidationTests(unittest.TestCase):
         ):
             self.assertIn(contract, fact_text)
 
+    def test_v042_contract_preserves_quantitative_reasoning_before_compression(self):
+        skill_text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+
+        for contract in (
+            "理论保留门",
+            "最小模型卡",
+            "先减少补充模型和案例",
+            "利用率接近 1",
+            "可检验的关系或阈值",
+            "压缩后仍保留主模型的核心变量关系",
+        ):
+            self.assertIn(contract, skill_text)
+
     def test_pressure_scenarios_cover_new_evidence_failure_modes(self):
         pressure_text = (ROOT / "evals" / "pressure-scenarios.md").read_text(
             encoding="utf-8"
