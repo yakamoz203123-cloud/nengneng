@@ -21,25 +21,41 @@ def write_pdf(path, pages, width, height, size=22):
     document.close()
 
 
+def write_booklet(path, texts, size=18, overrides=None):
+    overrides = overrides or {}
+    document = fitz.open()
+    for left, right in ((4, 1), (2, 3)):
+        page = document.new_page(width=297 * MM, height=210 * MM)
+        for side, page_number in enumerate((left, right)):
+            text = overrides.get(page_number, texts[page_number - 1])
+            if text:
+                page.insert_text(
+                    (side * page.rect.width / 2 + 36, 54),
+                    text,
+                    fontsize=size,
+                )
+    document.save(path)
+    document.close()
+
+
 def write_valid_exports(root, print_size=18):
     reading = root / 'reading.pdf'
     printing = root / 'print.pdf'
     texts = ['page-one', 'page-two', 'page-three', 'page-four']
     write_pdf(reading, texts, 148 * MM, 210 * MM)
-    document = fitz.open()
-    for left, right in ((4, 1), (2, 3)):
-        page = document.new_page(width=297 * MM, height=210 * MM)
-        page.insert_text((36, 54), texts[left - 1], fontsize=print_size)
-        page.insert_text((page.rect.width / 2 + 36, 54), texts[right - 1], fontsize=print_size)
-    document.save(printing)
-    document.close()
+    write_booklet(printing, texts, print_size)
     return reading, printing, texts
 
 
 class ValidateExportTests(unittest.TestCase):
     def validate(self, reading, printing, texts, **kwargs):
         from validate_exports import validate_exports
-        return validate_exports(reading, printing, texts, **kwargs)
+        try:
+            return validate_exports(reading, printing, texts, **kwargs)
+        except TypeError as exc:
+            if 'allow_empty_pages' in kwargs:
+                self.fail(f'validate_exports must accept explicit empty-page intent: {exc}')
+            raise
 
     def test_rejects_zero_byte_reading_pdf(self):
         with tempfile.TemporaryDirectory() as td:
@@ -71,6 +87,70 @@ class ValidateExportTests(unittest.TestCase):
             reading, printing, _ = write_valid_exports(root)
             with self.assertRaisesRegex(ValueError, 'expected page text must be non-empty'):
                 self.validate(reading, printing, ['', '  ', '\t', '\n'])
+
+    def test_accepts_explicitly_authorized_empty_page_and_booklet_half(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading = root / 'reading.pdf'
+            printing = root / 'print.pdf'
+            texts = ['cover-text', '', 'story-text', 'back-text']
+            write_pdf(reading, texts, 148 * MM, 210 * MM)
+            write_booklet(printing, texts)
+
+            report = self.validate(reading, printing, texts, allow_empty_pages={2})
+
+            self.assertEqual(report['reading_pages'], 4)
+            self.assertEqual(report['print_sides'], 2)
+
+    def test_rejects_extractable_text_on_authorized_empty_reading_page(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading = root / 'reading.pdf'
+            printing = root / 'print.pdf'
+            texts = ['cover-text', '', 'story-text', 'back-text']
+            write_pdf(
+                reading,
+                ['cover-text', 'accidental-text', 'story-text', 'back-text'],
+                148 * MM,
+                210 * MM,
+            )
+            write_booklet(printing, texts)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                'reading page 2: authorized empty page contains extractable text',
+            ):
+                self.validate(reading, printing, texts, allow_empty_pages={2})
+
+    def test_rejects_extractable_text_on_authorized_empty_booklet_half(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading = root / 'reading.pdf'
+            printing = root / 'print.pdf'
+            texts = ['cover-text', '', 'story-text', 'back-text']
+            write_pdf(reading, texts, 148 * MM, 210 * MM)
+            write_booklet(printing, texts, overrides={2: 'accidental-text'})
+
+            with self.assertRaisesRegex(
+                ValueError,
+                'print page 2 half 1: authorized empty page 2 contains extractable text',
+            ):
+                self.validate(reading, printing, texts, allow_empty_pages={2})
+
+    def test_rejects_all_textless_book_even_when_every_page_is_authorized(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading = root / 'reading.pdf'
+            printing = root / 'print.pdf'
+            texts = ['', '', '', '']
+            write_pdf(reading, texts, 148 * MM, 210 * MM)
+            write_booklet(printing, texts)
+
+            with self.assertRaisesRegex(
+                ValueError,
+                'book must contain at least one content-bearing page with non-empty text',
+            ):
+                self.validate(reading, printing, texts, allow_empty_pages={1, 2, 3, 4})
 
     def test_rejects_reading_and_booklet_pages_without_extractable_text(self):
         with tempfile.TemporaryDirectory() as td:

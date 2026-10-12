@@ -7,6 +7,7 @@ from pathlib import Path
 
 def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = False) -> list[str]:
     errors = []
+    project_root = Path(base_dir).resolve()
     def error(where, message):
         errors.append(f'{where}: {message}')
     def nonempty(value):
@@ -23,7 +24,14 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
             return
         if not nonempty(value):
             error(where, 'expected a nonempty path')
-        elif not (base_dir / value).is_file():
+            return
+        try:
+            candidate = (project_root / Path(value)).resolve()
+            candidate.relative_to(project_root)
+        except (OSError, ValueError):
+            error(where, f'selected file must stay inside project: {value}')
+            return
+        if not candidate.is_file():
             error(where, f'selected file does not exist: {value}')
     if not isinstance(data, dict):
         return ['manifest: expected an object']
@@ -47,6 +55,7 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
         for field in ('text_version', 'characters_version'):
             if not nonempty(page.get(field)):
                 error(where + '.' + field, 'expected a nonempty string')
+        file_record(page.get('character_reference_path'), where + '.character_reference_path', require_images)
         file_record(page.get('current_prompt_path'), where + '.current_prompt_path', True)
         if 'current_image_path' not in page:
             error(where + '.current_image_path', 'required; may be null while planning')
@@ -131,6 +140,13 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
                     and previous_hook['state_id'] != current_entry['state_id']):
                 error(f'pages[{number - 1}].next_page_hook.state_id',
                       f'must equal pages[{number}].current_page_entry.state_id')
+    if require_images:
+        first = pages[0].get('previous_page_state')
+        if isinstance(first, dict) and nonempty(first.get('state_id')) and first['state_id'] != 'story_start':
+            error('pages[1].previous_page_state.state_id', 'completion requires story_start')
+        last = pages[-1].get('next_page_hook')
+        if isinstance(last, dict) and nonempty(last.get('state_id')) and last['state_id'] != 'story_end':
+            error(f'pages[{len(pages)}].next_page_hook.state_id', 'completion requires story_end')
     return errors
 
 

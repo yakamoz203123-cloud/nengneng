@@ -10,7 +10,7 @@ from asset_registry import collect_declared_assets
 from project_paths import normalize_relative_path,resolve_project_file
 from validate_page_manifest import validate_page_manifest
 from impose_booklet import booklet_pairs,MM
-from validate_exports import minimum_print_text_size,validation_errors
+from validate_exports import allowed_empty_pages,minimum_print_text_size,validation_errors
 
 def read(path):return json.loads(Path(path).read_text(encoding='utf-8'))
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -97,11 +97,13 @@ def check_book(project_path,book_id):
     def track(path,parent=base):return track_resolved(resolve_project_file(parent,path))
     def artifact(key):return track(artifacts[key])
     try:
+        approved_characters_dir = None
         for key in ('concept','story','storyboard','layout','page_manifest','reading_pdf','print_pdf','review'):artifact(key)
         source_path=track(project['source']['path'])
         if not project.get('characters_path'):errors.append('缺少角色参考目录')
         else:
             chars=resolve_project_file(base,project['characters_path'])
+            approved_characters_dir=chars.resolve()
             refs=[p for p in chars.rglob('*') if p.is_file()]
             if not refs:errors.append('角色参考文件缺失')
             for p in refs:track_resolved(p)
@@ -135,6 +137,22 @@ def check_book(project_path,book_id):
             if saved.get('characters_version')!=book['characters_version']:errors.append(f'页{number}: 角色版本不一致')
             track(saved['current_prompt_path'],manifest_path.parent)
             selected=track(saved['current_image_path'],manifest_path.parent)
+            reference_value=saved.get('character_reference_path')
+            if isinstance(reference_value,(str,Path)) and str(reference_value).strip():
+                try:
+                    reference=resolve_project_file(manifest_path.parent,reference_value)
+                except (OSError,ValueError) as exc:
+                    errors.append(f'页{number}: 角色参考路径不可用: {exc}')
+                else:
+                    if not reference.is_file():
+                        errors.append(f'页{number}: 角色参考文件缺失: {reference_value}')
+                    elif approved_characters_dir is not None:
+                        try:
+                            reference.relative_to(approved_characters_dir)
+                        except ValueError:
+                            errors.append(f'页{number}: 角色参考不在当前批准目录 {project.get("characters_path")}')
+                        else:
+                            track_resolved(reference)
             kind=page.get('kind')
             if kind not in ('cover','story','parents','back','blank'):errors.append(f'页{number}: 缺少有效页面类型')
             if kind in ('cover','story','back') and not page.get('image'):errors.append(f'页{number}: 缺少实际插画')
@@ -157,7 +175,7 @@ def check_book(project_path,book_id):
         if review.get('unresolved_digital_defects'):errors.append('仍有未解决数字缺陷')
         dims=layout.get('page_mm',[148,210])
         reading_path=artifact('reading_pdf');printing_path=artifact('print_pdf')
-        errors.extend(validation_errors(reading_path,printing_path,[page.get('text','') for page in pages],dims,minimum_print_text_size(layout)))
+        errors.extend(validation_errors(reading_path,printing_path,[page.get('text','') for page in pages],dims,minimum_print_text_size(layout),allowed_empty_pages(layout)))
         reading=fitz.open(reading_path);printing=fitz.open(printing_path)
         if len(reading)!=n or len(printing)!=len(pairs):errors.append('最终PDF页数不符')
         for i,page in enumerate(reading):

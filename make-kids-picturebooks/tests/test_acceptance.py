@@ -5,7 +5,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 
 SKILL=Path(__file__).resolve().parents[1]
 
-def complete_project(root):
+def complete_project(root, blank_page=None):
  def write(path,data):
   (root/path).write_text(json.dumps(data,ensure_ascii=False) if not isinstance(data,str) else data,encoding='utf-8')
  write('source.txt','source A')
@@ -14,10 +14,16 @@ def complete_project(root):
  shutil.copy(SKILL/'assets/font-license.txt',root/'font-license.txt')
  write('font-provenance.txt','synthetic font provenance')
  Image.new('RGB',(1600,2400),'white').save(root/'test-image.png')
- pages=[{'number':i,'kind':kind,'text':'小朋友。','image':'test-image.png','image_box_mm':[10,10,128,190],'text_box_mm':[14,120,120,76],'image_role':'background','text_area_reviewed':True} for i,kind in enumerate(('cover','story','story','back'),1)]
+ pages=[]
+ for i,kind in enumerate(('cover','story','story','back'),1):
+  if i==blank_page:kind='blank'
+  pages.append({'number':i,'kind':kind,'text':'' if i==blank_page else '小朋友。','image':'test-image.png','image_box_mm':[10,10,128,190],'text_box_mm':[14,120,120,76],'image_role':'background','text_area_reviewed':True})
  write('layout.json',{'font_path':'font.ttf','font_license_path':'font-license.txt','font_provenance_path':'font-provenance.txt','pages':pages})
- write('concept.json',{'book_id':'b1','age_band':'5-7'});write('story.txt','小朋友。'*4);write('storyboard.json',{'pages':pages})
- write('manifest.json',{'schema_version':1,'book_id':'b1','age_band':'5-7','pages':[{'page':i,'text_version':'v1','characters_version':'v1','text_area':page['text_box_mm'],'current_prompt_path':'prompt.txt','current_image_path':'test-image.png','props':[],'knowledge_check':{'status':'passed','evidence':'synthetic test fixture'}} for i,page in enumerate(pages,1)]})
+ write('concept.json',{'book_id':'b1','age_band':'5-7'});write('story.txt',''.join(page['text'] for page in pages if page['kind']=='story'));write('storyboard.json',{'pages':pages})
+ manifest_pages=[]
+ for i,page in enumerate(pages,1):
+  manifest_pages.append({'page':i,'text_version':'v1','characters_version':'v1','character_reference_path':'characters/ref.txt','text_area':page['text_box_mm'],'current_prompt_path':'prompt.txt','current_image_path':'test-image.png','props':[],'knowledge_check':{'status':'passed','evidence':'synthetic test fixture'},'previous_page_state':{'state_id':'story_start' if i==1 else f'page-{i-1:02d}-hook','summary':f'Synthetic state before page {i}.'},'current_page_entry':{'state_id':'page-01-entry' if i==1 else f'page-{i-1:02d}-hook','summary':f'Synthetic entry state for page {i}.'},'next_page_hook':{'state_id':'story_end' if i==len(pages) else f'page-{i:02d}-hook','summary':f'Synthetic hook after page {i}.'},'text_image_match':{'status':'passed','evidence':f'Synthetic text and image review for page {i}.'},'continuity_review':{'status':'passed','evidence':f'Synthetic continuity review for page {i}.'}})
+ write('manifest.json',{'schema_version':1,'book_id':'b1','age_band':'5-7','pages':manifest_pages})
  write('prompt.txt','synthetic test only')
  from export_book import export_book
  export_book(root/'layout.json',root/'export')
@@ -26,6 +32,44 @@ def complete_project(root):
  return root/'project.json'
 
 class AcceptanceTests(unittest.TestCase):
+ def test_acceptance_allows_an_explicit_blank_page(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td)
+   try:project_path=complete_project(root,blank_page=3)
+   except (TypeError,ValueError) as exc:self.fail(f'explicit blank page should export: {exc}')
+   self.assertEqual(check_book(project_path,'b1')['errors'],[])
+ def test_acceptance_requires_each_page_character_reference(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);manifest=read_json(root/'manifest.json')
+   del manifest['pages'][0]['character_reference_path'];write_json(root/'manifest.json',manifest)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('pages[1].character_reference_path' in error for error in errors),errors)
+ def test_acceptance_rejects_missing_character_reference_file(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);manifest=read_json(root/'manifest.json')
+   manifest['pages'][0]['character_reference_path']='characters/missing.txt';write_json(root/'manifest.json',manifest)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('pages[1].character_reference_path' in error for error in errors),errors)
+ def test_acceptance_rejects_stale_character_reference_directory(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root)
+   (root/'characters-v0').mkdir();(root/'characters-v0/ref.txt').write_text('stale reference',encoding='utf-8')
+   manifest=read_json(root/'manifest.json');manifest['pages'][0]['character_reference_path']='characters-v0/ref.txt';write_json(root/'manifest.json',manifest)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertIn('页1: 角色参考不在当前批准目录 characters',errors)
+ def test_acceptance_rejects_out_of_project_character_reference(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root)
+   outside=root.parent/f'{root.name}-outside-reference.txt';outside.write_text('outside reference',encoding='utf-8')
+   self.addCleanup(outside.unlink,missing_ok=True)
+   manifest=read_json(root/'manifest.json');manifest['pages'][0]['character_reference_path']=str(outside);write_json(root/'manifest.json',manifest)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('pages[1].character_reference_path' in error and 'project' in error for error in errors),errors)
  def test_acceptance_rejects_final_print_text_below_minimum(self):
   from accept_book import check_book
   import pymupdf as fitz
@@ -85,4 +129,7 @@ class AcceptanceTests(unittest.TestCase):
    self.assertEqual(verify_receipt(project,book,root),[])
    project['source']['path']='other.txt'
    self.assertTrue(verify_receipt(project,book,root))
+
+def read_json(path):return json.loads(path.read_text(encoding='utf-8'))
+def write_json(path,data):path.write_text(json.dumps(data,ensure_ascii=False),encoding='utf-8')
 if __name__=='__main__':unittest.main()

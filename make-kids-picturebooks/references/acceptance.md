@@ -6,7 +6,7 @@
 
 每册的 artifacts（成果路径）保存 concept、story、storyboard、layout、page_manifest、reading_pdf、print_pdf、review；完成后另外保存 acceptance（验收记录）。所有资产放入项目目录，路径相对于其记录文件；不依赖旧工作区、账号或机器字体目录。保存角色参考目录 characters_path。附带字体复制到项目时同时复制 font-license.txt 和 font-provenance.json，并在版面保存 font_license_path 和 font_provenance_path，以便验收和打包保留第三方许可；自定义字体保存其实际许可，不套用附带字体的许可。
 
-版面每页填写 kind（页面类型）：cover（封面）、story（故事）、parents（家长说明）、back（封底）或blank（有意留白）。故事页必须有实际插画、background（背景）图像角色和已实际查看的文字留白确认。清单选图、版面选图及文字区域必须一致，正文与分镜逐字一致。逐页清单的知识检查应记录实际观察，不把生成提示当证据。
+版面每页填写 kind（页面类型）：cover（封面）、story（故事）、parents（家长说明）、back（封底）或blank（有意留白）。需要无字的 story 页还必须显式设置 `wordless: true`；空正文的其他页面必须使用 `kind: "blank"`，不能仅依靠空字符串。故事页必须有实际插画、background（背景）图像角色和已实际查看的文字留白确认。清单选图、版面选图及文字区域必须一致，正文与分镜逐字一致。逐页清单的知识检查应记录实际观察，不把生成提示当证据。
 
 ## 质量选择
 

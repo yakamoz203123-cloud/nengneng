@@ -7,7 +7,7 @@ from PIL import Image
 from render_book import render_book
 from impose_booklet import impose_booklet,booklet_pairs
 from accept_book import quality_errors
-from validate_exports import minimum_print_text_size,validate_exports
+from validate_exports import allowed_empty_pages,minimum_print_text_size,validate_exports
 
 def compress_images(source,dest):
     doc=fitz.open(source);seen=set();count=0
@@ -39,7 +39,7 @@ def export_book(layout_path,output_dir):
         count=compress_images(stage/'uncompressed.pdf',stage/'reading.pdf')
         (stage/'uncompressed.pdf').unlink()
         imposed=impose_booklet(stage/'reading.pdf',stage/'print.pdf')
-        validation=validate_exports(stage/'reading.pdf',stage/'print.pdf',[page.get('text','') for page in layout['pages']],layout.get('page_mm',[148,210]),minimum_print_text_size(layout))
+        validation=validate_exports(stage/'reading.pdf',stage/'print.pdf',[page.get('text','') for page in layout['pages']],layout.get('page_mm',[148,210]),minimum_print_text_size(layout),allowed_empty_pages(layout))
         for name in ('reading','print'):
             folder=stage/(name+'-pages');folder.mkdir()
             doc=fitz.open(stage/(name+'.pdf'))

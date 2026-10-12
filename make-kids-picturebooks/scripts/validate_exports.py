@@ -23,6 +23,15 @@ def minimum_print_text_size(layout):
     return max(DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT, float(value))
 
 
+def allowed_empty_pages(layout):
+    """Return page numbers explicitly marked blank or wordless in a layout."""
+    pages = layout.get('pages', [])
+    return {
+        number for number, page in enumerate(pages, 1)
+        if isinstance(page, dict) and (page.get('kind') == 'blank' or page.get('wordless') is True)
+    }
+
+
 def _open_pdf(path, label, errors):
     path = Path(path)
     if not path.is_file():
@@ -49,7 +58,19 @@ def _text_sizes(page):
     ]
 
 
-def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(148, 210), minimum_print_text_size_pt=DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT):
+def _normalize_empty_pages(value, expected_pages):
+    if value is None:
+        return set()
+    try:
+        pages = set(value)
+    except TypeError as exc:
+        raise ValueError('allow_empty_pages must be an iterable of page numbers') from exc
+    if any(type(number) is not int or number < 1 or number > expected_pages for number in pages):
+        raise ValueError('allow_empty_pages contains an invalid page number')
+    return pages
+
+
+def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(148, 210), minimum_print_text_size_pt=DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT, allow_empty_pages=None):
     """Return deterministic defects found in final reading and booklet PDFs."""
     errors = []
     reading = _open_pdf(reading_path, 'reading', errors)
@@ -63,9 +84,13 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
     try:
         expected_page_texts = list(expected_page_texts)
         expected_pages = len(expected_page_texts)
+        allow_empty_pages = _normalize_empty_pages(allow_empty_pages, expected_pages)
+        if expected_pages and all(not normal(text) for text in expected_page_texts):
+            errors.append('book must contain at least one content-bearing page with non-empty text')
         for index, text in enumerate(expected_page_texts, 1):
             if not normal(text):
-                errors.append(f'expected page text must be non-empty for page {index}')
+                if index not in allow_empty_pages:
+                    errors.append(f'expected page text must be non-empty for page {index}')
         pairs = booklet_pairs(expected_pages)
         if len(reading) != expected_pages:
             errors.append(f'reading PDF page count: expected {expected_pages}, got {len(reading)}')
@@ -77,9 +102,13 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
                 errors.append(f'reading page {index}: expected A5 dimensions')
             if index <= expected_pages:
                 extracted = normal(page.get_text())
-                if not extracted:
+                expected = normal(expected_page_texts[index - 1])
+                if index in allow_empty_pages:
+                    if extracted:
+                        errors.append(f'reading page {index}: authorized empty page contains extractable text')
+                elif not extracted:
                     errors.append(f'reading page {index}: no extractable text')
-                elif normal(expected_page_texts[index - 1]) not in extracted:
+                elif expected not in extracted:
                     errors.append(f'reading page {index}: expected text is not extractable')
         for index, page in enumerate(printing, 1):
             if abs(page.rect.width - 297 * MM) > DIMENSION_TOLERANCE_PT or abs(page.rect.height - 210 * MM) > DIMENSION_TOLERANCE_PT:
@@ -88,9 +117,13 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
                 for side, page_number in enumerate(pairs[index - 1]):
                     clip = fitz.Rect(side * page.rect.width / 2, 0, (side + 1) * page.rect.width / 2, page.rect.height)
                     extracted = normal(page.get_text(clip=clip))
-                    if not extracted:
+                    expected = normal(expected_page_texts[page_number - 1])
+                    if page_number in allow_empty_pages:
+                        if extracted:
+                            errors.append(f'print page {index} half {side + 1}: authorized empty page {page_number} contains extractable text')
+                    elif not extracted:
                         errors.append(f'print page {index} half {side + 1}: no extractable text')
-                    elif normal(expected_page_texts[page_number - 1]) not in extracted:
+                    elif expected not in extracted:
                         errors.append(f'print page {index}: expected text for page {page_number} is not extractable')
             if isinstance(minimum_print_text_size_pt, bool) or not isinstance(minimum_print_text_size_pt, (int, float)) or not math.isfinite(minimum_print_text_size_pt):
                 raise ValueError('minimum_print_text_size_pt must be a finite number')
@@ -104,9 +137,9 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
     return errors
 
 
-def validate_exports(reading_path, print_path, expected_page_texts, page_mm=(148, 210), minimum_print_text_size_pt=DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT):
+def validate_exports(reading_path, print_path, expected_page_texts, page_mm=(148, 210), minimum_print_text_size_pt=DEFAULT_MINIMUM_PRINT_TEXT_SIZE_PT, allow_empty_pages=None):
     """Validate exports or raise ``ValueError`` without modifying either PDF."""
-    errors = validation_errors(reading_path, print_path, expected_page_texts, page_mm, minimum_print_text_size_pt)
+    errors = validation_errors(reading_path, print_path, expected_page_texts, page_mm, minimum_print_text_size_pt, allow_empty_pages)
     if errors:
         raise ValueError('; '.join(errors))
     return {'reading_pages': len(expected_page_texts), 'print_sides': len(booklet_pairs(len(expected_page_texts)))}

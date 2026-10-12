@@ -104,3 +104,7 @@ class SkillGuidanceTests(unittest.TestCase):
             "`--accept` 保存新 acceptance 记录。",
             acceptance,
         )
+
+    def test_agent_metadata_avoids_unsupported_api_product(self) -> None:
+        metadata = read("agents/openai.yaml")
+        self.assertNotIn("\n  - api\n", metadata)

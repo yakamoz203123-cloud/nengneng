@@ -18,6 +18,8 @@ class ManifestTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.base = Path(self.temp.name)
         (self.base / 'prompt.md').write_text('scene', encoding='utf-8')
+        (self.base / 'characters/v1').mkdir(parents=True)
+        (self.base / 'characters/v1/reference.png').write_bytes(b'approved character reference')
         self.data = {'schema_version': 1, 'book_id': 'b01', 'age_band': '3-4', 'pages': [
             {'page': 1, 'text_version': 'v1', 'current_prompt_path': 'prompt.md',
              'current_image_path': None, 'characters_version': 'test-v1',
@@ -35,6 +37,7 @@ class ManifestTests(unittest.TestCase):
     def complete(self):
         (self.base / 'new.png').write_bytes(b'asset')
         self.data['pages'][0]['current_image_path'] = 'new.png'
+        self.data['pages'][0]['character_reference_path'] = 'characters/v1/reference.png'
         self.data['pages'][0]['knowledge_check'] = {'status': 'passed', 'evidence': 'viewed page 1; exactly 3 blocks'}
         self.data['pages'][0].update({
             'previous_page_state': {'state_id': 'story_start', 'summary': 'The story has not begun.'},
@@ -43,6 +46,40 @@ class ManifestTests(unittest.TestCase):
             'text_image_match': {'status': 'passed', 'evidence': 'Reviewed text and image for page 1.'},
             'continuity_review': {'status': 'passed', 'evidence': 'Reviewed the story boundaries for page 1.'},
         })
+
+    def test_template_declares_per_page_character_reference_path(self):
+        template_path = MODULE.parents[1] / 'assets/page-manifest-template.json'
+        import json
+
+        template = json.loads(template_path.read_text(encoding='utf-8'))
+        self.assertEqual(
+            template['pages'][0].get('character_reference_path'),
+            'characters/v1/character-reference.png',
+        )
+
+    def test_completion_requires_an_existing_character_reference(self):
+        self.complete()
+        del self.data['pages'][0]['character_reference_path']
+        errors = self.validate(self.data, self.base, True)
+        self.assertTrue(any('pages[1].character_reference_path' in error for error in errors), errors)
+
+        self.data['pages'][0]['character_reference_path'] = 'characters/v1/missing.png'
+        errors = self.validate(self.data, self.base, True)
+        self.assertTrue(any('pages[1].character_reference_path' in error for error in errors), errors)
+
+    def test_completion_rejects_character_reference_outside_manifest_project(self):
+        self.complete()
+        outside = self.base.parent / f'{self.base.name}-outside-reference.png'
+        outside.write_bytes(b'outside reference')
+        self.addCleanup(outside.unlink, missing_ok=True)
+        self.data['pages'][0]['character_reference_path'] = str(outside)
+
+        errors = self.validate(self.data, self.base, True)
+
+        self.assertTrue(any(
+            'pages[1].character_reference_path' in error and 'project' in error
+            for error in errors
+        ), errors)
 
     def test_selected_new_asset_only(self):
         self.complete()
@@ -152,6 +189,48 @@ class ManifestTests(unittest.TestCase):
         self.data['pages'].append(second_page)
         errors = self.validate(self.data, self.base, True)
         self.assertTrue(any('pages[1].next_page_hook.state_id' in error for error in errors), errors)
+
+    def test_completion_requires_story_start_on_page_one(self):
+        self.complete()
+        self.data['pages'][0]['previous_page_state']['state_id'] = 'dangling-start'
+
+        errors = self.validate(self.data, self.base, True)
+
+        self.assertIn(
+            'pages[1].previous_page_state.state_id: completion requires story_start',
+            errors,
+        )
+
+    def test_completion_requires_story_end_on_the_last_page(self):
+        self.complete()
+        self.data['pages'][0]['next_page_hook'] = {
+            'state_id': 'page-02-entry',
+            'summary': 'The story continues to page 2.',
+        }
+        second_page = copy.deepcopy(self.data['pages'][0])
+        second_page.update({
+            'page': 2,
+            'previous_page_state': {
+                'state_id': 'page-02-entry',
+                'summary': 'The story continues from page 1.',
+            },
+            'current_page_entry': {
+                'state_id': 'page-02-entry',
+                'summary': 'The final scene begins.',
+            },
+            'next_page_hook': {
+                'state_id': 'dangling-end',
+                'summary': 'The final scene has no valid ending boundary.',
+            },
+        })
+        self.data['pages'].append(second_page)
+
+        errors = self.validate(self.data, self.base, True)
+
+        self.assertIn(
+            'pages[2].next_page_hook.state_id: completion requires story_end',
+            errors,
+        )
 
     def test_duplicate_or_gap_page(self):
         for number in (1, 3):
