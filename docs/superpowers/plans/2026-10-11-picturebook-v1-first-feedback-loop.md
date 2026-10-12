@@ -1,4 +1,9 @@
-# Picturebook v1 First Feedback Loop Implementation Plan
+# Picturebook v1 First Feedback Loop Implementation Plan (deferred)
+
+> Superseded for the current iteration by
+> `docs/superpowers/plans/2026-10-12-picturebook-quality-gates.md`.
+> Grok Bot work remains intentionally deferred until the platform-neutral
+> skill passes the quality-gate iteration.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
