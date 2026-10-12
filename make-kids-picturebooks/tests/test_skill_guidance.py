@@ -53,7 +53,12 @@ class SkillGuidanceTests(unittest.TestCase):
             self.assertIn(term, records)
         self.assertIn("adjacent-page pair", review)
         self.assertIn("human/model visual review", review)
-        self.assertIn("font", printing)
+        for term in ("可嵌入的TrueType", "可提取文字", "最低打印字号"):
+            with self.subTest(term=term):
+                self.assertIn(term, printing)
+        for term in ("font-license.txt", "font-provenance.json"):
+            with self.subTest(term=term):
+                self.assertIn(term, acceptance)
         self.assertIn("validate_exports.py", acceptance)
         self.assertIn("export_book.py", acceptance)
         self.assertIn("acceptance", acceptance)
