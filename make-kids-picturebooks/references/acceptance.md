@@ -14,7 +14,7 @@
 
 ## 导出和审核
 
-运行 export_book.py，输出到新的版本目录；包含阅读PDF、横向A4拼版PDF、每个阅读页和每个打印面的PNG及导出报告。图片压缩保持像素尺寸，文字保留为可提取文字。导出报告只表示导出完成，review_status（审核状态）仍为pending（待审）。实际检查每一页人物、数量、动作、知识条件、中文字、留白和拼版，不仅检查缩略图或抽样页。
+最终顺序是：先以 `validate_exports.py` 的确定性规则检查预期阅读／打印输出，再运行 `export_book.py`（该脚本调用 `validate_exports.py` 并生成新版本），逐页审核后运行 `accept_book.py` 保存 acceptance。运行 `export_book.py`，输出到新的版本目录；包含阅读PDF、横向A4拼版PDF、每个阅读页和每个打印面的PNG及导出报告。图片压缩保持像素尺寸，文字保留为可提取文字。确认 `validate_exports.py` 已检查 PDF 存在且可读、阅读和打印页数与尺寸、正文可提取，以及最低打印字号；导出报告只表示导出完成，review_status（审核状态）仍为pending（待审）。实际检查每一页人物、数量、动作、知识条件、中文字、留白和拼版，不仅检查缩略图或抽样页。
 
 在 review.json 保存 reading_pages 和 print_sides 数组，每项对应连续页码或面码：
 
@@ -26,6 +26,6 @@
 
 ## 完成及续做
 
-运行 accept_book.py 检查实际文件；所有检查通过后以 --accept 保存新验收记录，状态才设为digital_checked（数字检查通过）。验收记录包含源文件、角色参考、正文、分镜、当前插画、提示、版面、字体、PDF和审核证据的摘要。修改任一资产后重新导出和审核，用新版本验收，不修改旧摘要来绕过检查。脚本核对可检查的结构和文件，科学判断和图像审核由执行者负责。
+运行 accept_book.py 检查实际文件；所有检查通过后以 --accept 保存新 acceptance 记录，状态才设为digital_checked（数字检查通过）。验收记录包含源文件、角色参考、正文、分镜、当前插画、提示、版面、字体、PDF和审核证据的摘要。修改任一资产后重新导出和审核，用新版本验收，不修改旧摘要来绕过检查。脚本是 deterministic gates，只核对可检查的结构和文件，never automatic proof；visual identity、scene readability、science/story consistency 仍由 human/model visual review 负责。
 
 运行 project_state.py 时检查验收摘要，文件缺失或变更返回revalidate（重新验收）。在selected_topics（适龄主题模式）下只推进本次已选册队列，队列结束不自动续做未读章节或未选候选项。新项目默认此模式；旧项目缺少模式时脚本保留旧行为，执行者先按本次用户要求保存模式和主题队列，保留旧作品。用户点名修改旧册时先将该册加入本次队列。按章模式须有明确范围依据。
