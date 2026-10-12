@@ -26,6 +26,20 @@ def complete_project(root):
  return root/'project.json'
 
 class AcceptanceTests(unittest.TestCase):
+ def test_acceptance_rejects_final_print_text_below_minimum(self):
+  from accept_book import check_book
+  import pymupdf as fitz
+  from impose_booklet import MM
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root)
+   font=root/'font.ttf';texts=['小朋友。']*4;printing=root/'export/print.pdf';document=fitz.open()
+   for left,right in ((4,1),(2,3)):
+    page=document.new_page(width=297*MM,height=210*MM)
+    page.insert_font(fontname='kidsbook',fontfile=str(font))
+    page.insert_text((36,54),texts[left-1],fontsize=17,fontname='kidsbook')
+    page.insert_text((page.rect.width/2+36,54),texts[right-1],fontsize=17,fontname='kidsbook')
+   document.save(printing);document.close()
+   self.assertIn('print page 1: text size 17.0 pt is below 18.0 pt',check_book(project_path,'b1')['errors'])
  def test_acceptance_requires_declared_font_license_and_provenance(self):
   from accept_book import check_book
   for field,label in (('font_license_path','字体许可证'),('font_provenance_path','字体来源证明')):

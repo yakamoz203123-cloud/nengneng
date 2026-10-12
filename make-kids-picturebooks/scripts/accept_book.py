@@ -10,6 +10,7 @@ from asset_registry import collect_declared_assets
 from project_paths import normalize_relative_path,resolve_project_file
 from validate_page_manifest import validate_page_manifest
 from impose_booklet import booklet_pairs,MM
+from validate_exports import minimum_print_text_size,validation_errors
 
 def read(path):return json.loads(Path(path).read_text(encoding='utf-8'))
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -154,9 +155,11 @@ def check_book(project_path,book_id):
                 else:errors.append(f'{field} {k}: 缺少审核渲染图')
         reviewed('reading_pages',n,'page');reviewed('print_sides',len(pairs),'side')
         if review.get('unresolved_digital_defects'):errors.append('仍有未解决数字缺陷')
-        reading=fitz.open(artifact('reading_pdf'));printing=fitz.open(artifact('print_pdf'))
-        if len(reading)!=n or len(printing)!=len(pairs):errors.append('最终PDF页数不符')
         dims=layout.get('page_mm',[148,210])
+        reading_path=artifact('reading_pdf');printing_path=artifact('print_pdf')
+        errors.extend(validation_errors(reading_path,printing_path,[page.get('text','') for page in pages],dims,minimum_print_text_size(layout)))
+        reading=fitz.open(reading_path);printing=fitz.open(printing_path)
+        if len(reading)!=n or len(printing)!=len(pairs):errors.append('最终PDF页数不符')
         for i,page in enumerate(reading):
             if i>=n:break
             if normal(page.get_text())!=normal(pages[i]['text']):errors.append(f'阅读页{i+1}: 可提取正文不一致')
