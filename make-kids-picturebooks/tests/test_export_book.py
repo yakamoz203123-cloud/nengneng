@@ -51,4 +51,18 @@ class ExportTests(unittest.TestCase):
    with self.assertRaisesRegex(ValueError,'expected page text must be non-empty for page 2'):
     export_book(layout,root/'export')
    self.assertFalse((root/'export').exists())
+ def test_export_rejects_wordless_marker_on_non_story_page(self):
+  from export_book import export_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);layout=root/'layout.json'
+   pages=[
+    {'number':1,'kind':'cover','wordless':True,'text':''},
+    {'number':2,'kind':'story','text':'故事'},
+    {'number':3,'kind':'story','text':'继续'},
+    {'number':4,'kind':'back','text':'再见'},
+   ]
+   layout.write_text(json.dumps({'font_size':22,'pages':pages},ensure_ascii=False),encoding='utf-8')
+   with self.assertRaisesRegex(ValueError,'expected page text must be non-empty for page 1'):
+    export_book(layout,root/'export')
+   self.assertFalse((root/'export').exists())
 if __name__=='__main__':unittest.main()

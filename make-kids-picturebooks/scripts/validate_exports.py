@@ -28,7 +28,10 @@ def allowed_empty_pages(layout):
     pages = layout.get('pages', [])
     return {
         number for number, page in enumerate(pages, 1)
-        if isinstance(page, dict) and (page.get('kind') == 'blank' or page.get('wordless') is True)
+        if isinstance(page, dict) and (
+            page.get('kind') == 'blank'
+            or (page.get('kind') == 'story' and page.get('wordless') is True)
+        )
     }
 
 
@@ -85,6 +88,17 @@ def validation_errors(reading_path, print_path, expected_page_texts, page_mm=(14
         expected_page_texts = list(expected_page_texts)
         expected_pages = len(expected_page_texts)
         allow_empty_pages = _normalize_empty_pages(allow_empty_pages, expected_pages)
+        try:
+            fixed_a5 = (
+                len(page_mm) == 2
+                and all(type(value) in (int, float) and not isinstance(value, bool) and math.isfinite(value) for value in page_mm)
+                and float(page_mm[0]) == 148.0
+                and float(page_mm[1]) == 210.0
+            )
+        except (TypeError, ValueError):
+            fixed_a5 = False
+        if not fixed_a5:
+            errors.append('reading page dimensions must be fixed A5 [148, 210]')
         if expected_pages and all(not normal(text) for text in expected_page_texts):
             errors.append('book must contain at least one content-bearing page with non-empty text')
         for index, text in enumerate(expected_page_texts, 1):

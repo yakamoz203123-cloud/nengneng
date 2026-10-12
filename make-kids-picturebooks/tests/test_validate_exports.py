@@ -177,6 +177,13 @@ class ValidateExportTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'reading page 1: expected A5 dimensions'):
                 self.validate(reading, printing, texts, page_mm=(150, 210))
 
+    def test_rejects_non_a5_page_configuration_even_when_pdfs_are_a5(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            reading, printing, texts = write_valid_exports(root)
+            with self.assertRaisesRegex(ValueError, 'reading page dimensions must be fixed A5'):
+                self.validate(reading, printing, texts, page_mm=(150, 210))
+
     def test_rejects_malformed_minimum_print_text_size_configuration(self):
         from validate_exports import minimum_print_text_size
 
