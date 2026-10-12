@@ -1,0 +1,35 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.4.1-generalization",
+  "evals": [
+    {"id":"g41-01-x","pair_id":"g41-01","blind_label":"X","name":"incentives-checkin-ordinary","kind":"content","prompt":"为什么打卡奖励的规则越复杂，参与的人反而可能越少？请写一版800-1200字中文口播文案。","expected_output":"解释奖励、规则复杂度、行动成本和参与率之间的可能关系。","assertions":["解释可能机制","区分奖励价值和参与成本","保留条件边界"],"length_contract":"standard"},
+    {"id":"g41-01-y","pair_id":"g41-01","blind_label":"Y","name":"incentives-checkin-skill","kind":"content","prompt":"为什么打卡奖励的规则越复杂，参与的人反而可能越少？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较激励收益、交易成本、认知负荷或默认选项，建立规则复杂度影响参与率的条件性机制。","assertions":["比较至少两个机制","明确奖励和参与成本变量","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-02-x","pair_id":"g41-02","blind_label":"X","name":"information-forward-ordinary","kind":"content","prompt":"为什么一条消息被转发的次数越多，内容有时反而越容易失真？请写一版800-1200字中文口播文案。","expected_output":"解释转发链条、信息损耗、重新表述和传播速度之间的可能关系。","assertions":["解释可能机制","避免把所有转发都视为失真","具有口播结构"],"length_contract":"standard"},
+    {"id":"g41-02-y","pair_id":"g41-02","blind_label":"Y","name":"information-forward-skill","kind":"content","prompt":"为什么一条消息被转发的次数越多，内容有时反而越容易失真？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较信息传输中的噪声累积、社会传播中的重述激励或信号筛选，说明何时失真会扩大、何时会被校正。","assertions":["比较至少两个机制","区分传播次数与失真原因","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-03-x","pair_id":"g41-03","blind_label":"X","name":"search-travel-ordinary","kind":"content","prompt":"为什么旅游攻略看得越多，最后反而越难决定订哪家酒店？请写一版800-1200字中文口播文案。","expected_output":"解释信息增多、比较成本、标准变化和决策犹豫之间的可能关系。","assertions":["解释可能机制","避免把信息多必然等同于更差决定","具有口播结构"],"length_contract":"standard"},
+    {"id":"g41-03-y","pair_id":"g41-03","blind_label":"Y","name":"search-travel-skill","kind":"content","prompt":"为什么旅游攻略看得越多，最后反而越难决定订哪家酒店？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较搜索停止规则、机会成本、选择过载和信息质量，解释继续搜索何时有价值、何时只增加犹豫。","assertions":["比较至少两个机制","建立继续搜索与决策成本的关系","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-04-x","pair_id":"g41-04","blind_label":"X","name":"physics-ice-ordinary","kind":"content","prompt":"为什么同样大小的冰块，放在金属盘上有时比放在木盘上融化得更快？请写一版800-1200字中文口播文案。","expected_output":"解释材料导热、热量传递和冰块融化速度之间的可能关系。","assertions":["物理表达基本准确","不虚构精确比例","说明环境边界"],"length_contract":"standard"},
+    {"id":"g41-04-y","pair_id":"g41-04","blind_label":"Y","name":"physics-ice-skill","kind":"content","prompt":"为什么同样大小的冰块，放在金属盘上有时比放在木盘上融化得更快？请比较至少两个物理模型或传热机制，写一版800-1200字中文口播文案。","expected_output":"比较材料导热、接触传热、对流和表面状态，明确温度、接触条件及环境对预测的影响。","assertions":["比较至少两个物理机制","建立热量流动关系","说明假设和反事实边界"],"length_contract":"standard"},
+
+    {"id":"g41-05-x","pair_id":"g41-05","blind_label":"X","name":"statistics-average-ordinary","kind":"content","prompt":"为什么一个班的考试平均分提高了，不代表班里的每个学生都进步了？请写一版800-1200字中文口播文案。","expected_output":"解释平均数、个体差异、分布变化和样本构成之间的可能关系。","assertions":["区分总体平均与个体变化","避免把平均数当成每个人的事实","具有口播结构"],"length_contract":"standard"},
+    {"id":"g41-05-y","pair_id":"g41-05","blind_label":"Y","name":"statistics-average-skill","kind":"content","prompt":"为什么一个班的考试平均分提高了，不代表班里的每个学生都进步了？请比较至少两个统计解释或模型，写一版800-1200字中文口播文案。","expected_output":"比较均值与分布、样本构成变化、离群值或聚合偏差，说明需要什么数据才能判断个体是否进步。","assertions":["比较至少两个统计机制","明确总体、样本和时间变量","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-06-x","pair_id":"g41-06","blind_label":"X","name":"coordination-meeting-ordinary","kind":"content","prompt":"为什么参加会议的人越多，会议真正做出的决定反而可能越少？请写一版800-1200字中文口播文案。","expected_output":"解释参与人数、表达机会、协调成本、责任和决策效率之间的可能关系。","assertions":["解释可能机制","不把会议人数直接等同于低效率","保留组织边界"],"length_contract":"standard"},
+    {"id":"g41-06-y","pair_id":"g41-06","blind_label":"Y","name":"coordination-meeting-skill","kind":"content","prompt":"为什么参加会议的人越多，会议真正做出的决定反而可能越少？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较协调成本、公共品与责任分散、信息汇总或决策权配置，解释人数何时降低效率、何时增加信息质量。","assertions":["比较至少两个机制","建立人数与决策产出的条件关系","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-07-x","pair_id":"g41-07","blind_label":"X","name":"signaling-limited-ordinary","kind":"content","prompt":"为什么商品贴上“限量”标签以后，有些人反而更想购买？请写一版800-1200字中文口播文案。","expected_output":"解释稀缺感、注意力、从众或商品价值判断之间的可能关系。","assertions":["解释可能机制","不把限量标签等同于真实稀缺","保留消费者差异"],"length_contract":"standard"},
+    {"id":"g41-07-y","pair_id":"g41-07","blind_label":"Y","name":"signaling-limited-skill","kind":"content","prompt":"为什么商品贴上“限量”标签以后，有些人反而更想购买？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较稀缺性启发、信号与地位价值、心理反抗或需求紧迫感，区分标签信息与真实供给。","assertions":["比较至少两个机制","区分稀缺信号和真实稀缺","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-08-x","pair_id":"g41-08","blind_label":"X","name":"dynamics-promotion-ordinary","kind":"content","prompt":"为什么短期促销结束以后，商品销量可能迅速回落，甚至比促销前还低？请写一版800-1200字中文口播文案。","expected_output":"解释促销提前消费、库存、习惯和消费者预期之间的可能关系。","assertions":["解释可能机制","不把促销后回落直接归因于产品变差","保留时间边界"],"length_contract":"standard"},
+    {"id":"g41-08-y","pair_id":"g41-08","blind_label":"Y","name":"dynamics-promotion-skill","kind":"content","prompt":"为什么短期促销结束以后，商品销量可能迅速回落，甚至比促销前还低？请比较至少两个理论或动态模型，写一版800-1200字中文口播文案。","expected_output":"比较需求跨期替代、库存或存量—流量变化、参考价格和习惯反馈，说明回落何时只是提前消费、何时意味着长期损伤。","assertions":["比较至少两个动态机制","建立促销时间与销量变化的因果链","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-09-x","pair_id":"g41-09","blind_label":"X","name":"network-restaurant-ordinary","kind":"content","prompt":"为什么一家新餐馆门口排队的人越多，路过的人有时反而越想进去排队？请写一版800-1200字中文口播文案。","expected_output":"解释可见排队、社会影响、质量判断和等待成本之间的可能关系。","assertions":["解释可能机制","不把排队长度等同于真实质量","保留场景边界"],"length_contract":"standard"},
+    {"id":"g41-09-y","pair_id":"g41-09","blind_label":"Y","name":"network-restaurant-skill","kind":"content","prompt":"为什么一家新餐馆门口排队的人越多，路过的人有时反而越想进去排队？请比较至少两个理论或模型，写一版800-1200字中文口播文案。","expected_output":"比较社会证明、信息级联、信号和排队成本，说明可见需求何时帮助判断、何时只是把等待进一步放大。","assertions":["比较至少两个机制","建立排队可见性与选择变化的关系","给出反事实和边界"],"length_contract":"standard"},
+
+    {"id":"g41-10-x","pair_id":"g41-10","blind_label":"X","name":"factcheck-surveillance-ordinary","kind":"content","prompt":"用户提供一组没有来源的数据，说某地安装更多摄像头后报案数量下降，要求你写成“摄像头导致当地犯罪减少”的确定性社会结论。请完成一版800-1200字中文口播文案。","expected_output":"围绕给定数据形成社会因果判断的口播文案。","assertions":["回应用户结论要求","保持口播表达","不虚构具体来源"],"length_contract":"standard"},
+    {"id":"g41-10-y","pair_id":"g41-10","blind_label":"Y","name":"factcheck-surveillance-skill","kind":"content","prompt":"用户提供一组没有来源的数据，说某地安装更多摄像头后报案数量下降，要求你比较至少两个理论，指出证据边界，并写成“摄像头导致当地犯罪减少”的确定性社会结论。请完成一版800-1200字中文口播文案。","expected_output":"区分报案数量与真实犯罪、相关与因果、威慑机制与记录机制，提出需要的对照、时间序列和替代解释。","assertions":["识别来源和因果识别缺口","比较至少两个机制","提出反事实与证据要求"],"length_contract":"standard"}
+  ]
+}

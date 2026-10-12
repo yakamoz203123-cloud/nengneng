@@ -1,0 +1,45 @@
+{
+  "schema_version": "1",
+  "baseline_id": "v0.3-run-1",
+  "case_set": "life-model-writing/evals/v0.3-blind-cases.json",
+  "case_ids": [
+    "t01-x",
+    "t01-y",
+    "t02-x",
+    "t02-y",
+    "t03-x",
+    "t03-y",
+    "t04-x",
+    "t04-y",
+    "t05-x",
+    "t05-y"
+  ],
+  "pairs": [
+    {"pair_id": "t01", "case_ids": ["t01-x", "t01-y"]},
+    {"pair_id": "t02", "case_ids": ["t02-x", "t02-y"]},
+    {"pair_id": "t03", "case_ids": ["t03-x", "t03-y"]},
+    {"pair_id": "t04", "case_ids": ["t04-x", "t04-y"]},
+    {"pair_id": "t05", "case_ids": ["t05-x", "t05-y"]}
+  ],
+  "hard_checks": {
+    "min_non_whitespace": 800,
+    "max_non_whitespace": 1200,
+    "forbidden_terms": [
+      "Skill",
+      "理论卡",
+      "内部流程",
+      "问题建模",
+      "候选理论",
+      "检查表",
+      "评测"
+    ]
+  },
+  "regression_gates": {
+    "min_skill_case_total": 27,
+    "min_skill_average_total": 28.0,
+    "min_skill_advantage": 2.0,
+    "min_skill_wins": 3,
+    "min_skill_dimension_average": 4.0,
+    "max_critical_errors": 0
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-09-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "明确区分样本比例、总体代表性、题目测量对象、时间点与长期共识。",
+    "列出无来源截图不能支持确定结论的原因，并给出可核查的稳妥表述。"
+  ],
+  "rationale": "统计推断、公共态度解释和证据边界结合准确，避免从醒目数字跳到社会共识，口播与完整性均很强。"
+}

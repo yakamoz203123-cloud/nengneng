@@ -1,0 +1,25 @@
+{
+  "case_id": "v04-10-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 1,
+    "causal_reasoning": 0,
+    "cross_disciplinary_integration": 2,
+    "spoken_naturalness": 5,
+    "content_completeness": 1,
+    "factual_accuracy_and_boundaries": 1
+  },
+  "critical_errors": [
+    "unsupported_causality"
+  ],
+  "total": 10,
+  "evidence": [
+    "仅凭一个月两组指标同步上升，就断言某行为导致犯罪率上升并可通过压制行为降低犯罪。",
+    "虽列举人口、经济、报案和执法因素，却没有用时间顺序、对照或测量定义检验因果。"
+  ],
+  "rationale": "口播顺畅但核心因果推断越过证据边界；同步变化的观察是准确的，因果结论和反事实承诺没有支撑。"
+}

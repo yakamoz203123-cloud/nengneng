@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-06-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 4,
+    "causal_reasoning": 4,
+    "cross_disciplinary_integration": 4,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 27,
+  "evidence": [
+    "区分表达质量与实际能力，指出模板化包装会降低信号区分度。",
+    "用背景、个人动作、结果条件和可追问证据补足判断路径。"
+  ],
+  "rationale": "招聘判断、信号质量和可验证证据解释清楚，岗位差异也有交代；筛选机制较概括，理论和跨学科联系未完全显式化。"
+}

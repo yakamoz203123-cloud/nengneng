@@ -1,0 +1,10 @@
+{
+  "disclosure": "post-review-only",
+  "pairs": [
+    {"pair_id": "t01", "skill_case_id": "t01-x", "ordinary_case_id": "t01-y"},
+    {"pair_id": "t02", "skill_case_id": "t02-y", "ordinary_case_id": "t02-x"},
+    {"pair_id": "t03", "skill_case_id": "t03-x", "ordinary_case_id": "t03-y"},
+    {"pair_id": "t04", "skill_case_id": "t04-y", "ordinary_case_id": "t04-x"},
+    {"pair_id": "t05", "skill_case_id": "t05-y", "ordinary_case_id": "t05-x"}
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-01-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "用 p 和独立抽样条件准确区分单次概率与连续参与的总体机会。",
+    "将代表性直觉与主观公平感分开，并给出不同预测和规则例外。"
+  ],
+  "rationale": "理论选择准确，两个心理解释与概率机制形成清楚的因果连接，边界条件、反事实和口播表达均完整。"
+}

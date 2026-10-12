@@ -1,0 +1,221 @@
+{
+  "blocking_reasons": [],
+  "gates": {
+    "max_critical_errors": true,
+    "min_skill_advantage": true,
+    "min_skill_average_total": true,
+    "min_skill_case_total": true,
+    "min_skill_dimension_average": true,
+    "min_skill_wins": true
+  },
+  "hard_checks": {
+    "cases": [
+      {
+        "case_id": "v04-01-x",
+        "character_count": 882,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-01-y",
+        "character_count": 919,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-02-x",
+        "character_count": 839,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-02-y",
+        "character_count": 874,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-03-x",
+        "character_count": 857,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-03-y",
+        "character_count": 907,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-04-x",
+        "character_count": 813,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-04-y",
+        "character_count": 867,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-05-x",
+        "character_count": 890,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-05-y",
+        "character_count": 890,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-06-x",
+        "character_count": 855,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-06-y",
+        "character_count": 907,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-07-x",
+        "character_count": 807,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-07-y",
+        "character_count": 809,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-08-x",
+        "character_count": 844,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-08-y",
+        "character_count": 873,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-09-x",
+        "character_count": 860,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-09-y",
+        "character_count": 870,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-10-x",
+        "character_count": 833,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "v04-10-y",
+        "character_count": 867,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      }
+    ],
+    "failed": 0,
+    "total": 20
+  },
+  "metrics": {
+    "critical_error_count": 1,
+    "critical_error_scope": "skill_cases_only",
+    "ordinary_average_total": 24.6,
+    "ordinary_critical_error_count": 1,
+    "ordinary_wins": 0,
+    "skill_advantage": 5.1,
+    "skill_average_total": 29.7,
+    "skill_critical_error_count": 0,
+    "skill_dimension_averages": {
+      "causal_reasoning": 5.0,
+      "content_completeness": 5.0,
+      "cross_disciplinary_integration": 4.7,
+      "factual_accuracy_and_boundaries": 5.0,
+      "spoken_naturalness": 5.0,
+      "theory_selection": 5.0
+    },
+    "skill_wins": 9,
+    "ties": 1
+  },
+  "run_id": "v0.4.1-run-2",
+  "schema_version": "1",
+  "status": "pass",
+  "unverified_reasons": []
+}

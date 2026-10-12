@@ -1,7 +1,9 @@
 import json
+import io
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stdout
 from pathlib import Path
 
 
@@ -12,6 +14,7 @@ from create_eval_run import create_run  # noqa: E402
 from score_eval_run import (  # noqa: E402
     check_output,
     count_non_whitespace_characters,
+    main,
     summarize_run,
     validate_score,
 )
@@ -124,6 +127,151 @@ class ScoreEvaluationTests(unittest.TestCase):
             self.assertEqual(result["status"], "review")
             self.assertIn("absolute-language", result["review_flags"])
             self.assertIn("boundary-language", result["review_flags"])
+
+    def test_release_status_blocks_deterministic_failure_even_with_passing_score(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            case_path = Path(temporary) / "cases.json"
+            case_path.write_text(
+                json.dumps(
+                    {
+                        "skill_name": "life-model-writing",
+                        "version": "0.2",
+                        "evals": [
+                            {
+                                "id": "1",
+                                "name": "standard-case",
+                                "prompt": "问题",
+                                "expected_output": "输出",
+                                "assertions": ["有机制"],
+                                "length_contract": "standard",
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            run_path = create_run(
+                Path(temporary) / "skill",
+                [case_path],
+                "release-gate-run",
+                {"name": "manual"},
+                "manual-import",
+                "none",
+            )
+            (run_path / "outputs" / "1.md").write_text("短输出", encoding="utf-8")
+            (run_path / "scores" / "1.json").write_text(
+                json.dumps(_score("1"), ensure_ascii=False),
+                encoding="utf-8",
+            )
+
+            summary = summarize_run(run_path, ROOT / "evals" / "rubric.json")
+
+            case = summary["cases"][0]
+            self.assertEqual(case["status"], "fail")
+            self.assertEqual(case["score_status"], "pass")
+            self.assertEqual(case["release_status"], "fail")
+            self.assertEqual(summary["release_status"], "fail")
+
+    def test_release_status_distinguishes_missing_and_failed_scores(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            def run_case(run_id, output, score=None):
+                case_path = Path(temporary) / f"{run_id}.json"
+                case_path.write_text(
+                    json.dumps(
+                        {
+                            "skill_name": "life-model-writing",
+                            "version": "0.2",
+                            "evals": [
+                                {
+                                    "id": "1",
+                                    "name": run_id,
+                                    "prompt": "问题",
+                                    "expected_output": "输出",
+                                    "assertions": ["有机制"],
+                                    "length_contract": "standard",
+                                }
+                            ],
+                        },
+                        ensure_ascii=False,
+                    ),
+                    encoding="utf-8",
+                )
+                run_path = create_run(
+                    Path(temporary) / "skill",
+                    [case_path],
+                    run_id,
+                    {"name": "manual"},
+                    "manual-import",
+                    "none",
+                )
+                (run_path / "outputs" / "1.md").write_text(output, encoding="utf-8")
+                if score is not None:
+                    (run_path / "scores" / "1.json").write_text(
+                        json.dumps(score, ensure_ascii=False),
+                        encoding="utf-8",
+                    )
+                return summarize_run(run_path, ROOT / "evals" / "rubric.json")
+
+            valid_output = "但是" + "中" * 798
+            missing_score = run_case("missing-score", valid_output)
+            failed_score = run_case("failed-score", valid_output, _score("1", total=23))
+            passing_score = run_case("passing-score", valid_output, _score("1"))
+
+            self.assertEqual(missing_score["release_status"], "unverified")
+            self.assertEqual(failed_score["release_status"], "fail")
+            self.assertEqual(passing_score["release_status"], "pass")
+
+    def test_cli_returns_nonzero_for_failed_release_status(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            case_path = Path(temporary) / "cases.json"
+            case_path.write_text(
+                json.dumps(
+                    {
+                        "skill_name": "life-model-writing",
+                        "version": "0.2",
+                        "evals": [
+                            {
+                                "id": "1",
+                                "name": "cli-gate",
+                                "prompt": "问题",
+                                "expected_output": "输出",
+                                "assertions": ["有机制"],
+                                "length_contract": "standard",
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            run_path = create_run(
+                Path(temporary) / "skill",
+                [case_path],
+                "cli-gate",
+                {"name": "manual"},
+                "manual-import",
+                "none",
+            )
+            (run_path / "outputs" / "1.md").write_text("短输出", encoding="utf-8")
+            (run_path / "scores" / "1.json").write_text(
+                json.dumps(_score("1"), ensure_ascii=False),
+                encoding="utf-8",
+            )
+
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                exit_code = main(
+                    [
+                        "--run-dir",
+                        str(run_path),
+                        "--rubric",
+                        str(ROOT / "evals" / "rubric.json"),
+                    ]
+                )
+
+            self.assertEqual(exit_code, 1)
+            self.assertIn("release_status=fail", stdout.getvalue())
 
 
 if __name__ == "__main__":

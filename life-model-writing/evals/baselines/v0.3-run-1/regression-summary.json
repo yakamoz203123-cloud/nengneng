@@ -1,0 +1,128 @@
+{
+  "blocking_reasons": [],
+  "gates": {
+    "max_critical_errors": true,
+    "min_skill_advantage": true,
+    "min_skill_average_total": true,
+    "min_skill_case_total": true,
+    "min_skill_dimension_average": true,
+    "min_skill_wins": true
+  },
+  "hard_checks": {
+    "cases": [
+      {
+        "case_id": "t01-x",
+        "character_count": 809,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t01-y",
+        "character_count": 988,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t02-x",
+        "character_count": 1096,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t02-y",
+        "character_count": 975,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t03-x",
+        "character_count": 961,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t03-y",
+        "character_count": 922,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t04-x",
+        "character_count": 817,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t04-y",
+        "character_count": 873,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t05-x",
+        "character_count": 1035,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      },
+      {
+        "case_id": "t05-y",
+        "character_count": 1069,
+        "lower": 800,
+        "matched_forbidden_terms": [],
+        "reasons": [],
+        "status": "pass",
+        "upper": 1200
+      }
+    ],
+    "failed": 0,
+    "total": 10
+  },
+  "metrics": {
+    "critical_error_count": 0,
+    "ordinary_average_total": 24.6,
+    "ordinary_wins": 0,
+    "skill_advantage": 4.4,
+    "skill_average_total": 29.0,
+    "skill_dimension_averages": {
+      "causal_reasoning": 5.0,
+      "content_completeness": 4.8,
+      "cross_disciplinary_integration": 4.6,
+      "factual_accuracy_and_boundaries": 5.0,
+      "spoken_naturalness": 4.8,
+      "theory_selection": 4.8
+    },
+    "skill_wins": 4,
+    "ties": 1
+  },
+  "run_id": "v0.3-run-1",
+  "schema_version": "1",
+  "status": "pass",
+  "unverified_reasons": []
+}

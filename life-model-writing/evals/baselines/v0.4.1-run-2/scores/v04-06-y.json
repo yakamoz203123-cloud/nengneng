@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-06-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "把低成本信号、筛选成本、可伪造性和验证证据连成完整机制。",
+    "按岗位区分文字表达与实操证据，并给出信号变得有用的条件。"
+  ],
+  "rationale": "理论选择准确，招聘者的筛选行为与候选人的信号质量形成清楚联系，岗位边界、证据要求和口播均完整。"
+}

@@ -1,0 +1,9 @@
+{
+  "case_id": "t05-y",
+  "character_count": 1069,
+  "lower": 800,
+  "matched_forbidden_terms": [],
+  "reasons": [],
+  "status": "pass",
+  "upper": 1200
+}

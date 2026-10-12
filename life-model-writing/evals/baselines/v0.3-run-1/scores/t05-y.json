@@ -1,0 +1,7 @@
+{
+  "case_id": "t05-y",
+  "evaluator": {"type": "anonymous-paired-blind-review", "name": "independent-reviewer", "independent": true},
+  "scores": {"theory_selection": 5, "causal_reasoning": 5, "cross_disciplinary_integration": 4, "spoken_naturalness": 5, "content_completeness": 5, "factual_accuracy_and_boundaries": 5},
+  "critical_errors": [],
+  "total": 29
+}

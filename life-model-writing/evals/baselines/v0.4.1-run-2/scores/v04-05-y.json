@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-05-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "明确使用信息不对称、信号与筛选解释慢报价及验证成本。",
+    "给出类型差异的可观察预测、反事实和不把慢报价自动等同欺骗的边界。"
+  ],
+  "rationale": "经济机制、行为证据和交易实践整合紧密，解释链、反事实、边界和口播均达到完整水平。"
+}

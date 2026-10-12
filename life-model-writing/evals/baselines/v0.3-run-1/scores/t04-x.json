@@ -1,0 +1,7 @@
+{
+  "case_id": "t04-x",
+  "evaluator": {"type": "anonymous-paired-blind-review", "name": "independent-reviewer", "independent": true},
+  "scores": {"theory_selection": 4, "causal_reasoning": 4, "cross_disciplinary_integration": 4, "spoken_naturalness": 4, "content_completeness": 4, "factual_accuracy_and_boundaries": 3},
+  "critical_errors": [],
+  "total": 23
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-08-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "用到达率与有效服务率的队列关系解释局部等待积累。",
+    "把空间错配、信息与选择反馈、真实可用容量和反事实比较连起来。"
+  ],
+  "rationale": "队列理论、空间行为和设施运营产生实质联系，关键变量、边界和反事实均明确，表达自然完整。"
+}

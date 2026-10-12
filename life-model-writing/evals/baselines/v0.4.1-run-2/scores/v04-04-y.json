@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-04-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 3,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 28,
+  "evidence": [
+    "给出牛顿冷却近似，并把 k 解释为受条件影响的合并参数。",
+    "区分传导、对流、辐射和蒸发，且说明室温变化与高温情形的边界。"
+  ],
+  "rationale": "理论、机制拆分、反事实和边界均很强；内容仍主要是热学内部的多机制整合，因此跨学科维度不满分。"
+}

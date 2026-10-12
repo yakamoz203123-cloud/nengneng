@@ -1,0 +1,15 @@
+{
+  "schema_version": "1",
+  "baseline_id": "v0.4.2-theory-necessity-low",
+  "case_set": "life-model-writing/evals/v0.4.2-theory-necessity-cases.json",
+  "critical_error_scope": "skill_cases_only",
+  "case_ids": ["g42-low-01-x", "g42-low-01-y", "g42-low-02-x", "g42-low-02-y", "g42-low-03-x", "g42-low-03-y", "g42-low-04-x", "g42-low-04-y"],
+  "pairs": [
+    {"pair_id":"g42-low-01","case_ids":["g42-low-01-x", "g42-low-01-y"]},
+    {"pair_id":"g42-low-02","case_ids":["g42-low-02-x", "g42-low-02-y"]},
+    {"pair_id":"g42-low-03","case_ids":["g42-low-03-x", "g42-low-03-y"]},
+    {"pair_id":"g42-low-04","case_ids":["g42-low-04-x", "g42-low-04-y"]}
+  ],
+  "hard_checks": {"min_non_whitespace": 800, "max_non_whitespace": 1200, "forbidden_terms": ["Skill", "理论卡", "内部流程", "问题建模", "候选理论", "检查表", "评测"]},
+  "regression_gates": {"min_skill_case_total": 25, "min_skill_average_total": 27.0, "min_skill_advantage": -0.5, "min_skill_wins": 0, "min_skill_dimension_average": 4.0, "max_critical_errors": 0}
+}

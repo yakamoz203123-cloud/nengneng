@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-04-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 4,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 3,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 27,
+  "evidence": [
+    "用温差解释降温速率变慢，并拆出杯壁、空气、蒸发和风等条件。",
+    "明确指出不能用固定的每分钟降温数值概括所有情形。"
+  ],
+  "rationale": "热传递机制准确、边界充分且很适合口播；理论主要在热学内部展开，跨学科联系较弱，理论形式化程度也略低。"
+}

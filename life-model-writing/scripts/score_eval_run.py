@@ -189,6 +189,18 @@ def _score_status(run_dir: Path, case: dict[str, object], rubric: dict[str, obje
     }
 
 
+def _release_status(check_status: str, score_status: str) -> str:
+    """Combine hard output checks and rubric scoring into a release gate."""
+
+    if check_status == "fail" or score_status == "fail":
+        return "fail"
+    if check_status == "unverified" or score_status == "unverified":
+        return "unverified"
+    if check_status not in {"pass", "review"} or score_status != "pass":
+        return "unverified"
+    return "pass"
+
+
 def summarize_run(run_dir: Path, rubric_path: Path) -> dict[str, object]:
     """Write checks and an aggregate summary without rewriting raw outputs/scores."""
 
@@ -209,7 +221,15 @@ def summarize_run(run_dir: Path, rubric_path: Path) -> dict[str, object]:
         check = check_output(case, run_dir / "outputs" / f"{case_id}.md")
         _json_write(checks_dir / f"{case_id}.json", check)
         score = _score_status(run_dir, case, rubric)
-        summary_cases.append({**check, **score})
+        summary_cases.append(
+            {
+                **check,
+                **score,
+                "release_status": _release_status(
+                    str(check["status"]), str(score["score_status"])
+                ),
+            }
+        )
 
     counts = {"pass": 0, "fail": 0, "unverified": 0, "skipped": 0}
     verified_totals: list[int] = []
@@ -224,6 +244,16 @@ def summarize_run(run_dir: Path, rubric_path: Path) -> dict[str, object]:
     summary: dict[str, object] = {
         "run_id": manifest.get("run_id"),
         "counts": counts,
+        "release_status": (
+            "fail"
+            if any(case["release_status"] == "fail" for case in summary_cases)
+            else (
+                "unverified"
+                if not summary_cases
+                or any(case["release_status"] == "unverified" for case in summary_cases)
+                else "pass"
+            )
+        ),
         "verified_case_count": len(verified_totals),
         "average_total": (
             sum(verified_totals) / len(verified_totals) if verified_totals else None
@@ -248,9 +278,10 @@ def main(argv: list[str] | None = None) -> int:
         "EVALUATION_SCORE=SUMMARY "
         f"pass={summary['counts']['pass']} "
         f"fail={summary['counts']['fail']} "
-        f"unverified={summary['counts']['unverified']}"
+        f"unverified={summary['counts']['unverified']} "
+        f"release_status={summary['release_status']}"
     )
-    return 0
+    return 0 if summary["release_status"] == "pass" else 1
 
 
 if __name__ == "__main__":

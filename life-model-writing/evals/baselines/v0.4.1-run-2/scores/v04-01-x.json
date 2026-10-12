@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-01-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 4,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 29,
+  "evidence": [
+    "区分独立抽样、代表性直觉、累计至少一次机会与心理公平感。",
+    "明确说明不放回、保底或递增概率会改变条件。"
+  ],
+  "rationale": "概率机制、心理直觉和例外条件交代完整，口播自然；跨学科联系成立，但心理机制的差异化预测还可更显式。"
+}

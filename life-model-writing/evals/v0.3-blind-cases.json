@@ -1,0 +1,116 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.3",
+  "evals": [
+    {
+      "id": "t01-x",
+      "pair_id": "t01",
+      "blind_label": "X",
+      "name": "reading-reward-skill-condition",
+      "kind": "content",
+      "prompt": "为什么给孩子阅读奖励，孩子反而可能更不愿意主动阅读？请比较至少两个理论，写一版800-1200字中文口播文案。",
+      "expected_output": "解释外在奖励、即时收益、内在动机或反馈机制，并说明条件与边界。",
+      "assertions": ["至少两个机制或理论", "明确条件性预测", "保留反例和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t01-y",
+      "pair_id": "t01",
+      "blind_label": "Y",
+      "name": "reading-reward-ordinary-condition",
+      "kind": "content",
+      "prompt": "为什么给孩子阅读奖励，孩子反而可能更不愿意主动阅读？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释奖励与主动阅读之间可能的关系，并说明条件与边界。",
+      "assertions": ["解释可能机制", "避免绝对化", "具有口播结构"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t02-x",
+      "pair_id": "t02",
+      "blind_label": "X",
+      "name": "error-punishment-ordinary-condition",
+      "kind": "content",
+      "prompt": "为什么组织越严厉惩罚错误，员工反而可能越晚报告问题？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释惩罚、上报成本、信息延迟和组织反馈之间的关系。",
+      "assertions": ["解释激励变化", "区分错误与隐瞒", "说明替代解释"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t02-y",
+      "pair_id": "t02",
+      "blind_label": "Y",
+      "name": "error-punishment-skill-condition",
+      "kind": "content",
+      "prompt": "为什么组织越严厉惩罚错误，员工反而可能越晚报告问题？请比较至少两个理论，写一版800-1200字中文口播文案。",
+      "expected_output": "解释惩罚激励、重复博弈或信息反馈，并说明条件与边界。",
+      "assertions": ["至少两个机制或理论", "建立因果链", "保留反例和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t03-x",
+      "pair_id": "t03",
+      "blind_label": "X",
+      "name": "insurance-prevention-skill-condition",
+      "kind": "content",
+      "prompt": "为什么保险保障增加以后，人们对预防风险的投入有时反而会减少？请比较至少两个理论，写一版800-1200字中文口播文案。",
+      "expected_output": "解释风险分担、风险补偿、机会成本或时间偏好，并说明边界。",
+      "assertions": ["至少两个机制或理论", "区分金钱损失与非金钱损失", "反事实检查"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t03-y",
+      "pair_id": "t03",
+      "blind_label": "Y",
+      "name": "insurance-prevention-ordinary-condition",
+      "kind": "content",
+      "prompt": "为什么保险保障增加以后，人们对预防风险的投入有时反而会减少？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释保险与风险预防之间可能的关系，并说明条件与边界。",
+      "assertions": ["解释可能机制", "不把可能性写成必然", "具有口播结构"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t04-x",
+      "pair_id": "t04",
+      "blind_label": "X",
+      "name": "inventory-stockout-ordinary-condition",
+      "kind": "content",
+      "prompt": "为什么库存只减少一点，缺货概率却可能大幅增加？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释库存、需求波动、补货周期和缺货之间的关系。",
+      "assertions": ["说明变量关系", "解释临界点或缓冲", "保留适用边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t04-y",
+      "pair_id": "t04",
+      "blind_label": "Y",
+      "name": "inventory-stockout-skill-condition",
+      "kind": "content",
+      "prompt": "为什么库存只减少一点，缺货概率却可能大幅增加？请比较至少两个理论，写一版800-1200字中文口播文案。",
+      "expected_output": "使用存量—流量、容量、排队或概率波动建立条件性解释。",
+      "assertions": ["至少两个机制或理论", "建立变量关系", "反事实检查"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t05-x",
+      "pair_id": "t05",
+      "blind_label": "X",
+      "name": "unsupported-social-statistic-ordinary-condition",
+      "kind": "content",
+      "prompt": "用户提供没有来源的社会统计数据，要求你据此写出确定性的社会结论。请完成一版800-1200字中文口播文案。",
+      "expected_output": "根据无来源统计写出确定性社会判断。",
+      "assertions": ["直接回应用户结论要求", "保持口播表达"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "t05-y",
+      "pair_id": "t05",
+      "blind_label": "Y",
+      "name": "unsupported-social-statistic-skill-condition",
+      "kind": "content",
+      "prompt": "用户提供没有来源的社会统计数据，要求你据此写出确定性的社会结论。请比较至少两个理论，指出证据边界，并写一版800-1200字中文口播文案。",
+      "expected_output": "区分未经核实的数据、统计推论和社会结论，解释基率或信息不对称，并拒绝过度确定化。",
+      "assertions": ["识别证据不足", "至少两个机制或理论", "给出条件性表达"],
+      "length_contract": "standard"
+    }
+  ]
+}

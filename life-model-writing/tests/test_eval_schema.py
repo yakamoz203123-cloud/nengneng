@@ -19,6 +19,123 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 
 class EvaluationSchemaTests(unittest.TestCase):
+    def test_v042_theory_necessity_cases_are_same_prompt_pairs_and_balanced(self):
+        product_evals = ROOT / "evals"
+        case_path = product_evals / "v0.4.2-theory-necessity-cases.json"
+        raw_cases = read_json(case_path)["evals"]
+        cases = load_case_sets([case_path])
+
+        self.assertEqual(len(cases), 24)
+        self.assertEqual(
+            {case["id"] for case in cases},
+            {
+                f"g42-{stratum}-{pair:02d}-{label}"
+                for stratum in ("low", "medium", "high")
+                for pair in range(1, 5)
+                for label in ("x", "y")
+            },
+        )
+        self.assertTrue(all(case["length_contract"] == "standard" for case in cases))
+        self.assertTrue(all(case["kind"] == "content" for case in cases))
+
+        raw_by_pair = {}
+        for case in raw_cases:
+            raw_by_pair.setdefault(case["pair_id"], []).append(case)
+        self.assertEqual(len(raw_by_pair), 12)
+        self.assertTrue(
+            all(
+                len(pair_cases) == 2
+                and pair_cases[0]["prompt"] == pair_cases[1]["prompt"]
+                for pair_cases in raw_by_pair.values()
+            )
+        )
+        self.assertEqual(
+            {case["stratum"] for case in raw_cases}, {"low", "medium", "high"}
+        )
+        for stratum in ("low", "medium", "high"):
+            self.assertEqual(
+                sum(case["stratum"] == stratum for case in raw_cases), 8
+            )
+
+        old_paths = [
+            product_evals / "v0.4-blind-cases.json",
+            product_evals / "v0.4.1-generalization-cases.json",
+        ]
+        self.assertTrue(
+            {case["prompt"] for case in raw_cases}.isdisjoint(
+                {case["prompt"] for case in load_case_sets(old_paths)}
+            )
+        )
+
+    def test_v041_generalization_cases_are_new_paired_and_cover_unseen_topics(self):
+        product_evals = ROOT / "evals"
+        generalization_path = product_evals / "v0.4.1-generalization-cases.json"
+        raw_cases = read_json(generalization_path)["evals"]
+        cases = load_case_sets(
+            [generalization_path]
+        )
+
+        self.assertEqual(len(cases), 20)
+        self.assertEqual(
+            {case["id"] for case in cases},
+            {
+                f"g41-{pair:02d}-{label}"
+                for pair in range(1, 11)
+                for label in ("x", "y")
+            },
+        )
+        self.assertEqual({case["pair_id"] for case in raw_cases}, {f"g41-{i:02d}" for i in range(1, 11)})
+        self.assertTrue(all(case["length_contract"] == "standard" for case in cases))
+        self.assertTrue(all(case["kind"] == "content" for case in cases))
+        self.assertTrue(all(case["blind_label"] in {"X", "Y"} for case in raw_cases))
+
+        categories = {case["name"].split("-")[0] for case in cases}
+        self.assertTrue(
+            {
+                "incentives",
+                "information",
+                "search",
+                "physics",
+                "statistics",
+                "coordination",
+                "signaling",
+                "dynamics",
+                "network",
+                "factcheck",
+            }
+            <= categories
+        )
+
+        old_cases = load_case_sets([product_evals / "v0.4-blind-cases.json"])
+        self.assertTrue(
+            {
+                case["prompt"] for case in cases
+            }.isdisjoint({case["prompt"] for case in old_cases})
+        )
+
+    def test_v04_candidate_cases_are_schema_valid_and_cover_required_failure_modes(self):
+        product_evals = ROOT / "evals"
+        candidate_cases = load_case_sets(
+            [product_evals / "v0.4-candidate-cases.json"]
+        )
+
+        self.assertEqual(len(candidate_cases), 10)
+        self.assertEqual(
+            {case["id"] for case in candidate_cases},
+            {f"v04-{index:02d}" for index in range(1, 11)},
+        )
+        self.assertTrue(
+            all(
+                case["kind"] == "content" and case["length_contract"] == "standard"
+                for case in candidate_cases
+            )
+        )
+        categories = {case["name"].split("-")[0] for case in candidate_cases}
+        self.assertTrue(
+            {"probability", "physics", "information", "coordination", "factcheck"}
+            <= categories
+        )
+
     def test_real_cases_and_activation_cases_have_versioned_coverage(self):
         product_evals = ROOT / "evals"
         real_cases = load_case_sets([product_evals / "real-cases.json"])

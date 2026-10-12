@@ -1,0 +1,106 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.4-candidate",
+  "evals": [
+    {
+      "id": "v04-01",
+      "name": "probability-gambler-fallacy",
+      "kind": "content",
+      "prompt": "为什么抽奖规则没有改变，连续几次没中奖后，人们反而更觉得自己下一次该中了？请写一版800-1200字中文口播文案。",
+      "expected_output": "区分独立事件、主观公平感和实际中奖概率，说明代表性直觉与反事实边界。",
+      "assertions": ["定义独立事件与概率", "区分心理直觉和事实", "给出条件性边界"],
+      "length_contract": "standard",
+      "coverage": ["probability", "statistics"]
+    },
+    {
+      "id": "v04-02",
+      "name": "probability-average-risk",
+      "kind": "content",
+      "prompt": "为什么两个人的平均收入一样，面对同一个月度支出时，风险感受和选择却可能完全不同？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释平均数、波动、尾部风险和现金流时间结构不能互相替代，并避免把平均值当成个体事实。",
+      "assertions": ["区分平均数和分布", "建立现金流变量关系", "说明数据与个体边界"],
+      "length_contract": "standard",
+      "coverage": ["probability", "statistics"]
+    },
+    {
+      "id": "v04-03",
+      "name": "physics-wet-braking",
+      "kind": "content",
+      "prompt": "为什么路面变湿以后，汽车刹车距离可能明显增加，却不能简单地按速度变化比例来估算？请写一版800-1200字中文口播文案。",
+      "expected_output": "使用摩擦、速度平方和路况边界解释刹车距离，区分理想模型与实际车辆条件。",
+      "assertions": ["物理关系使用准确", "区分速度与路况变量", "避免固定比例断言"],
+      "length_contract": "standard",
+      "coverage": ["physics"]
+    },
+    {
+      "id": "v04-04",
+      "name": "physics-cooling-rate",
+      "kind": "content",
+      "prompt": "为什么一杯热水刚倒出来时降温很快，接近室温以后却慢了下来？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释温差、散热速率和环境条件，说明理想化冷却模型的适用边界。",
+      "assertions": ["建立温差与速率关系", "区分模型和实际环境", "给出反事实条件"],
+      "length_contract": "standard",
+      "coverage": ["physics"]
+    },
+    {
+      "id": "v04-05",
+      "name": "information-used-car-inspection",
+      "kind": "content",
+      "prompt": "为什么二手车买家越认真检查，卖家有时反而越不愿意快速报价？请写一版800-1200字中文口播文案。",
+      "expected_output": "用信息不对称、信号和筛选解释双方策略，并说明检查也可能提高信任的条件。",
+      "assertions": ["区分信息不对称与不信任", "解释信号或筛选机制", "保留替代解释"],
+      "length_contract": "standard",
+      "coverage": ["information"]
+    },
+    {
+      "id": "v04-06",
+      "name": "information-polished-resume",
+      "kind": "content",
+      "prompt": "为什么简历写得越来越漂亮，招聘者有时反而更难判断一个人的真实能力？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释低成本信号、信息筛选和验证成本，区分表达能力与实际能力。",
+      "assertions": ["明确不可观察变量", "区分信号成本和真实能力", "给出可验证的边界"],
+      "length_contract": "standard",
+      "coverage": ["information"]
+    },
+    {
+      "id": "v04-07",
+      "name": "coordination-dinner-choice",
+      "kind": "content",
+      "prompt": "为什么一起吃饭的人越多，大家都有空的时间反而越难约出来？请写一版800-1200字中文口播文案。",
+      "expected_output": "解释多方约束、协调成本和妥协规则，说明人数、偏好和决策机制的关系。",
+      "assertions": ["建立多方约束关系", "区分偏好冲突和信息不足", "提出反事实安排"],
+      "length_contract": "standard",
+      "coverage": ["coordination"]
+    },
+    {
+      "id": "v04-08",
+      "name": "coordination-charging-queue",
+      "kind": "content",
+      "prompt": "为什么公共充电桩数量增加了，热门时段的排队却可能没有明显减少？请写一版800-1200字中文口播文案。",
+      "expected_output": "结合需求集中、空间分布、服务时长和协调选择解释局部排队，并说明增加设施何时有效。",
+      "assertions": ["区分总容量和局部容量", "解释高峰协调机制", "给出设施增加的边界"],
+      "length_contract": "standard",
+      "coverage": ["coordination"]
+    },
+    {
+      "id": "v04-09",
+      "name": "factcheck-viral-percentage",
+      "kind": "content",
+      "prompt": "用户提供一张没有来源的截图，说‘百分之八十的人都支持某项政策’，要求你写出整个社会已经形成共识的确定性结论。请完成一版800-1200字中文口播文案。",
+      "expected_output": "拒绝把无来源截图当作总体共识，区分样本、测量、时间和因果边界，并给出可核查的条件性表达。",
+      "assertions": ["识别来源缺失", "区分样本比例和总体共识", "拒绝确定性过度推断"],
+      "length_contract": "standard",
+      "coverage": ["factcheck"]
+    },
+    {
+      "id": "v04-10",
+      "name": "factcheck-city-correlation",
+      "kind": "content",
+      "prompt": "用户提供某城市一个月的两组同步变化数据，要求你写成‘某个行为导致犯罪率上升’的确定性社会结论。请完成一版800-1200字中文口播文案。",
+      "expected_output": "区分相关、时间顺序和因果识别，指出混杂变量、基线和重复观察的需要。",
+      "assertions": ["拒绝相关等于因果", "指出替代解释", "提出可验证的证据要求"],
+      "length_contract": "standard",
+      "coverage": ["factcheck", "statistics"]
+    }
+  ]
+}

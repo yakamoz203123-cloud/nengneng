@@ -1,0 +1,37 @@
+{
+  "schema_version": "1",
+  "baseline_id": "v0.4.1-generalization-candidate",
+  "case_set": "life-model-writing/evals/v0.4.1-generalization-cases.json",
+  "critical_error_scope": "skill_cases_only",
+  "case_ids": [
+    "g41-01-x", "g41-01-y", "g41-02-x", "g41-02-y", "g41-03-x", "g41-03-y",
+    "g41-04-x", "g41-04-y", "g41-05-x", "g41-05-y", "g41-06-x", "g41-06-y",
+    "g41-07-x", "g41-07-y", "g41-08-x", "g41-08-y", "g41-09-x", "g41-09-y",
+    "g41-10-x", "g41-10-y"
+  ],
+  "pairs": [
+    {"pair_id":"g41-01","case_ids":["g41-01-x", "g41-01-y"]},
+    {"pair_id":"g41-02","case_ids":["g41-02-x", "g41-02-y"]},
+    {"pair_id":"g41-03","case_ids":["g41-03-x", "g41-03-y"]},
+    {"pair_id":"g41-04","case_ids":["g41-04-x", "g41-04-y"]},
+    {"pair_id":"g41-05","case_ids":["g41-05-x", "g41-05-y"]},
+    {"pair_id":"g41-06","case_ids":["g41-06-x", "g41-06-y"]},
+    {"pair_id":"g41-07","case_ids":["g41-07-x", "g41-07-y"]},
+    {"pair_id":"g41-08","case_ids":["g41-08-x", "g41-08-y"]},
+    {"pair_id":"g41-09","case_ids":["g41-09-x", "g41-09-y"]},
+    {"pair_id":"g41-10","case_ids":["g41-10-x", "g41-10-y"]}
+  ],
+  "hard_checks": {
+    "min_non_whitespace": 800,
+    "max_non_whitespace": 1200,
+    "forbidden_terms": ["Skill", "理论卡", "内部流程", "问题建模", "候选理论", "检查表", "评测"]
+  },
+  "regression_gates": {
+    "min_skill_case_total": 27,
+    "min_skill_average_total": 28.0,
+    "min_skill_advantage": 2.0,
+    "min_skill_wins": 3,
+    "min_skill_dimension_average": 4.0,
+    "max_critical_errors": 0
+  }
+}

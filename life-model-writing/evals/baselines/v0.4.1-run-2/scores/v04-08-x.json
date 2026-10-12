@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-08-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 5,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 30,
+  "evidence": [
+    "区分局部有效容量、服务时间、空间错配、占位失效与需求变化。",
+    "说明安装数量不等于高峰可用能力，并给出新增设施可能有效的条件。"
+  ],
+  "rationale": "队列瓶颈、空间选择和需求响应形成完整解释，因果方向谨慎，数字与运营前提充分，口播清楚。"
+}

@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-07-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 4,
+    "causal_reasoning": 4,
+    "cross_disciplinary_integration": 4,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 27,
+  "evidence": [
+    "用共同时间交集和新增限制解释人数增加后的协调困难。",
+    "补充地点、偏好、决定规则和发起者沟通成本，并给出可降低难度的条件。"
+  ],
+  "rationale": "约束叠加和协调成本的解释完整、自然且边界诚实；社会协调机制较少形式化，跨学科联系和因果预测略弱。"
+}

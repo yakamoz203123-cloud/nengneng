@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-09-x",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 1,
+    "causal_reasoning": 1,
+    "cross_disciplinary_integration": 2,
+    "spoken_naturalness": 5,
+    "content_completeness": 2,
+    "factual_accuracy_and_boundaries": 1
+  },
+  "critical_errors": [],
+  "total": 12,
+  "evidence": [
+    "把没有来源、未知分母和未知抽样方式的百分比直接外推为整个社会的稳定共识。",
+    "虽提到态度可能变化，但没有补足样本、题目、时间和代表性等必要统计前提。"
+  ],
+  "rationale": "口播流畅、画面感强，但核心统计边界失守，把有限比例当成总体共识，解释链和内容完整性因此明显扣分。"
+}

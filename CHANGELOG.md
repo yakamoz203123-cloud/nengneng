@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.4.1-experimental — 2026-10-12
+
+- 补齐公开实验版的 README、证据说明和许可证入口；现有许可证为 Apache License 2.0。
+- 记录已见主题、未见主题和同提示词理论必要性评测的真实结果，并明确未通过的门槛，不把局部优势包装成普遍优越性。
+- 记录 20 题试跑的长度结果和非独立评审限制，作为后续回归的起点。
+- 本次发布层补齐不修改 `SKILL.md`、理论卡、评测脚本或测试逻辑。
+
 ## Unreleased — experimental
 
 - Added a 14-card theory library with candidate-selection and cross-disciplinary bridge fields.

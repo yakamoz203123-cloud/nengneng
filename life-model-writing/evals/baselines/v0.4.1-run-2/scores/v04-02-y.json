@@ -1,0 +1,23 @@
+{
+  "case_id": "v04-02-y",
+  "evaluator": {
+    "type": "anonymous-paired-blind-review",
+    "name": "independent-reviewer-v041-run2",
+    "independent": true
+  },
+  "scores": {
+    "theory_selection": 5,
+    "causal_reasoning": 5,
+    "cross_disciplinary_integration": 4,
+    "spoken_naturalness": 5,
+    "content_completeness": 5,
+    "factual_accuracy_and_boundaries": 5
+  },
+  "critical_errors": [],
+  "total": 29,
+  "evidence": [
+    "分别解释收入分布、现金流时序和尾部风险，并用反事实区分路径。",
+    "明确说明储蓄、到账时间和稳定性会改变结果。"
+  ],
+  "rationale": "因果链条和条件边界很扎实，示例与口播清楚；跨学科整合有风险与现金管理联系，但仍以经济解释为主。"
+}

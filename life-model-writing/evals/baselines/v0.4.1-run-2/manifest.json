@@ -1,0 +1,345 @@
+{
+  "case_sets": [
+    "evals\\v0.4-blind-cases.json"
+  ],
+  "cases": [
+    {
+      "expected_activation": null,
+      "id": "v04-01-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "probability-gambler-ordinary",
+      "prompt_sha256": "973c5c65b6c91022abf0e85cbed7f547b0c819239b7bb2cc818461ad4d00d707",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-01-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "probability-gambler-skill",
+      "prompt_sha256": "7c1cd65c26defa6b9c3922da9d5efdffe93705776eac44f92c7106ef1258e87b",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-02-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "probability-average-ordinary",
+      "prompt_sha256": "881111eeddb5b32efd7683e4c5a8c31d42039deacb5dd0af464b6817fdc1278e",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-02-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "probability-average-skill",
+      "prompt_sha256": "69ca2c1673d802b44362a702730c3db1d95a0eef9945756ecfaa7c8eb6784926",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-03-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "physics-braking-ordinary",
+      "prompt_sha256": "b1c3053534a9760d0816d03cbbfdf3b24bf34bbd612e56ee79c6fc9255d7fd61",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-03-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "physics-braking-skill",
+      "prompt_sha256": "ce23484daba3df8bc09f87089bd8b4dbe7eff82f704ff5b00348ac30c1db9abd",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-04-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "physics-cooling-ordinary",
+      "prompt_sha256": "6d556c8b9777dc1e173d314f89912051827b4ed420647fdf8f973c0e758cee00",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-04-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "physics-cooling-skill",
+      "prompt_sha256": "abee3616ad23c9f8190034e51c24e4a308ff538082dabc081c430afaaa063460",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-05-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "information-car-ordinary",
+      "prompt_sha256": "08dc52ed1acc8a8584123a49a1ba1e29949c2ddb25a58fddc93eebf8cfe7765d",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-05-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "information-car-skill",
+      "prompt_sha256": "dcd72bb1237bacef10d58cbee2a0a8615738b576809eabfefb5cf19e771db27a",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-06-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "information-resume-ordinary",
+      "prompt_sha256": "747e12222c14be0d0f4ba85750a25442c4cf1cd14e1831ee5465e52388869205",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-06-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "information-resume-skill",
+      "prompt_sha256": "bbb2b3dfd9dd0ee16c9a2f92d830599a15fa9dedcbb5619ef6c63701bc93379e",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-07-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "coordination-dinner-ordinary",
+      "prompt_sha256": "9821ec6065b556acfd46dcaabf1c24d0e5f78255f3909a882189f13aeb5e87c7",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-07-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "coordination-dinner-skill",
+      "prompt_sha256": "594edf594a3221f291990f73daaf467259097f0c8bddb33444fceb5a919fcbe5",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-08-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "coordination-charge-ordinary",
+      "prompt_sha256": "dd3149600afae9a43fb930c67bda2f4e4b84f3906d6aad95444cd78aca3c8504",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-08-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "coordination-charge-skill",
+      "prompt_sha256": "6632c87e368a0d3b12d8a972be0e825dc23d7792a5ee87e18f6cc877171793bc",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-09-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "factcheck-policy-ordinary",
+      "prompt_sha256": "67a025d7a70cf2e4f264af9b95dd3ecb6d85bd5e2b1dbd65b3eeec759d21f533",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-09-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "factcheck-policy-skill",
+      "prompt_sha256": "3be3bf2b7d9f7a10bbd3feb60cf63c854d9ef4b450f3c57f3e4e3daf5ac3cecb",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-10-x",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "factcheck-correlation-ordinary",
+      "prompt_sha256": "9226bf6f5b76e55a644739ee160809205c7016e18005c389044b0770eabbce1e",
+      "source": "evals\\v0.4-blind-cases.json"
+    },
+    {
+      "expected_activation": null,
+      "id": "v04-10-y",
+      "kind": "content",
+      "length_contract": "standard",
+      "name": "factcheck-correlation-skill",
+      "prompt_sha256": "7b0ba9f26a6c40d41f603242fa8c7b04727b72a7c4349f571bbbfbce55e4054a",
+      "source": "evals\\v0.4-blind-cases.json"
+    }
+  ],
+  "created_at": "2026-10-11T12:59:46.844678+00:00",
+  "git_commit": "001c921d0d77ad9d557982cbb52472bb37289373",
+  "human_intervention": "none during generation",
+  "invocation_mode": "paired-anonymous-manual-generation",
+  "model": {
+    "backend_version": "Codex subagent generation",
+    "name": "GPT-5",
+    "parameters": {
+      "length": "800-1200 non-whitespace",
+      "paired_conditions": "X ordinary / Y Skill",
+      "temperature": "unknown"
+    }
+  },
+  "outputs": [
+    {
+      "byte_length": 2660,
+      "case_id": "v04-01-x",
+      "imported_at": "2026-10-11T13:05:14.372253+00:00",
+      "sha256": "0bb5827b4151450e94b75f83e02ec41f7e5256027ea9b299c128414549793ea5",
+      "source_filename": "v04-01-x.md"
+    },
+    {
+      "byte_length": 2767,
+      "case_id": "v04-01-y",
+      "imported_at": "2026-10-11T13:05:14.373555+00:00",
+      "sha256": "de77662676db6bbaaa46699617719a8dd4381b554d3ddaf1e3a3ea2f7ff06a74",
+      "source_filename": "v04-01-y.md"
+    },
+    {
+      "byte_length": 2529,
+      "case_id": "v04-02-x",
+      "imported_at": "2026-10-11T13:05:14.374717+00:00",
+      "sha256": "1970b8df4d90487f8830cb1f368f2b1d2f13ba292f02ef0bdeefbe984cf4f909",
+      "source_filename": "v04-02-x.md"
+    },
+    {
+      "byte_length": 2634,
+      "case_id": "v04-02-y",
+      "imported_at": "2026-10-11T13:05:14.376090+00:00",
+      "sha256": "c944b717fe20257e99f4802c754619513f8fc725f855ced4df84471f26326d67",
+      "source_filename": "v04-02-y.md"
+    },
+    {
+      "byte_length": 2582,
+      "case_id": "v04-03-x",
+      "imported_at": "2026-10-11T13:05:14.377331+00:00",
+      "sha256": "75963ee2f51f54c08cbf01dadfb8bde22ba882235b016592604ebbb8559040bc",
+      "source_filename": "v04-03-x.md"
+    },
+    {
+      "byte_length": 2708,
+      "case_id": "v04-03-y",
+      "imported_at": "2026-10-11T13:05:14.378834+00:00",
+      "sha256": "73ec088bfed8949c52c2507908b339c0129b611831f41130ef952250a591494d",
+      "source_filename": "v04-03-y.md"
+    },
+    {
+      "byte_length": 2450,
+      "case_id": "v04-04-x",
+      "imported_at": "2026-10-11T13:05:14.390246+00:00",
+      "sha256": "11aadce9b85e6c42e2ab26e89c8bd505bf9ea136f9265770e08c56386ab3db85",
+      "source_filename": "v04-04-x.md"
+    },
+    {
+      "byte_length": 2570,
+      "case_id": "v04-04-y",
+      "imported_at": "2026-10-11T13:05:14.398467+00:00",
+      "sha256": "bca91d92cae59e8611c301544ad57a37330c7995a0efae22984d903bb14f06c5",
+      "source_filename": "v04-04-y.md"
+    },
+    {
+      "byte_length": 2681,
+      "case_id": "v04-05-x",
+      "imported_at": "2026-10-11T13:05:14.402730+00:00",
+      "sha256": "7646915e7fc30cbd7c145fabf71a3be2c8b6115ec7d8381f34999532c045bad5",
+      "source_filename": "v04-05-x.md"
+    },
+    {
+      "byte_length": 2679,
+      "case_id": "v04-05-y",
+      "imported_at": "2026-10-11T13:05:14.406010+00:00",
+      "sha256": "3ad2c88712f562629f693f53499e42a60f8dd348e68609323f08e1d9cd215fc9",
+      "source_filename": "v04-05-y.md"
+    },
+    {
+      "byte_length": 2576,
+      "case_id": "v04-06-x",
+      "imported_at": "2026-10-11T13:05:14.408815+00:00",
+      "sha256": "05b1210a002c20b448263cbdbe1cb87266e4b4eba1a0fbb45b7a44d264fab212",
+      "source_filename": "v04-06-x.md"
+    },
+    {
+      "byte_length": 2732,
+      "case_id": "v04-06-y",
+      "imported_at": "2026-10-11T13:05:14.411079+00:00",
+      "sha256": "f39991d7b986b2b574b5e99ed8b795e3a02c72a8b83261c4cfd8a40f6bc9da17",
+      "source_filename": "v04-06-y.md"
+    },
+    {
+      "byte_length": 2432,
+      "case_id": "v04-07-x",
+      "imported_at": "2026-10-11T13:05:14.413370+00:00",
+      "sha256": "2966265e2d8916837c6035adbcb1285f3dcee88f869c63dc73381b850b0f2b9d",
+      "source_filename": "v04-07-x.md"
+    },
+    {
+      "byte_length": 2438,
+      "case_id": "v04-07-y",
+      "imported_at": "2026-10-11T13:05:14.416594+00:00",
+      "sha256": "e960b5b45d9ffe46ca92890b54e958bc3ee51ef2fcfef49473ba30a9b967f7ae",
+      "source_filename": "v04-07-y.md"
+    },
+    {
+      "byte_length": 2545,
+      "case_id": "v04-08-x",
+      "imported_at": "2026-10-11T13:05:14.419182+00:00",
+      "sha256": "b5a71325c93dc5bbc50f34cdfc505f50ba2169237ac0f9c15a97552fedd69e6d",
+      "source_filename": "v04-08-x.md"
+    },
+    {
+      "byte_length": 2632,
+      "case_id": "v04-08-y",
+      "imported_at": "2026-10-11T13:05:14.421173+00:00",
+      "sha256": "72eef0703f071b1858d01932cd9e504ed91963b46daae7d5e2b54e6b4bc7feab",
+      "source_filename": "v04-08-y.md"
+    },
+    {
+      "byte_length": 2591,
+      "case_id": "v04-09-x",
+      "imported_at": "2026-10-11T13:05:14.423101+00:00",
+      "sha256": "e776d05a5bcf7ebca4c8a5c03064415ad233b88e9463342c6468dbe3988ddcee",
+      "source_filename": "v04-09-x.md"
+    },
+    {
+      "byte_length": 2619,
+      "case_id": "v04-09-y",
+      "imported_at": "2026-10-11T13:05:14.424767+00:00",
+      "sha256": "b757f074c7458b36fde540dafa89512a9ab9af0d6a11ea0eec18f908edc0dde7",
+      "source_filename": "v04-09-y.md"
+    },
+    {
+      "byte_length": 2510,
+      "case_id": "v04-10-x",
+      "imported_at": "2026-10-11T13:05:14.426406+00:00",
+      "sha256": "12a500352376b3852e712435a7f1087663824770e8c93e97a2a9751591a21957",
+      "source_filename": "v04-10-x.md"
+    },
+    {
+      "byte_length": 2610,
+      "case_id": "v04-10-y",
+      "imported_at": "2026-10-11T13:05:14.428027+00:00",
+      "sha256": "3a9b943d3f3fa0e8c7c2815c1e4f9fc23dadbc3681a57b34478ef9218495938b",
+      "source_filename": "v04-10-y.md"
+    }
+  ],
+  "run_id": "v0.4.1-run-2",
+  "schema_version": "1",
+  "skill_name": "life-model-writing"
+}

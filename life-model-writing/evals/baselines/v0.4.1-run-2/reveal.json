@@ -1,0 +1,16 @@
+{
+  "schema_version": "1",
+  "run_id": "v0.4.1-run-2",
+  "pairs": [
+    {"pair_id":"v04-01","skill_case_id":"v04-01-y","ordinary_case_id":"v04-01-x"},
+    {"pair_id":"v04-02","skill_case_id":"v04-02-y","ordinary_case_id":"v04-02-x"},
+    {"pair_id":"v04-03","skill_case_id":"v04-03-y","ordinary_case_id":"v04-03-x"},
+    {"pair_id":"v04-04","skill_case_id":"v04-04-y","ordinary_case_id":"v04-04-x"},
+    {"pair_id":"v04-05","skill_case_id":"v04-05-y","ordinary_case_id":"v04-05-x"},
+    {"pair_id":"v04-06","skill_case_id":"v04-06-y","ordinary_case_id":"v04-06-x"},
+    {"pair_id":"v04-07","skill_case_id":"v04-07-y","ordinary_case_id":"v04-07-x"},
+    {"pair_id":"v04-08","skill_case_id":"v04-08-y","ordinary_case_id":"v04-08-x"},
+    {"pair_id":"v04-09","skill_case_id":"v04-09-y","ordinary_case_id":"v04-09-x"},
+    {"pair_id":"v04-10","skill_case_id":"v04-10-y","ordinary_case_id":"v04-10-x"}
+  ]
+}

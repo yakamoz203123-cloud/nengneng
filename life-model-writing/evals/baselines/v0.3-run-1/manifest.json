@@ -1,0 +1,35 @@
+{
+  "schema_version": "2",
+  "run_id": "v0.3-run-1",
+  "baseline_version": "v0.3",
+  "created_at": "2026-10-11",
+  "skill_name": "life-model-writing",
+  "git_commit": "001c921d0d77ad9d557982cbb52472bb37289373",
+  "working_tree_dirty_at_capture": true,
+  "model": {
+    "name": "GPT-5",
+    "backend_version": "unknown",
+    "parameters": {"fresh_context": true, "paid_api": false}
+  },
+  "invocation_mode": "paired-anonymous-manual-generation",
+  "human_intervention": "none during generation; independent blind review after generation",
+  "case_set": "life-model-writing/evals/v0.3-blind-cases.json",
+  "blind_protocol": {
+    "pair_count": 5,
+    "anonymous_labels": ["X", "Y"],
+    "revealed_after_review": true,
+    "review_source": "blind-review.md"
+  },
+  "cases": [
+    {"id": "t01-x", "pair_id": "t01", "blind_label": "X", "prompt_sha256": "b1f9447254eaa94555baaaf8bb5e4f982d0bc7d52b5775ab4d740a17165cdcad", "character_count": 809, "byte_length": 2438, "sha256": "228f3f601443dc1f2e28c0e3ebc8ba914bd6be65619adee233cb9408b0da7911"},
+    {"id": "t01-y", "pair_id": "t01", "blind_label": "Y", "prompt_sha256": "616f55ad67d51bc8d1ecb99337c69440eb77d99081d91b758a96c807715377a6", "character_count": 988, "byte_length": 2977, "sha256": "bb4c7bf011f31900f26bf35489c579731b898bcd53b077af9e04933084b4a825"},
+    {"id": "t02-x", "pair_id": "t02", "blind_label": "X", "prompt_sha256": "b2e44e50801733c08b0563cf28edb6f158b1cf142b951bfdb948574fb2cbeb6c", "character_count": 1096, "byte_length": 3307, "sha256": "1a76ce45f332894ce50fe37b171e6d08f981226613894f00b36d46281fade194"},
+    {"id": "t02-y", "pair_id": "t02", "blind_label": "Y", "prompt_sha256": "27a555f43dfbc1a90bc5de7b21c7de53508a0e3368e66aeb6bace6677083fa72", "character_count": 975, "byte_length": 2938, "sha256": "9a44dece8019265890ef29b2454c2ba166e2e762d2d0c103e459b612a603fb00"},
+    {"id": "t03-x", "pair_id": "t03", "blind_label": "X", "prompt_sha256": "18fe0ef49ed18aef320cdce0cf8b7897729d91b595ec27cec89e675847c34e86", "character_count": 961, "byte_length": 2894, "sha256": "82726f9fb3ce5200844b1a9d2faf2b96804dbccafb25c41aae453e58f336e5ac"},
+    {"id": "t03-y", "pair_id": "t03", "blind_label": "Y", "prompt_sha256": "fc72e5c613d7e6a2f7169b2777bf67ef2eefe39c45d75c412a36efe58589209b", "character_count": 922, "byte_length": 2777, "sha256": "c0b00d1c715d7737c5535692ab93e7c11595d0e47ae3bce4422a16caef6ec832"},
+    {"id": "t04-x", "pair_id": "t04", "blind_label": "X", "prompt_sha256": "1fb3588fe92f053a53f9b9e20e9feb9b5ed4ac83ad4ac8914681cc392930d943", "character_count": 817, "byte_length": 2460, "sha256": "9a08f5f79fb53ba8c90002ef61570ac69b2e5a14ad188ba0c100b6abe090ab9d"},
+    {"id": "t04-y", "pair_id": "t04", "blind_label": "Y", "prompt_sha256": "2aedd90148dc06f6ce860322dd03a3b8240ddd735ec14cbde4bfe8cbaee9bd59", "character_count": 873, "byte_length": 2628, "sha256": "6b6ec013e07876c03f275396c00a1faffa80f948b02ae21ae4db47caf33b0d2d"},
+    {"id": "t05-x", "pair_id": "t05", "blind_label": "X", "prompt_sha256": "878b26f162c4e8e8f7f35d4a90364a01410ffca1d9ad04b3078f837f29201eb2", "character_count": 1035, "byte_length": 3104, "sha256": "ce4b63c84c3190d25c5cfbc202251f3be24b48d530d41f33fcfd081ab3774f8b"},
+    {"id": "t05-y", "pair_id": "t05", "blind_label": "Y", "prompt_sha256": "ef5d6e1ab754dbae365b4610af0ae5e257431bcce8fe32e6e0d0425c78f0e248", "character_count": 1069, "byte_length": 3218, "sha256": "88a5dd7f647dcd6759452c4eefd0cfc1cbab24fba0b87437dc2c7cf3540a624d"}
+  ]
+}
