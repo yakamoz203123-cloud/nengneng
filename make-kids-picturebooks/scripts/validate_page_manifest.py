@@ -90,28 +90,32 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
             if require_images and (check.get('status') != 'passed' or not nonempty(check.get('evidence'))):
                 error(where + '.knowledge_check', 'completion requires passed status and actual evidence')
         for field in ('previous_page_state', 'current_page_entry', 'next_page_hook'):
-            record = page.get(field)
             record_where = where + '.' + field
-            if record is None:
+            if field not in page:
                 if require_images:
                     error(record_where, 'completion requires an object')
                 continue
+            record = page[field]
             if not isinstance(record, dict):
                 error(record_where, 'expected an object')
                 continue
+            if set(record) != {'state_id', 'summary'}:
+                error(record_where, 'expected exactly the required fields')
             for key in ('state_id', 'summary'):
                 if not nonempty(record.get(key)):
                     error(record_where + '.' + key, 'expected a nonempty string')
         for field in ('text_image_match', 'continuity_review'):
-            review = page.get(field)
             review_where = where + '.' + field
-            if review is None:
+            if field not in page:
                 if require_images:
                     error(review_where, 'completion requires an object')
                 continue
+            review = page[field]
             if not isinstance(review, dict):
                 error(review_where, 'expected an object')
                 continue
+            if set(review) != {'status', 'evidence'}:
+                error(review_where, 'expected exactly the required fields')
             if review.get('status') not in ('pending', 'passed', 'failed'):
                 error(review_where + '.status', 'expected pending, passed or failed')
             if not isinstance(review.get('evidence'), str):

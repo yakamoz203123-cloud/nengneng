@@ -114,6 +114,32 @@ class ManifestTests(unittest.TestCase):
                 errors = self.validate(self.data, self.base, True)
                 self.assertTrue(any(f'pages[1].{field}' in error for error in errors), errors)
 
+    def test_declared_null_continuity_records_are_invalid_in_planning_and_completion(self):
+        fields = ('previous_page_state', 'current_page_entry', 'next_page_hook',
+                  'text_image_match', 'continuity_review')
+        for require_images in (False, True):
+            with self.subTest(require_images=require_images):
+                self.complete()
+                for field in fields:
+                    self.data['pages'][0][field] = None
+                errors = self.validate(self.data, self.base, require_images)
+                for field in fields:
+                    with self.subTest(field=field):
+                        self.assertIn(f'pages[1].{field}: expected an object', errors)
+
+    def test_continuity_records_reject_extra_keys_in_planning_and_completion(self):
+        fields = ('previous_page_state', 'current_page_entry', 'next_page_hook',
+                  'text_image_match', 'continuity_review')
+        for require_images in (False, True):
+            with self.subTest(require_images=require_images):
+                self.complete()
+                for field in fields:
+                    self.data['pages'][0][field]['unexpected'] = 'not part of the schema'
+                errors = self.validate(self.data, self.base, require_images)
+                for field in fields:
+                    with self.subTest(field=field):
+                        self.assertIn(f'pages[1].{field}: expected exactly the required fields', errors)
+
     def test_adjacent_hook_must_match_next_page_entry(self):
         self.complete()
         second_page = copy.deepcopy(self.data['pages'][0])
