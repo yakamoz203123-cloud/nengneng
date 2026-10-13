@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from eval_common import load_case_sets  # noqa: E402
 from reference_router import load_routes  # noqa: E402
 from run_deepseek_eval import (  # noqa: E402
+    MAX_LENGTH_REPAIR_PASSES,
     ORDINARY_SYSTEM,
     SKILL_SYSTEM_PREFIX,
     build_length_repair_messages,
@@ -23,6 +24,9 @@ from run_deepseek_eval import (  # noqa: E402
 
 
 class DeepSeekRunnerTests(unittest.TestCase):
+    def test_length_repair_has_a_hard_maximum(self):
+        self.assertEqual(MAX_LENGTH_REPAIR_PASSES, 2)
+
     def test_standard_length_violation_covers_both_bounds_only(self):
         case = {"length_contract": "standard"}
 

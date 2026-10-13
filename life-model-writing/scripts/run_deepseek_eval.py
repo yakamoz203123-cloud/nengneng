@@ -38,6 +38,8 @@ UNDERLENGTH_REPAIR_INSTRUCTION = """上一版口播文案低于标准版的 800 
 只输出补充后的完整口播文案，不输出解释、修改说明、提纲或评分；不要用空洞金句、重复场景或无关案例凑字数。
 目标是 950—1100 个非空白字符，最终必须控制在 800—1200 个非空白字符内。"""
 
+MAX_LENGTH_REPAIR_PASSES = 2
+
 
 def normalize_case_records(data: dict[str, object]) -> dict[str, dict[str, str]]:
     raw_cases = data.get("evals")
@@ -284,15 +286,21 @@ def run_eval(
             length_violation = standard_length_violation(
                 normalized_cases[case_id], initial_content
             )
+            initial_length_violation = length_violation
             repair_attempted = length_violation is not None
+            repair_passes = 0
             repair_status = "not-needed"
             repair_error: str | None = None
-            if repair_attempted:
+            while (
+                length_violation is not None
+                and repair_passes < MAX_LENGTH_REPAIR_PASSES
+            ):
+                repair_passes += 1
                 try:
                     result = call_chat_completion(
                         api_key,
                         build_length_repair_messages(
-                            messages, initial_content, str(length_violation)
+                            messages, final_content, str(length_violation)
                         ),
                         model=model,
                         temperature=temperature,
@@ -301,13 +309,19 @@ def run_eval(
                         timeout=timeout,
                     )
                     final_content = str(result["content"])
-                    repair_status = "applied"
-                    (attempt_dir / "repair.md").write_text(
+                    (attempt_dir / f"repair-{repair_passes}.md").write_text(
                         final_content, encoding="utf-8"
+                    )
+                    length_violation = standard_length_violation(
+                        normalized_cases[case_id], final_content
                     )
                 except DeepSeekAPIError as exc:
                     repair_status = "failed"
                     repair_error = str(exc)
+                    break
+
+            if repair_attempted and repair_error is None:
+                repair_status = "applied" if length_violation is None else "exhausted"
 
             source = temporary_root / f"{case_id}.md"
             source.write_text(final_content, encoding="utf-8")
@@ -339,7 +353,9 @@ def run_eval(
                     },
                     "compression_repair": {
                         "attempted": repair_attempted,
-                        "violation": length_violation,
+                        "initial_violation": initial_length_violation,
+                        "final_violation": length_violation,
+                        "passes": repair_passes,
                         "status": repair_status,
                         "error": repair_error,
                         "final_character_count": count_non_whitespace_characters(
