@@ -12,6 +12,34 @@ from create_review_packet import create_review_packet  # noqa: E402
 
 
 class ReviewPacketTests(unittest.TestCase):
+    def test_packet_renames_case_ids_and_outputs_for_true_blind_review(self):
+        run_dir = ROOT / "evals" / "baselines" / "v0.2-run-1"
+        rubric = ROOT / "evals" / "rubric.json"
+
+        with tempfile.TemporaryDirectory() as temporary:
+            packet_dir = Path(temporary) / "packet"
+            create_review_packet(
+                run_dir=run_dir,
+                skill_root=ROOT,
+                rubric_path=rubric,
+                output_dir=packet_dir,
+            )
+
+            cases = json.loads((packet_dir / "cases.json").read_text(encoding="utf-8"))
+            output_names = sorted(path.name for path in (packet_dir / "outputs").glob("*.md"))
+
+            self.assertEqual([case["id"] for case in cases], [
+                "sample-001",
+                "sample-002",
+                "sample-003",
+            ])
+            self.assertEqual(
+                output_names,
+                ["sample-001.md", "sample-002.md", "sample-003.md"],
+            )
+            self.assertNotIn("activation-direct-01", (packet_dir / "cases.json").read_text(encoding="utf-8"))
+            self.assertNotIn("activation-direct-01", (packet_dir / "manifest.json").read_text(encoding="utf-8"))
+
     def test_packet_is_blinded_and_contains_only_review_inputs(self):
         run_dir = ROOT / "evals" / "baselines" / "v0.2-run-1"
         rubric = ROOT / "evals" / "rubric.json"
@@ -29,18 +57,18 @@ class ReviewPacketTests(unittest.TestCase):
             self.assertEqual(
                 manifest["omitted_case_ids"],
                 [
-                    "activation-direct-02",
-                    "activation-indirect-02",
-                    "activation-incomplete-01",
-                    "activation-incomplete-02",
-                    "activation-incomplete-03",
-                    "activation-negative-02",
-                    "activation-negative-03",
-                    "activation-negative-04",
-                    "activation-negative-05",
-                    "activation-edge-01",
-                    "activation-edge-02",
-                    "activation-edge-03",
+                    "omitted-002",
+                    "omitted-004",
+                    "omitted-005",
+                    "omitted-006",
+                    "omitted-007",
+                    "omitted-009",
+                    "omitted-010",
+                    "omitted-011",
+                    "omitted-012",
+                    "omitted-013",
+                    "omitted-014",
+                    "omitted-015",
                 ],
             )
 
@@ -51,9 +79,9 @@ class ReviewPacketTests(unittest.TestCase):
                 "reviewer-instructions.md",
                 "skill/SKILL.md",
                 "skill/references/theory-14-diffusion-thresholds-propagation.md",
-                "outputs/activation-direct-01.md",
-                "outputs/activation-indirect-01.md",
-                "outputs/activation-negative-01.md",
+                "outputs/sample-001.md",
+                "outputs/sample-002.md",
+                "outputs/sample-003.md",
             ):
                 self.assertTrue((packet_dir / relative_path).is_file(), relative_path)
 

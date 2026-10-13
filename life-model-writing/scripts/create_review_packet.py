@@ -98,25 +98,30 @@ def create_review_packet(
     review_cases: list[dict[str, object]] = []
     omitted_case_ids: list[str] = []
     output_records: list[dict[str, object]] = []
-    for raw_case in manifest["cases"]:
+    blind_to_source: dict[str, str] = {}
+    sample_index = 0
+    for index, raw_case in enumerate(manifest["cases"], start=1):
         if not isinstance(raw_case, dict) or "id" not in raw_case:
             raise ValueError("manifest contains an invalid case")
         case_id = str(raw_case["id"])
         source_output = run_dir / "outputs" / f"{case_id}.md"
         if not source_output.is_file():
-            omitted_case_ids.append(case_id)
+            omitted_case_ids.append(f"omitted-{index:03d}")
             continue
         source_case = cases_by_id.get(case_id)
         if source_case is None:
             raise ValueError(f"case is missing from case sets: {case_id}")
 
-        destination_output = output_dir / "outputs" / source_output.name
+        sample_index += 1
+        blind_id = f"sample-{sample_index:03d}"
+        blind_to_source[blind_id] = case_id
+        destination_output = output_dir / "outputs" / f"{blind_id}.md"
         output_bytes = source_output.read_bytes()
         destination_output.write_bytes(output_bytes)
         review_cases.append(
             {
-                "id": case_id,
-                "name": str(source_case["name"]),
+                "id": blind_id,
+                "name": blind_id,
                 "kind": str(source_case["kind"]),
                 "prompt": str(source_case["prompt"]),
                 "length_contract": source_case.get("length_contract"),
@@ -124,7 +129,7 @@ def create_review_packet(
         )
         output_records.append(
             {
-                "case_id": case_id,
+                "case_id": blind_id,
                 "filename": destination_output.name,
                 "byte_length": len(output_bytes),
                 "sha256": hashlib.sha256(output_bytes).hexdigest(),
@@ -140,6 +145,14 @@ def create_review_packet(
         "outputs": output_records,
     }
     _write_json(output_dir / "manifest.json", packet_manifest)
+    _write_json(
+        output_dir.with_name(f"{output_dir.name}.mapping.json"),
+        {
+            "schema_version": "1",
+            "source_run_id": manifest.get("run_id"),
+            "blind_to_source": blind_to_source,
+        },
+    )
     return packet_manifest
 
 

@@ -34,6 +34,32 @@ def _packet_case_ids(packet_dir: Path) -> set[str]:
     return case_ids
 
 
+def _packet_case_mapping(packet_dir: Path, case_ids: set[str]) -> dict[str, str]:
+    """Load the private blind-to-source map, with legacy identity fallback."""
+
+    mapping_path = packet_dir.with_name(f"{packet_dir.name}.mapping.json")
+    if not mapping_path.is_file():
+        return {case_id: case_id for case_id in case_ids}
+
+    data = _read_json_value(mapping_path)
+    if not isinstance(data, dict) or not isinstance(data.get("blind_to_source"), dict):
+        raise ValueError("invalid blind review mapping")
+    raw_mapping = data["blind_to_source"]
+    mapping: dict[str, str] = {}
+    for blind_id, source_id in raw_mapping.items():
+        if (
+            not isinstance(blind_id, str)
+            or not isinstance(source_id, str)
+            or not SAFE_CASE_ID.fullmatch(blind_id)
+            or not SAFE_CASE_ID.fullmatch(source_id)
+        ):
+            raise ValueError("invalid blind review mapping ids")
+        mapping[blind_id] = source_id
+    if set(mapping) != case_ids:
+        raise ValueError("blind review mapping does not cover packet cases")
+    return mapping
+
+
 def import_review_scores(
     run_dir: Path,
     packet_dir: Path,
@@ -47,6 +73,7 @@ def import_review_scores(
     if not isinstance(rubric, dict):
         raise ValueError("rubric must be an object")
     packet_case_ids = _packet_case_ids(packet_dir)
+    packet_mapping = _packet_case_mapping(packet_dir, packet_case_ids)
     source_dir = packet_dir / "scores"
     if not source_dir.is_dir():
         raise FileNotFoundError(source_dir)
@@ -55,11 +82,11 @@ def import_review_scores(
 
     imported: list[dict[str, object]] = []
     for source in sorted(source_dir.glob("*.json")):
-        case_id = source.stem
-        if not SAFE_CASE_ID.fullmatch(case_id):
+        blind_case_id = source.stem
+        if not SAFE_CASE_ID.fullmatch(blind_case_id):
             raise ValueError(f"unsafe score filename: {source.name}")
-        if case_id not in packet_case_ids:
-            raise ValueError(f"score case is not in review packet: {case_id}")
+        if blind_case_id not in packet_case_ids:
+            raise ValueError(f"score case is not in review packet: {blind_case_id}")
 
         score = read_json(source)
         if not isinstance(score, dict):
@@ -67,9 +94,10 @@ def import_review_scores(
         evaluator = score.get("evaluator")
         if not isinstance(evaluator, dict) or evaluator.get("independent") is not True:
             raise ValueError(f"score is not marked independent: {source.name}")
-        normalized = validate_score(score, rubric, case_id)
+        normalized = validate_score(score, rubric, blind_case_id)
 
-        destination = destination_dir / source.name
+        source_case_id = packet_mapping[blind_case_id]
+        destination = destination_dir / f"{source_case_id}.json"
         if destination.exists():
             raise FileExistsError(f"score already exists: {destination}")
         raw_bytes = source.read_bytes()
@@ -80,7 +108,7 @@ def import_review_scores(
             raise OSError(f"score byte verification failed: {destination}")
         imported.append(
             {
-                "case_id": case_id,
+                "case_id": source_case_id,
                 "status": normalized["status"],
                 "byte_length": len(raw_bytes),
                 "sha256": hashlib.sha256(raw_bytes).hexdigest(),
