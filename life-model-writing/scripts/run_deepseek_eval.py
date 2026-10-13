@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any
 
 from create_eval_run import create_run
-from deepseek_provider import DEFAULT_MODEL, call_chat_completion
+from deepseek_provider import DEFAULT_MODEL, DeepSeekAPIError, call_chat_completion
 from eval_common import load_case_sets
 from import_outputs import import_output
 from reference_router import build_skill_context, load_routes
-from score_eval_run import check_output
+from score_eval_run import LENGTH_BOUNDS, check_output, count_non_whitespace_characters
 
 
 ORDINARY_SYSTEM = """你是一名中文长口播文案作者。
@@ -27,6 +27,11 @@ SKILL_SYSTEM_PREFIX = """你正在执行下面提供的 life-model-writing Skill
 先在内部完成草稿，再检查非空白字符数。标准版以950—1100个非空白字符为安全目标；超过 1100 字必须再压缩一轮，先删重复场景、同义案例、重复变量和结论，再缩短不改变预测的理论定义；不要用截断代替压缩。低于800字时只补缺失的机制桥梁或边界，不用空话凑字数。
 
 """
+
+OVERLENGTH_REPAIR_INSTRUCTION = """上一版口播文案超过了标准版的 1200 个非空白字符上限。
+请在保留核心因果链、关键变量关系、一个反事实或适用边界，以及必要定量关系的前提下，压缩上一版。
+只输出压缩后的完整口播文案，不输出解释、修改说明、提纲或评分；不要截断，不要只删除结尾，不要重新扩写。
+压缩优先删除重复场景、同义案例、重复结论和非关键修饰，再合并理论定义；压缩后控制在 800—1200 个非空白字符内。"""
 
 
 def normalize_case_records(data: dict[str, object]) -> dict[str, dict[str, str]]:
@@ -77,6 +82,28 @@ def build_messages(
     return [
         {"role": "system", "content": system},
         {"role": "user", "content": topic},
+    ]
+
+
+def should_repair_overlength(case: dict[str, object], content: str) -> bool:
+    """Allow one bounded repair only for an overlength standard output."""
+
+    contract = case.get("length_contract")
+    if contract != "standard":
+        return False
+    _, upper = LENGTH_BOUNDS[str(contract)]
+    return count_non_whitespace_characters(content) > upper
+
+
+def build_overlength_repair_messages(
+    original_messages: list[dict[str, str]], draft: str
+) -> list[dict[str, str]]:
+    """Ask the same condition/model to compress one existing overlength draft."""
+
+    return [
+        *original_messages,
+        {"role": "assistant", "content": draft},
+        {"role": "user", "content": OVERLENGTH_REPAIR_INSTRUCTION},
     ]
 
 
@@ -218,17 +245,50 @@ def run_eval(
                 )
             else:
                 context, reference_files = "", []
-            result = call_chat_completion(
+            messages = build_messages(record["condition"], record["prompt"], context)
+            initial_result = call_chat_completion(
                 api_key,
-                build_messages(record["condition"], record["prompt"], context),
+                messages,
                 model=model,
                 temperature=temperature,
                 thinking=thinking,
                 max_tokens=max_tokens,
                 timeout=timeout,
             )
+            initial_content = str(initial_result["content"])
+            attempt_dir = run_dir / "attempts" / case_id
+            attempt_dir.mkdir(parents=True, exist_ok=True)
+            (attempt_dir / "initial.md").write_text(initial_content, encoding="utf-8")
+
+            result = initial_result
+            final_content = initial_content
+            repair_attempted = should_repair_overlength(
+                normalized_cases[case_id], initial_content
+            )
+            repair_status = "not-needed"
+            repair_error: str | None = None
+            if repair_attempted:
+                try:
+                    result = call_chat_completion(
+                        api_key,
+                        build_overlength_repair_messages(messages, initial_content),
+                        model=model,
+                        temperature=temperature,
+                        thinking=thinking,
+                        max_tokens=max_tokens,
+                        timeout=timeout,
+                    )
+                    final_content = str(result["content"])
+                    repair_status = "applied"
+                    (attempt_dir / "repair.md").write_text(
+                        final_content, encoding="utf-8"
+                    )
+                except DeepSeekAPIError as exc:
+                    repair_status = "failed"
+                    repair_error = str(exc)
+
             source = temporary_root / f"{case_id}.md"
-            source.write_text(str(result["content"]), encoding="utf-8")
+            source.write_text(final_content, encoding="utf-8")
             import_output(run_dir, case_id, source)
             output_path = run_dir / "outputs" / f"{case_id}.md"
             _write_json(
@@ -247,6 +307,22 @@ def run_eval(
                     "finish_reason": result["finish_reason"],
                     "usage": result["usage"],
                     "reference_files": reference_files,
+                    "initial": {
+                        "model": initial_result["model"],
+                        "finish_reason": initial_result["finish_reason"],
+                        "usage": initial_result["usage"],
+                        "character_count": count_non_whitespace_characters(
+                            initial_content
+                        ),
+                    },
+                    "compression_repair": {
+                        "attempted": repair_attempted,
+                        "status": repair_status,
+                        "error": repair_error,
+                        "final_character_count": count_non_whitespace_characters(
+                            final_content
+                        ),
+                    },
                 },
             )
     return run_dir
