@@ -85,6 +85,23 @@ class CreateEvaluationRunTests(unittest.TestCase):
 
             self.assertEqual((run_path / "manifest.json").read_bytes(), original)
 
+    def test_legacy_positional_now_argument_remains_supported(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            skill_root = Path(temporary) / "skill"
+            legacy_now = datetime(2026, 10, 9, 1, 2, 3, tzinfo=timezone.utc)
+            run_path = create_run(
+                skill_root,
+                [FIXTURE],
+                "legacy-now-run",
+                {"name": "manual"},
+                "manual-import",
+                "none",
+                legacy_now,
+            )
+
+            manifest = json.loads((run_path / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["created_at"], "2026-10-09T01:02:03+00:00")
+
     def test_create_run_preserves_optional_experiment_metadata(self):
         with tempfile.TemporaryDirectory() as temporary:
             skill_root = Path(temporary) / "skill"
