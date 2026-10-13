@@ -53,7 +53,13 @@ class ReviewScoreImportTests(unittest.TestCase):
             )
 
             self.assertEqual([item["case_id"] for item in imported], ["activation-direct-01"])
-            self.assertTrue((run_dir / "scores" / "activation-direct-01.json").is_file())
+            imported_score = json.loads(
+                (run_dir / "scores" / "activation-direct-01.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(imported_score["case_id"], "activation-direct-01")
+            self.assertEqual(imported_score["scores"], score["scores"])
 
     def test_import_requires_independent_scores_and_refuses_overwrite(self):
         source_run = ROOT / "evals" / "baselines" / "v0.2-run-1"
@@ -99,8 +105,8 @@ class ReviewScoreImportTests(unittest.TestCase):
                     (run_dir / "scores" / "activation-direct-01.json").read_text(
                         encoding="utf-8"
                     )
-                ),
-                score,
+                )["case_id"],
+                "activation-direct-01",
             )
             with self.assertRaises(FileExistsError):
                 import_review_scores(

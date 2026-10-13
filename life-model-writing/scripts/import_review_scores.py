@@ -100,7 +100,12 @@ def import_review_scores(
         destination = destination_dir / f"{source_case_id}.json"
         if destination.exists():
             raise FileExistsError(f"score already exists: {destination}")
-        raw_bytes = source.read_bytes()
+        score_for_run = dict(score)
+        score_for_run["case_id"] = source_case_id
+        score_for_run["blind_case_id"] = blind_case_id
+        raw_bytes = (
+            json.dumps(score_for_run, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+        ).encode("utf-8")
         with destination.open("xb") as output_file:
             output_file.write(raw_bytes)
         if destination.read_bytes() != raw_bytes:
