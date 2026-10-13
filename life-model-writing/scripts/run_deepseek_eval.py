@@ -14,6 +14,7 @@ from deepseek_provider import DEFAULT_MODEL, call_chat_completion
 from eval_common import load_case_sets
 from import_outputs import import_output
 from reference_router import build_skill_context, load_routes
+from score_eval_run import check_output
 
 
 ORDINARY_SYSTEM = """你是一名中文长口播文案作者。
@@ -75,6 +76,12 @@ def build_messages(
         {"role": "system", "content": system},
         {"role": "user", "content": topic},
     ]
+
+
+def build_output_check(case: dict[str, object], output_path: Path) -> dict[str, object]:
+    """Reuse the existing deterministic output contract for provider runs."""
+
+    return check_output(case, output_path)
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -196,6 +203,9 @@ def run_eval(
             _write_json(manifest_path, manifest)
         _write_reveal(run_dir, records)
         routes = load_routes(routes_path, skill_root)
+        normalized_cases = {
+            str(case["id"]): case for case in load_case_sets([selected_case_path])
+        }
         temporary_root = temporary_root / "outputs"
         temporary_root.mkdir()
         for case_id in sorted(records):
@@ -218,6 +228,11 @@ def run_eval(
             source = temporary_root / f"{case_id}.md"
             source.write_text(str(result["content"]), encoding="utf-8")
             import_output(run_dir, case_id, source)
+            output_path = run_dir / "outputs" / f"{case_id}.md"
+            _write_json(
+                run_dir / "checks" / f"{case_id}.json",
+                build_output_check(normalized_cases[case_id], output_path),
+            )
             record_dir = run_dir / "provider-records"
             record_dir.mkdir(exist_ok=True)
             _write_json(

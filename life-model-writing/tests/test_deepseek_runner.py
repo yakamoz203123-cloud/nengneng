@@ -1,4 +1,5 @@
 import sys
+import tempfile
 import unittest
 import json
 from pathlib import Path
@@ -12,6 +13,7 @@ from reference_router import load_routes  # noqa: E402
 from run_deepseek_eval import (  # noqa: E402
     _set_manifest_case_source,
     build_messages,
+    build_output_check,
     normalize_case_records,
 )
 
@@ -70,6 +72,18 @@ class DeepSeekRunnerTests(unittest.TestCase):
         self.assertEqual(
             manifest["cases"][0]["source"], str(Path("evals/v0.5-test-cases.json"))
         )
+
+    def test_output_check_records_standard_length_failure(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "case.md"
+            output.write_text("字" * 1201, encoding="utf-8")
+
+            result = build_output_check(
+                {"id": "case", "length_contract": "standard"}, output
+            )
+
+            self.assertEqual(result["status"], "fail")
+            self.assertEqual(result["checks"][2]["name"], "length-contract")
 
 
 if __name__ == "__main__":
