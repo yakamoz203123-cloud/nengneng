@@ -1,0 +1,126 @@
+{
+  "skill_name": "life-model-writing",
+  "version": "0.5",
+  "evals": [
+    {
+      "id": "v05-fresh-01-x",
+      "pair_id": "v05-fresh-01",
+      "blind_label": "X",
+      "condition": "ordinary",
+      "name": "meeting-many-ordinary",
+      "kind": "content",
+      "prompt": "为什么会议参加的人越多，决定反而越慢？请写一版800—1200字中文口播文案。",
+      "expected_output": "解释会议人数、协调成本、信息汇总、责任和决策效率之间的可能关系。",
+      "assertions": ["解释可能机制", "不把人数直接等同于低效率", "保留组织边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-01-y",
+      "pair_id": "v05-fresh-01",
+      "blind_label": "Y",
+      "condition": "skill",
+      "name": "meeting-many-skill",
+      "kind": "content",
+      "prompt": "为什么会议参加的人越多，决定反而越慢？请写一版800—1200字中文口播文案。",
+      "expected_output": "比较协调成本、公共品与责任分散，建立人数影响发言和拍板的条件性机制。",
+      "assertions": ["比较可区分机制", "建立变量关系", "给出反事实和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-02-x",
+      "pair_id": "v05-fresh-02",
+      "blind_label": "X",
+      "condition": "ordinary",
+      "name": "subscription-forget-ordinary",
+      "kind": "content",
+      "prompt": "为什么便宜的长期订阅，反而更容易被人忘记取消？请写一版800—1200字中文口播文案。",
+      "expected_output": "解释订阅价格、即时支付痛感、默认续费和持续使用之间的可能关系。",
+      "assertions": ["不把用户简单归因于懒惰", "区分支付和使用", "保留边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-02-y",
+      "pair_id": "v05-fresh-02",
+      "blind_label": "Y",
+      "condition": "skill",
+      "name": "subscription-forget-skill",
+      "kind": "content",
+      "prompt": "为什么便宜的长期订阅，反而更容易被人忘记取消？请写一版800—1200字中文口播文案。",
+      "expected_output": "比较默认选项、注意力成本、时间偏好和反馈回路，说明何时会继续扣费、何时会主动取消。",
+      "assertions": ["比较可区分机制", "建立成本和反馈变量", "给出反事实和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-03-x",
+      "pair_id": "v05-fresh-03",
+      "blind_label": "X",
+      "condition": "ordinary",
+      "name": "queue-feels-fast-ordinary",
+      "kind": "content",
+      "prompt": "为什么同样长度的队伍，移动得快时感觉没有那么难等？请写一版800—1200字中文口播文案。",
+      "expected_output": "区分客观等待时间、队伍移动、信息反馈和主观等待感受。",
+      "assertions": ["区分客观与主观等待", "不把感觉写成吞吐量变化", "具有口播结构"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-03-y",
+      "pair_id": "v05-fresh-03",
+      "blind_label": "Y",
+      "condition": "skill",
+      "name": "queue-feels-fast-skill",
+      "kind": "content",
+      "prompt": "为什么同样长度的队伍，移动得快时感觉没有那么难等？请写一版800—1200字中文口播文案。",
+      "expected_output": "比较排队系统中的存量流量与等待反馈，说明客观时间不变时主观感受为何可能变化。",
+      "assertions": ["比较可区分机制", "保留变量关系", "给出反事实和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-04-x",
+      "pair_id": "v05-fresh-04",
+      "blind_label": "X",
+      "condition": "ordinary",
+      "name": "rain-taxi-ordinary",
+      "kind": "content",
+      "prompt": "为什么下雨天打车更难，价格也可能更高？请写一版800—1200字中文口播文案。",
+      "expected_output": "解释天气、乘客需求、司机供给、等待和价格变化之间的可能关系。",
+      "assertions": ["不把涨价一概归因于平台操纵", "保留供给变化", "说明条件边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-04-y",
+      "pair_id": "v05-fresh-04",
+      "blind_label": "Y",
+      "condition": "skill",
+      "name": "rain-taxi-skill",
+      "kind": "content",
+      "prompt": "为什么下雨天打车更难，价格也可能更高？请写一版800—1200字中文口播文案。",
+      "expected_output": "比较供需、动态定价和风险时间成本，解释何时价格上升仍不能快速恢复供给。",
+      "assertions": ["比较可区分机制", "建立供需和容量关系", "给出反事实和边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-05-x",
+      "pair_id": "v05-fresh-05",
+      "blind_label": "X",
+      "condition": "ordinary",
+      "name": "battery-anxiety-ordinary",
+      "kind": "content",
+      "prompt": "为什么手机电量还剩很多，有些人却开始焦虑？请写一版800—1200字中文口播文案。",
+      "expected_output": "解释剩余电量、未来不确定性、安全缓冲和焦虑感之间的可能关系。",
+      "assertions": ["不把心理倾向写成普遍规律", "区分客观电量和主观风险", "保留边界"],
+      "length_contract": "standard"
+    },
+    {
+      "id": "v05-fresh-05-y",
+      "pair_id": "v05-fresh-05",
+      "blind_label": "Y",
+      "condition": "skill",
+      "name": "battery-anxiety-skill",
+      "kind": "content",
+      "prompt": "为什么手机电量还剩很多，有些人却开始焦虑？请写一版800—1200字中文口播文案。",
+      "expected_output": "比较贝叶斯更新、损失规避和注意力/时间偏好，说明剩余电量何时会改变风险判断。",
+      "assertions": ["比较可区分机制", "区分事实和模型推论", "给出反事实和边界"],
+      "length_contract": "standard"
+    }
+  ]
+}

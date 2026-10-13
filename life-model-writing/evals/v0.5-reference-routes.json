@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "common": [
+    "references/structure-patterns.md",
+    "references/spoken-script-style.md",
+    "references/fact-checking.md",
+    "references/theory-misuse.md"
+  ],
+  "cases": {
+    "v05-fresh-01": [
+      "references/theory-01-incentives-opportunity-cost.md",
+      "references/theory-02-externalities-public-goods.md",
+      "references/theory-11-coordination-local-optima-bottlenecks.md"
+    ],
+    "v05-fresh-02": [
+      "references/theory-01-incentives-opportunity-cost.md",
+      "references/theory-07-feedback-loops-path-dependence.md",
+      "references/theory-12-time-preference-attention.md"
+    ],
+    "v05-fresh-03": [
+      "references/theory-07-feedback-loops-path-dependence.md",
+      "references/theory-12-time-preference-attention.md",
+      "references/theory-13-stocks-flows-capacity.md"
+    ],
+    "v05-fresh-04": [
+      "references/theory-01-incentives-opportunity-cost.md",
+      "references/theory-09-information-asymmetry-signaling-screening.md",
+      "references/theory-13-stocks-flows-capacity.md"
+    ],
+    "v05-fresh-05": [
+      "references/theory-03-bayes-base-rates.md",
+      "references/theory-09-information-asymmetry-signaling-screening.md",
+      "references/theory-12-time-preference-attention.md"
+    ]
+  }
+}
