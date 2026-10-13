@@ -85,6 +85,28 @@ class CreateEvaluationRunTests(unittest.TestCase):
 
             self.assertEqual((run_path / "manifest.json").read_bytes(), original)
 
+    def test_create_run_preserves_optional_experiment_metadata(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            skill_root = Path(temporary) / "skill"
+            experiment = {
+                "engine": "codex",
+                "condition": "skill",
+                "repeat_index": 1,
+                "sampling": {"temperature": 0.2, "seed": 41},
+            }
+            run_path = create_run(
+                skill_root=skill_root,
+                case_paths=[FIXTURE],
+                run_id="metadata-run",
+                model={"name": "manual"},
+                invocation_mode="manual-import",
+                human_intervention="none",
+                experiment=experiment,
+            )
+
+            manifest = json.loads((run_path / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["experiment"], experiment)
+
 
 if __name__ == "__main__":
     unittest.main()

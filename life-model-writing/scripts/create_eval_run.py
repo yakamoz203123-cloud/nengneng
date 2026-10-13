@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from eval_common import load_case_sets
+from eval_common import load_case_sets, validate_experiment_metadata
 
 
 RUN_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
@@ -73,12 +73,18 @@ def create_run(
     model: dict[str, object],
     invocation_mode: str,
     human_intervention: str,
+    experiment: dict[str, object] | None = None,
     now: datetime | None = None,
 ) -> Path:
     """Validate inputs, then create one collision-safe evaluation run."""
 
     skill_root = Path(skill_root)
     _validate_run_inputs(skill_root, run_id, model, invocation_mode, human_intervention)
+    normalized_experiment = (
+        validate_experiment_metadata(experiment, "experiment")
+        if experiment is not None
+        else None
+    )
     cases = load_case_sets([Path(path) for path in case_paths])
 
     run_path = skill_root / "evals" / "runs" / run_id
@@ -112,6 +118,8 @@ def create_run(
         "case_sets": [str(Path(path)) for path in case_paths],
         "cases": manifest_cases,
     }
+    if normalized_experiment is not None:
+        manifest["experiment"] = normalized_experiment
 
     run_path.mkdir(parents=True)
     for directory in ("outputs", "checks", "scores"):

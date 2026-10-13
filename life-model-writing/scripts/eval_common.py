@@ -9,6 +9,7 @@ from typing import Any
 
 ALLOWED_KINDS = {"content", "activation"}
 ALLOWED_LENGTH_CONTRACTS = {"short", "standard", "long"}
+EXPERIMENT_REQUIRED_FIELDS = {"engine", "condition", "repeat_index", "sampling"}
 
 
 class EvaluationDataError(ValueError):
@@ -61,6 +62,66 @@ def _required_string(
     if not isinstance(value, str) or not value.strip():
         raise _error("must be a non-empty string", source, f"{field_path}.{key}")
     return value
+
+
+def validate_experiment_metadata(
+    value: object, source: str = "experiment"
+) -> dict[str, object]:
+    """Validate metadata needed to reproduce a model comparison run."""
+
+    if not isinstance(value, dict):
+        raise _error("must be an object", source, "$")
+    missing = EXPERIMENT_REQUIRED_FIELDS - set(value)
+    if missing:
+        field = sorted(missing)[0]
+        raise _error("required field is missing", source, f"$.{field}")
+
+    engine = value.get("engine")
+    if not isinstance(engine, str) or not engine.strip():
+        raise _error("must be a non-empty string", source, "$.engine")
+    condition = value.get("condition")
+    if not isinstance(condition, str) or not condition.strip():
+        raise _error("must be a non-empty string", source, "$.condition")
+
+    repeat_index = value.get("repeat_index")
+    if (
+        isinstance(repeat_index, bool)
+        or not isinstance(repeat_index, int)
+        or repeat_index < 0
+    ):
+        raise _error("must be a non-negative integer", source, "$.repeat_index")
+
+    sampling = value.get("sampling")
+    if not isinstance(sampling, dict):
+        raise _error("must be an object", source, "$.sampling")
+    temperature = sampling.get("temperature")
+    if (
+        isinstance(temperature, bool)
+        or not isinstance(temperature, (int, float))
+        or temperature < 0
+    ):
+        raise _error(
+            "temperature must be a non-negative number",
+            source,
+            "$.sampling.temperature",
+        )
+    if "seed" in sampling:
+        seed = sampling["seed"]
+        if seed is not None and (
+            isinstance(seed, bool) or not isinstance(seed, int)
+        ):
+            raise _error(
+                "seed must be an integer or null",
+                source,
+                "$.sampling.seed",
+            )
+
+    return {
+        "engine": engine,
+        "condition": condition,
+        "repeat_index": repeat_index,
+        "sampling": dict(sampling),
+    }
 
 
 def validate_case_set(

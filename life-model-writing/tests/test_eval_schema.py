@@ -11,6 +11,7 @@ from eval_common import (  # noqa: E402
     EvaluationDataError,
     load_case_sets,
     read_json,
+    validate_experiment_metadata,
     validate_case_set,
 )
 
@@ -215,6 +216,41 @@ class EvaluationSchemaTests(unittest.TestCase):
             validate_case_set(data, "inline.json")
 
         self.assertEqual(error.exception.field_path, "evals[0].kind")
+
+    def test_experiment_metadata_accepts_reproducible_sampling_fields(self):
+        metadata = validate_experiment_metadata(
+            {
+                "engine": "codex",
+                "condition": "skill",
+                "repeat_index": 2,
+                "sampling": {"temperature": 0.2, "seed": 17},
+            },
+            "experiment.json",
+        )
+
+        self.assertEqual(metadata["engine"], "codex")
+        self.assertEqual(metadata["repeat_index"], 2)
+        self.assertEqual(metadata["sampling"]["temperature"], 0.2)
+
+    def test_experiment_metadata_rejects_missing_or_invalid_fields(self):
+        with self.assertRaises(EvaluationDataError) as missing:
+            validate_experiment_metadata(
+                {"engine": "codex", "condition": "skill", "repeat_index": 0},
+                "experiment.json",
+            )
+        self.assertEqual(missing.exception.field_path, "$.sampling")
+
+        with self.assertRaises(EvaluationDataError) as invalid:
+            validate_experiment_metadata(
+                {
+                    "engine": "codex",
+                    "condition": "skill",
+                    "repeat_index": -1,
+                    "sampling": {"temperature": 0.2},
+                },
+                "experiment.json",
+            )
+        self.assertEqual(invalid.exception.field_path, "$.repeat_index")
 
 
 if __name__ == "__main__":
