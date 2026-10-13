@@ -11,6 +11,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from eval_common import load_case_sets  # noqa: E402
 from reference_router import load_routes  # noqa: E402
 from run_deepseek_eval import (  # noqa: E402
+    ORDINARY_SYSTEM,
+    SKILL_SYSTEM_PREFIX,
     _set_manifest_case_source,
     build_messages,
     build_output_check,
@@ -19,6 +21,12 @@ from run_deepseek_eval import (  # noqa: E402
 
 
 class DeepSeekRunnerTests(unittest.TestCase):
+    def test_both_conditions_have_an_explicit_safe_compression_target(self):
+        for system_prompt in (ORDINARY_SYSTEM, SKILL_SYSTEM_PREFIX):
+            self.assertIn("950—1100", system_prompt)
+            self.assertIn("超过 1100", system_prompt)
+            self.assertIn("非空白字符", system_prompt)
+
     def test_normalize_case_records_requires_paired_ordinary_and_skill_cases(self):
         records = normalize_case_records(
             {

@@ -102,6 +102,17 @@ class StaticValidationTests(unittest.TestCase):
         ):
             self.assertIn(contract, style_text)
 
+    def test_skill_main_exposes_safe_length_target_and_second_pass(self):
+        skill_text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+
+        for contract in (
+            "950-1050",
+            "超过 1100 字",
+            "必须再压缩一轮",
+            "非空白字符数",
+        ):
+            self.assertIn(contract, skill_text)
+
     def test_structure_pattern_routes_length_details_to_single_reference(self):
         structure_text = (ROOT / "references" / "structure-patterns.md").read_text(
             encoding="utf-8"
