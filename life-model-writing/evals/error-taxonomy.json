@@ -4,12 +4,15 @@
     "fabricated_research",
     "quantitative_error",
     "severe_theory_misuse",
+    "theory_mismatch",
     "unsupported_causality"
   ],
   "tags": [
     {"id": "fabricated_research", "label": "虚构研究或来源"},
     {"id": "quantitative_error", "label": "公式、单位或数字错误"},
     {"id": "severe_theory_misuse", "label": "严重理论误用"},
+    {"id": "theory_mismatch", "label": "理论主体、变量或适用条件错配"},
+    {"id": "unsupported_theory", "label": "库外理论未核实或无法区分"},
     {"id": "unsupported_causality", "label": "未经支持的因果结论"},
     {"id": "theory_decoration", "label": "理论装饰而未参与推理"},
     {"id": "missing_counterfactual", "label": "缺少反事实检验"},
