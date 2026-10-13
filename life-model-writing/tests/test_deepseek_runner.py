@@ -13,26 +13,27 @@ from reference_router import load_routes  # noqa: E402
 from run_deepseek_eval import (  # noqa: E402
     ORDINARY_SYSTEM,
     SKILL_SYSTEM_PREFIX,
-    build_overlength_repair_messages,
+    build_length_repair_messages,
     _set_manifest_case_source,
     build_messages,
     build_output_check,
     normalize_case_records,
-    should_repair_overlength,
+    standard_length_violation,
 )
 
 
 class DeepSeekRunnerTests(unittest.TestCase):
-    def test_overlength_repair_is_triggered_only_above_standard_upper_bound(self):
+    def test_standard_length_violation_covers_both_bounds_only(self):
         case = {"length_contract": "standard"}
 
-        self.assertFalse(should_repair_overlength(case, "字" * 1200))
-        self.assertTrue(should_repair_overlength(case, "字" * 1201))
-        self.assertFalse(should_repair_overlength({"length_contract": "short"}, "字" * 1201))
+        self.assertIsNone(standard_length_violation(case, "字" * 800))
+        self.assertEqual(standard_length_violation(case, "字" * 799), "underlength")
+        self.assertEqual(standard_length_violation(case, "字" * 1201), "overlength")
+        self.assertIsNone(standard_length_violation({"length_contract": "short"}, "字" * 1201))
 
-    def test_overlength_repair_messages_keep_draft_and_forbid_truncation(self):
+    def test_length_repair_messages_keep_draft_and_match_violation(self):
         original = build_messages("ordinary", "原始题目", "")
-        repaired = build_overlength_repair_messages(original, "这是超长草稿")
+        repaired = build_length_repair_messages(original, "这是超长草稿", "overlength")
 
         self.assertEqual(repaired[:2], original)
         self.assertEqual(repaired[2]["role"], "assistant")
@@ -40,6 +41,9 @@ class DeepSeekRunnerTests(unittest.TestCase):
         self.assertEqual(repaired[3]["role"], "user")
         self.assertIn("只输出压缩后的完整口播文案", repaired[3]["content"])
         self.assertIn("不要截断", repaired[3]["content"])
+
+        underlength = build_length_repair_messages(original, "这是过短草稿", "underlength")
+        self.assertIn("补充缺失的机制桥梁、关键变量关系", underlength[3]["content"])
 
     def test_both_conditions_have_an_explicit_safe_compression_target(self):
         for system_prompt in (ORDINARY_SYSTEM, SKILL_SYSTEM_PREFIX):

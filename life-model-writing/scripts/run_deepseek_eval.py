@@ -31,7 +31,12 @@ SKILL_SYSTEM_PREFIX = """你正在执行下面提供的 life-model-writing Skill
 OVERLENGTH_REPAIR_INSTRUCTION = """上一版口播文案超过了标准版的 1200 个非空白字符上限。
 请在保留核心因果链、关键变量关系、一个反事实或适用边界，以及必要定量关系的前提下，压缩上一版。
 只输出压缩后的完整口播文案，不输出解释、修改说明、提纲或评分；不要截断，不要只删除结尾，不要重新扩写。
-压缩优先删除重复场景、同义案例、重复结论和非关键修饰，再合并理论定义；压缩后控制在 800—1200 个非空白字符内。"""
+压缩优先删除重复场景、同义案例、重复结论和非关键修饰，再合并理论定义；目标是 950—1100 个非空白字符，最终必须控制在 800—1200 个非空白字符内。"""
+
+UNDERLENGTH_REPAIR_INSTRUCTION = """上一版口播文案低于标准版的 800 个非空白字符下限。
+请在保留原有主线的基础上，补充缺失的机制桥梁、关键变量关系、一个反事实或适用边界，以及必要的定量关系。
+只输出补充后的完整口播文案，不输出解释、修改说明、提纲或评分；不要用空洞金句、重复场景或无关案例凑字数。
+目标是 950—1100 个非空白字符，最终必须控制在 800—1200 个非空白字符内。"""
 
 
 def normalize_case_records(data: dict[str, object]) -> dict[str, dict[str, str]]:
@@ -85,25 +90,39 @@ def build_messages(
     ]
 
 
-def should_repair_overlength(case: dict[str, object], content: str) -> bool:
-    """Allow one bounded repair only for an overlength standard output."""
+def standard_length_violation(
+    case: dict[str, object], content: str
+) -> str | None:
+    """Return one standard-length violation, if a bounded repair is warranted."""
 
     contract = case.get("length_contract")
     if contract != "standard":
-        return False
-    _, upper = LENGTH_BOUNDS[str(contract)]
-    return count_non_whitespace_characters(content) > upper
+        return None
+    lower, upper = LENGTH_BOUNDS["standard"]
+    character_count = count_non_whitespace_characters(content)
+    if character_count < lower:
+        return "underlength"
+    if character_count > upper:
+        return "overlength"
+    return None
 
 
-def build_overlength_repair_messages(
-    original_messages: list[dict[str, str]], draft: str
+def build_length_repair_messages(
+    original_messages: list[dict[str, str]], draft: str, violation: str
 ) -> list[dict[str, str]]:
-    """Ask the same condition/model to compress one existing overlength draft."""
+    """Ask the same condition/model to repair one standard-length violation."""
+
+    if violation == "overlength":
+        instruction = OVERLENGTH_REPAIR_INSTRUCTION
+    elif violation == "underlength":
+        instruction = UNDERLENGTH_REPAIR_INSTRUCTION
+    else:
+        raise ValueError("violation must be underlength or overlength")
 
     return [
         *original_messages,
         {"role": "assistant", "content": draft},
-        {"role": "user", "content": OVERLENGTH_REPAIR_INSTRUCTION},
+        {"role": "user", "content": instruction},
     ]
 
 
@@ -262,16 +281,19 @@ def run_eval(
 
             result = initial_result
             final_content = initial_content
-            repair_attempted = should_repair_overlength(
+            length_violation = standard_length_violation(
                 normalized_cases[case_id], initial_content
             )
+            repair_attempted = length_violation is not None
             repair_status = "not-needed"
             repair_error: str | None = None
             if repair_attempted:
                 try:
                     result = call_chat_completion(
                         api_key,
-                        build_overlength_repair_messages(messages, initial_content),
+                        build_length_repair_messages(
+                            messages, initial_content, str(length_violation)
+                        ),
                         model=model,
                         temperature=temperature,
                         thinking=thinking,
@@ -317,6 +339,7 @@ def run_eval(
                     },
                     "compression_repair": {
                         "attempted": repair_attempted,
+                        "violation": length_violation,
                         "status": repair_status,
                         "error": repair_error,
                         "final_character_count": count_non_whitespace_characters(
