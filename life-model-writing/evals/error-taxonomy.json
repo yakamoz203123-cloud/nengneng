@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "blocking_tags": [
+    "fabricated_research",
+    "quantitative_error",
+    "severe_theory_misuse",
+    "unsupported_causality"
+  ],
+  "tags": [
+    {"id": "fabricated_research", "label": "虚构研究或来源"},
+    {"id": "quantitative_error", "label": "公式、单位或数字错误"},
+    {"id": "severe_theory_misuse", "label": "严重理论误用"},
+    {"id": "unsupported_causality", "label": "未经支持的因果结论"},
+    {"id": "theory_decoration", "label": "理论装饰而未参与推理"},
+    {"id": "missing_counterfactual", "label": "缺少反事实检验"},
+    {"id": "missing_boundary", "label": "缺少适用边界或反例"},
+    {"id": "evidence_overclaim", "label": "把模型推论写成事实"},
+    {"id": "oral_stiffness", "label": "口播不自然或过度讲义化"},
+    {"id": "length_or_structure", "label": "长度或结构契约问题"}
+  ]
+}
