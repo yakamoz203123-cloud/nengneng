@@ -32,11 +32,13 @@ description: Use when the user provides an adult knowledge book or chapter and w
 
    这一步是生成前的文字安全区锁定，不是生成后把字幕随意贴到图片上。图像提示词必须明确完整单页、按所选社媒 profile 的比例（小红书默认3:4；抖音/长屏仅在显式选择 `social-vertical-9x16` 时用9:16）、主体从上到下的纵向构图、低纹理文字区域的具体位置与纹理，并明确禁止横向条幅、禁止上下大块空白、禁止底部通栏和图像内文字。正文仍由排版层加入，以保证文字可编辑、可提取和可校验。
 
+   **生产队列与分阶段执行（必须）**：先阅读 [单 Skill 的分阶段生产流程](references/production-workflow.md)。在正式出图前完成一次规划：完整 `story.md`、`storyboard.json`、`page-manifest.json`、`layout.json`、角色/生产参考图和画风版本都必须齐全。然后运行 `scripts/generation_queue.py init` 建立一页一个任务的队列；默认 `max_in_flight` 为 2，工具支持并经过小批量测试时才试 3。队列负责缓存、失败记录、重试预算、断点续跑和单页 `reset-page`，不接入新的付费图像接口，也不自动生成多套备选。
+
    在开始正式逐页插画前，必须先用实际生成器完成一次目标 profile 的探针生成，并运行 `preflight_image_generation.py`；将通过的 JSON 记录保存到当前版本的审核目录。小红书探针必须实际返回3:4（例如 `768×1024` 或 `1080×1440`），抖音/长屏探针必须实际返回9:16。若实际返回 `1280×720` 等横图，状态是 `blocked`，不要反复修改提示词假装已具备竖版能力；应更换支持原生比例的生成器，或向用户索取合格源图。两个 profile 必须分别预检，不能用一个 profile 的探针替代另一个。
 
    **快速出图协议（必须）**：先完成 `layout_design` 再调用图像生成器，把全册分镜、每页的 `profile`、文字安全区、主体动作和连续性状态先写入清单。正式生成使用与已批准角色 Bible 同版本的干净生产参考图，记录为 `production_reference_path`；展示型角色设定页可以保留多表情、多服装和说明文字，但不要每页连同原始照片、整张设定页和多份重复参考一起提交。稳定基础提示词只保留画风、角色不变特征、目标比例、全局禁项和安全区；每页只追加短的场景动作、道具、知识证据和前后页状态。
 
-   先做一张完整样页并等待确认，再按**每页一次生成、两页一批**推进；每批完成后先检查已有结果、实际像素和 `preflight_image_generation.py`，再做相邻页与 `layout_review`，通过后才开始下一批。生成器已经返回成功、任务仍在运行或结果目录可能已有文件时，先检查已有结果和任务状态，**不要重复提交**相同请求；只有明确失败且没有任何输出时，才记录失败原因后做一次针对性重试。修订只改变该页的场景增量，不重发整套长提示词。工具支持时，草稿可用较低质量或较小尺寸，正式页再按目标 profile 输出；不支持这些参数的工具不能靠反复改提示词伪造提速，也不能把草稿当正式成品。
+   先做一张完整样页并等待确认，再按**每页一次生成、两页一批**推进；每批完成后先检查已有结果、实际像素和 `preflight_image_generation.py`，再做相邻页与 `layout_review`，通过后才开始下一批。生成器已经返回成功、任务仍在运行或结果目录可能已有文件时，先检查已有结果和任务状态，**不要重复提交**相同请求；只有明确失败且没有任何输出时，才记录失败原因后做一次针对性重试。修订只改变该页的场景增量，不重发整套长提示词。工具支持时，草稿可用较低质量或较小尺寸，正式页再按目标 profile 输出；不支持这些参数的工具不能靠反复改提示词伪造提速，也不能把草稿当正式成品。绘图完成后再进入统一的文字排版、页码、PDF 和家庭打印导出阶段。
 
    先看 character bible 参考图，绑定人物、道具、动作与知识检查点；再按 `layout_design` 生成逐页插画。生成后必须实际查看留白、文字对比、遮挡、阅读顺序和人物连续性，保存 `layout_review` 的实际证据；小红书页还要确认主体不是横向条幅、背景从上到下连续、没有上下大块空白，文字确实位于画面内部。留白消失、焦点被遮挡或版式失去视觉融合时回到插画或版式修订。成页必须达到图文融合，不接受独立矩形图片加底部默认正文块的故事页。进行 text-image state matching，并按 [检查规则](references/review.md)做 adjacent-page pair 审核；问题页最多两轮针对性修订，仍有关键缺陷时保存阻碍。
 5. 阅读 [打印规则](references/printing.md)，填写 [版面模板](assets/book-template.json)。按 [验收与导出](references/acceptance.md)运行最终的 `export_book.py`（其中调用 `validate_exports.py`）和 acceptance 检查，生成阅读版、已经拼好的打印版及全部页面预览，实际查看每个阅读页和打印面。社媒默认按小红书静态图文 `xiaohongshu-feed-3x4` 生成逐页 PNG/JPEG，画布为 `1080×1440`，源图必须为3:4；需要抖音/长屏时必须显式选择 `social-vertical-9x16`，画布才是 `1080×1920`、源图才按9:16生成。一次导出只绑定一个 profile；同时交付两个 profile 时分别建立输出版本、源图和逐页审核记录，不直接缩放、中心裁切或补大块空白。
@@ -49,6 +51,8 @@ description: Use when the user provides an adult knowledge book or chapter and w
 ```bash
 python3 "$SKILL_DIR/scripts/project_state.py" /absolute/project/project.json
 python3 "$SKILL_DIR/scripts/preflight_image_generation.py" /absolute/probe.png --profile xiaohongshu-feed-3x4
+python3 "$SKILL_DIR/scripts/generation_queue.py" init /absolute/project/books/b01/v1 /absolute/project/books/b01/v1/review/production-queue.json --max-in-flight 2 --max-attempts 2
+python3 "$SKILL_DIR/scripts/generation_queue.py" status /absolute/project/books/b01/v1/review/production-queue.json
 python3 "$SKILL_DIR/scripts/validate_page_manifest.py" /absolute/project/books/b01/page-manifest.json --require-images
 python3 "$SKILL_DIR/scripts/export_book.py" /absolute/project/books/b01/v1/layout.json /absolute/project/books/b01/v1/export
 python3 "$SKILL_DIR/scripts/accept_book.py" /absolute/project/project.json b01

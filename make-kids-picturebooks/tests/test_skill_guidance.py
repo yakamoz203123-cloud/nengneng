@@ -100,6 +100,40 @@ class SkillGuidanceTests(unittest.TestCase):
             with self.subTest(term=term):
                 self.assertIn(term, combined)
 
+    def test_production_queue_and_performance_protocol_are_explicit(self) -> None:
+        combined = "\n".join(
+            read(path)
+            for path in (
+                "SKILL.md",
+                "references/production-workflow.md",
+                "references/characters.md",
+                "references/acceptance.md",
+                "RELEASE.md",
+            )
+        )
+        for term in (
+            "generation_queue.py",
+            "一次规划",
+            "分阶段",
+            "story.md",
+            "storyboard.json",
+            "max_in_flight",
+            "默认 2",
+            "2—3",
+            "断点续跑",
+            "缓存",
+            "reset-page",
+            "只重新生成该页",
+            "一版完整成品",
+            "不自动生成多套备选",
+            "不接入新的付费图像接口",
+            "总耗时",
+            "失败率",
+            "输出质量",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
 
     def test_page_manifest_template_exposes_private_production_reference_slot(self) -> None:
         template = json.loads(read("assets/page-manifest-template.json"))
