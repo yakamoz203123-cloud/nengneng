@@ -8,7 +8,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from layout_design import (
-    DEFAULT_SOCIAL_PROFILE,
     get_social_profile,
     image_matches_aspect_ratio,
     validate_layout_design,
@@ -19,6 +18,9 @@ from layout_styles import (
     SOCIAL_TEXT_PADDING_PX,
     resolve_text_style,
 )
+
+
+_PROFILE_OMITTED = object()
 
 
 def _pixel_box(area, width, height):
@@ -54,21 +56,24 @@ def _wrap_text(text, draw, font, width):
     return lines
 
 
-def render_social_page(page, output_path, profile=DEFAULT_SOCIAL_PROFILE) -> Path:
-    """Render a separate profile-sized PNG/JPEG after deterministic geometry checks."""
+def render_social_page(page, output_path, profile=_PROFILE_OMITTED) -> Path:
+    """Render a profile-sized PNG/JPEG, reusing the page profile when omitted."""
     if not isinstance(page, dict):
         raise ValueError("社媒页面必须是对象")
-    profile_config = get_social_profile(profile)
-    if profile_config is None:
-        raise ValueError("不支持的社媒profile")
 
     layout_design = page.get("layout_design")
     errors = validate_layout_design(layout_design, require_complete=True)
     if errors:
         raise ValueError("; ".join(errors))
     social_layout = layout_design["social_layout"]
-    if social_layout["profile"] != profile:
+    profile_was_omitted = profile is _PROFILE_OMITTED
+    if profile_was_omitted:
+        profile = social_layout["profile"]
+    elif social_layout["profile"] != profile:
         raise ValueError("社媒profile与layout_design不一致")
+    profile_config = get_social_profile(profile)
+    if profile_config is None:
+        raise ValueError("不支持的社媒profile")
 
     output_path = Path(output_path)
     if output_path.suffix.lower() not in {".png", ".jpg", ".jpeg"}:

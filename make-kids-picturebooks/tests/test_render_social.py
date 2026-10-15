@@ -86,6 +86,26 @@ class SocialRenderTests(unittest.TestCase):
         with Image.open(output) as rendered:
             self.assertEqual((1080, 1920), rendered.size)
 
+    def test_social_renderer_omitted_profile_reuses_legacy_9x16_layout(self):
+        self.page["layout_design"] = valid_layout_design("social-vertical-9x16")
+        Image.new("RGB", (900, 1600), (120, 160, 200)).save(self.source)
+
+        output = render_social_page(self.page, self.root / "legacy-default-page-01.png")
+
+        with Image.open(output) as rendered:
+            self.assertEqual((1080, 1920), rendered.size)
+
+    def test_social_renderer_explicit_profile_mismatch_is_rejected(self):
+        self.page["layout_design"] = valid_layout_design("social-vertical-9x16")
+        Image.new("RGB", (900, 1600), (120, 160, 200)).save(self.source)
+
+        with self.assertRaisesRegex(ValueError, "社媒profile与layout_design不一致"):
+            render_social_page(
+                self.page,
+                self.root / "mismatched-profile-page-01.png",
+                profile="xiaohongshu-feed-3x4",
+            )
+
     def test_social_renderer_explicit_9x16_rejects_3x4_source(self):
         self.page["layout_design"] = valid_layout_design("social-vertical-9x16")
         Image.new("RGB", (900, 1200), (120, 160, 200)).save(self.source)
