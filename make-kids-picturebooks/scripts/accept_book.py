@@ -9,6 +9,7 @@ import pymupdf as fitz
 from asset_registry import collect_declared_assets
 from project_paths import normalize_relative_path,resolve_project_file
 from validate_page_manifest import validate_page_manifest
+from layout_design import SOCIAL_CANVAS,SOCIAL_PROFILE,SOCIAL_SOURCE_ASPECT_RATIO,validate_layout_design,validate_layout_review
 from impose_booklet import booklet_pairs,MM
 from validate_exports import allowed_empty_pages,minimum_print_text_size,validation_errors
 
@@ -50,6 +51,52 @@ def quality_errors(layout):
     errors=[]
     if not isinstance(dpi,(float,int)) or dpi<minimum:errors.append(f'{profile}: 分辨率门槛至少{minimum}')
     if profile=='home-pilot' and not str(layout.get('quality_approval','')).strip():errors.append('家庭试制档位需要明确选择记录')
+    return errors
+
+def layout_design_errors(value,number,label):
+    errors=[]
+    if value is None:errors.append(f'页{number}: 旧项目缺少{label}，请迁移到layout-v1后再验收')
+    for message in validate_layout_design(value,True):errors.append(f'页{number}: {label}: {message}')
+    return errors
+
+def layout_review_errors(value,number):
+    errors=[]
+    if value is None:errors.append(f'reading_pages {number}: 缺少完整版式审核（layout_review）')
+    for message in validate_layout_review(value,True):errors.append(f'reading_pages {number}: {message}')
+    return errors
+
+def social_render_errors(record,number,design,source_image,track):
+    errors=[]
+    label=f'社媒页{number}'
+    if not isinstance(record,dict):return [f'{label}: 缺少社媒渲染记录']
+    social=design.get('social_layout') if isinstance(design,dict) else None
+    if not isinstance(social,dict):return [f'{label}: 缺少social_layout，无法验证社媒输出']
+    if record.get('page')!=number:errors.append(f'{label}: 页码不连续')
+    if record.get('status') not in ('rendered','passed'):errors.append(f'{label}: 渲染状态必须是rendered或passed')
+    if record.get('profile')!=SOCIAL_PROFILE:errors.append(f'{label}: profile必须是{SOCIAL_PROFILE}')
+    if record.get('canvas')!=SOCIAL_CANVAS:errors.append(f'{label}: canvas必须是1080×1920')
+    if record.get('source_aspect_ratio')!=SOCIAL_SOURCE_ASPECT_RATIO:errors.append(f'{label}: 源图比例必须是9:16')
+    for field in ('subject_safe_area','text_safe_area'):
+        if record.get(field)!=social.get(field):errors.append(f'{label}: {field}与layout.json不一致')
+    if source_image is None or not source_image.is_file():
+        errors.append(f'{label}: 源图文件不可用')
+    else:
+        from PIL import Image
+        try:
+            with Image.open(source_image) as image:
+                if image.width*16!=image.height*9:errors.append(f'{label}: 源图必须是9:16，禁止用印刷页中心裁切冒充')
+        except (OSError,ValueError) as exc:errors.append(f'{label}: 源图不可读取: {exc}')
+    output_value=record.get('output_path')
+    if not isinstance(output_value,(str,Path)) or not str(output_value).strip():
+        errors.append(f'{label}: 缺少渲染文件路径');return errors
+    try:output=track(output_value)
+    except (OSError,ValueError,TypeError) as exc:
+        errors.append(f'{label}: 渲染文件不可用: {exc}');return errors
+    from PIL import Image
+    try:
+        with Image.open(output) as image:
+            if image.size!=(SOCIAL_CANVAS['width_px'],SOCIAL_CANVAS['height_px']):errors.append(f'{label}: 渲染文件必须是1080×1920')
+    except (OSError,ValueError) as exc:errors.append(f'{label}: 渲染文件不可读取: {exc}')
     return errors
 
 def verify_receipt(project,book,base):
@@ -121,11 +168,13 @@ def check_book(project_path,book_id):
         if manifest.get('book_id')!=book_id or concept.get('book_id')!=book_id:errors.append('册编号不一致')
         if book.get('source_version')!=project['source']['version'] or book.get('characters_version')!=project['characters_version']:errors.append('项目版本已变化')
         errors.extend(validate_page_manifest(manifest,manifest_path.parent,True))
-        pages=layout['pages'];n=len(pages);pairs=booklet_pairs(n)
+        pages=layout.get('pages');n=len(pages) if isinstance(pages,list) else 0;pairs=booklet_pairs(n)
+        if not isinstance(pages,list) or not pages:errors.append('layout.json缺少可验收的pages数组');pages=[]
         errors.extend(structure_errors(pages))
         story=normal(artifact('story').read_text(encoding='utf-8'))
         errors.extend(story_text_errors(pages,story))
         if len(storyboard)!=n or len(manifest['pages'])!=n:errors.append('分镜、清单与版面页数不一致')
+        source_images={}
         for i,page in enumerate(pages):
             number=i+1
             if page.get('number')!=number:errors.append(f'页{number}: 页码不连续')
@@ -134,6 +183,10 @@ def check_book(project_path,book_id):
             saved=manifest['pages'][i];board=storyboard[i]
             if page.get('text')!=board.get('text'):errors.append(f'页{number}: 正文与分镜不一致')
             if saved.get('text_area')!=page.get('text_box_mm'):errors.append(f'页{number}: 文字区域不一致')
+            if saved.get('text')!=page.get('text'):errors.append(f'页{number}: 清单正文与layout.json不一致')
+            if page.get('layout_design')!=saved.get('layout_design'):errors.append(f'页{number}: 清单与layout.json版式不一致')
+            errors.extend(layout_design_errors(page.get('layout_design'),number,'layout_design'))
+            errors.extend(layout_design_errors(saved.get('layout_design'),number,'清单layout_design'))
             if saved.get('characters_version')!=book['characters_version']:errors.append(f'页{number}: 角色版本不一致')
             track(saved['current_prompt_path'],manifest_path.parent)
             selected=track(saved['current_image_path'],manifest_path.parent)
@@ -159,6 +212,7 @@ def check_book(project_path,book_id):
             if kind=='story' and (page.get('image_role')!='background' or page.get('text_area_reviewed') is not True):errors.append(f'页{number}: 未确认画面中文字区域')
             if page.get('image'):
                 actual=track(page['image'],layout_path.parent)
+                source_images[number]=actual
                 if selected!=actual:errors.append(f'页{number}: 清单选图与排版选图不一致')
                 from PIL import Image
                 with Image.open(actual) as img:pw,ph=img.size
@@ -172,6 +226,17 @@ def check_book(project_path,book_id):
                 if record.get('image_path'):track(record['image_path'])
                 else:errors.append(f'{field} {k}: 缺少审核渲染图')
         reviewed('reading_pages',n,'page');reviewed('print_sides',len(pairs),'side')
+        reading_records=review.get('reading_pages',[])
+        if isinstance(reading_records,list):
+            for number,record in enumerate(reading_records,1):errors.extend(layout_review_errors(record.get('layout_review') if isinstance(record,dict) else None,number))
+        social_records=review.get('social_pages')
+        if not isinstance(social_records,list) or len(social_records)!=n:
+            errors.append('社媒输出未逐页记录渲染结果')
+        else:
+            for number in range(1,n+1):
+                record=next((item for item in social_records if isinstance(item,dict) and item.get('page')==number),None)
+                page=pages[number-1]
+                errors.extend(social_render_errors(record,number,page.get('layout_design'),source_images.get(number),track))
         if review.get('unresolved_digital_defects'):errors.append('仍有未解决数字缺陷')
         dims=layout.get('page_mm',[148,210])
         reading_path=artifact('reading_pdf');printing_path=artifact('print_pdf')

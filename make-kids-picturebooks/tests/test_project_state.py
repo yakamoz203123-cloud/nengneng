@@ -13,6 +13,11 @@ class ProjectTests(unittest.TestCase):
         self.assertIsNotNone(validate_project,'进度接口尚未实现')
         self.assertEqual(validate_project(self.data),[])
         self.assertEqual(next_action(self.data),{'book_id':'b1','stage':'laid_out'})
+    def test_planning_project_without_layout_evidence_remains_readable(self):
+        self.assertEqual(validate_project(self.data),[])
+        self.data['books'][0]['status']='laid_out'
+        self.assertEqual(validate_project(self.data),[])
+        self.assertEqual(next_action(self.data),{'book_id':'b1','stage':'digital_checked'})
     def test_duplicate_ids(self):
         self.assertIsNotNone(validate_project)
         self.data['books'].append(copy.deepcopy(self.data['books'][0]))

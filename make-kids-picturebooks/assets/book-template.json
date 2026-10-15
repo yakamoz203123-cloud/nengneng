@@ -26,7 +26,39 @@
       ],
       "image_role": "background",
       "text_area_reviewed": false,
-      "kind": "cover"
+      "kind": "story",
+      "layout_design": {
+        "layout_style_version": "layout-v1",
+        "layout_mode": "scene-integrated",
+        "text_anchor": "top-left",
+        "text_treatment": "natural-space",
+        "text_align": "left",
+        "max_lines": 4,
+        "focal_point": "孩子手中的纸飞机",
+        "text_safe_area": "左上方浅色墙面",
+        "avoid_covering": [
+          "孩子的脸部",
+          "纸飞机"
+        ],
+        "page_rhythm": "establishing",
+        "palette_token": "warm-paper",
+        "status": "pending",
+        "social_layout": {
+          "profile": "social-vertical-9x16",
+          "canvas": {
+            "width_px": 1080,
+            "height_px": 1920
+          },
+          "subject_safe_area": [0.08, 0.10, 0.84, 0.72],
+          "text_safe_area": [0.08, 0.76, 0.84, 0.14],
+          "avoid_regions": [
+            "top-ui",
+            "bottom-ui"
+          ],
+          "source_aspect_ratio": "9:16",
+          "status": "pending"
+        }
+      }
     }
   ],
   "quality_profile": "print",
