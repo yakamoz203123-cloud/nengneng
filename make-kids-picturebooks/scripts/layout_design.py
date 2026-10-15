@@ -1,6 +1,7 @@
 """Validate layout contract data without claiming to prove visual aesthetics."""
 
 import math
+import re
 
 
 LAYOUT_STYLE_VERSION = "layout-v1"
@@ -57,6 +58,20 @@ GENERIC_REVIEW_EVIDENCE = {
     "okay",
     "已检查效果良好",
 }
+GENERIC_REVIEW_EVIDENCE_PATTERNS = (
+    re.compile(
+        r"^(?:已)?(?:通过|合格|良好|正常|很好|不错|完成|效果良好|无问题|没问题)(?:了)?$"
+    ),
+    re.compile(
+        r"^(?:已)?(?:检查|审核|审查|验证|确认|评估|测试)"
+        r"(?:过了|过|了|完成)?"
+        r"(?:(?:通过|合格|良好|正常|很好|不错|完成|效果良好|无问题|没问题)(?:了)?)?$"
+    ),
+    re.compile(
+        r"^(?:(?:it)?(?:is|was))?"
+        r"(?:checked|reviewed|approved|passed|done|ok|okay|good|looksgood|allgood)$"
+    ),
+)
 
 
 def _nonempty(value):
@@ -78,6 +93,15 @@ def _specific_text(value, generic_values):
 
 def _evidence_key(value):
     return "".join(character for character in value.casefold() if character.isalnum())
+
+
+def _generic_review_evidence(value):
+    if not _nonempty(value):
+        return True
+    key = _evidence_key(value)
+    return key in GENERIC_REVIEW_EVIDENCE or any(
+        pattern.fullmatch(key) for pattern in GENERIC_REVIEW_EVIDENCE_PATTERNS
+    )
 
 
 def _require_field(value, key, errors, label=None):
@@ -209,6 +233,10 @@ def validate_layout_design(
         or not all(_nonempty(item) for item in value["avoid_covering"])
     ):
         errors.append("avoid_covering必须是非空字符串列表")
+    elif require_complete and value.get("avoid_covering") == [] and not _nonempty(
+        value.get("avoid_covering_reason")
+    ):
+        errors.append("avoid_covering为空时必须提供avoid_covering_reason")
     if "page_rhythm" in value and value["page_rhythm"] not in PAGE_RHYTHMS:
         errors.append("page_rhythm必须是受支持的页面节奏")
     if "palette_token" in value and value["palette_token"] not in PALETTE_TOKENS:
@@ -249,10 +277,7 @@ def validate_layout_review(
         errors.append("layout_review.status必须是pending、passed或failed")
     elif require_complete and value.get("status") != "passed":
         errors.append("完成模式要求layout_review.status为passed")
-    if "evidence" in value and (
-        not _nonempty(value["evidence"])
-        or _evidence_key(value["evidence"]) in GENERIC_REVIEW_EVIDENCE
-    ):
+    if "evidence" in value and _generic_review_evidence(value["evidence"]):
         errors.append("layout_review.evidence必须提供具体版式证据")
     if (
         "text_image_relationship" in value

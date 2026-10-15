@@ -76,6 +76,32 @@ class LayoutDesignTests(unittest.TestCase):
 
         self.assertIn("max_lines必须是正整数", validate_layout_design(design, True))
 
+    def test_rejects_empty_avoid_covering_without_reason(self):
+        for reason in (None, "   "):
+            with self.subTest(reason=reason):
+                design = valid_layout_design()
+                design["avoid_covering"] = []
+                if reason is not None:
+                    design["avoid_covering_reason"] = reason
+
+                self.assertIn(
+                    "avoid_covering为空时必须提供avoid_covering_reason",
+                    validate_layout_design(design, True),
+                )
+
+    def test_accepts_empty_avoid_covering_with_reason(self):
+        design = valid_layout_design()
+        design["avoid_covering"] = []
+        design["avoid_covering_reason"] = "纯风景页，没有人物或知识关键物"
+
+        self.assertEqual([], validate_layout_design(design, True))
+
+    def test_planning_allows_empty_avoid_covering_without_reason(self):
+        design = valid_layout_design()
+        design["avoid_covering"] = []
+
+        self.assertEqual([], validate_layout_design(design))
+
     def test_requires_specific_focal_point_and_safe_area_on_completion(self):
         design = valid_layout_design()
         design["focal_point"] = "主体"
@@ -94,6 +120,23 @@ class LayoutDesignTests(unittest.TestCase):
         review["evidence"] = "已检查，效果良好"
 
         self.assertIn("layout_review.evidence必须提供具体版式证据", validate_layout_review(review, True))
+
+    def test_rejects_generic_short_layout_review_evidence(self):
+        for evidence in ("通过了", "已审核通过", "检查过了", "没问题", "looks good"):
+            with self.subTest(evidence=evidence):
+                review = valid_layout_review()
+                review["evidence"] = evidence
+
+                self.assertIn(
+                    "layout_review.evidence必须提供具体版式证据",
+                    validate_layout_review(review, True),
+                )
+
+    def test_accepts_concrete_short_layout_review_evidence(self):
+        review = valid_layout_review()
+        review["evidence"] = "左上文字未遮挡脸部"
+
+        self.assertEqual([], validate_layout_review(review, True))
 
     def test_accepts_valid_social_layout(self):
         self.assertEqual([], validate_layout_design(valid_layout_design(), True))
