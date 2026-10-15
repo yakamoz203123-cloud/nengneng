@@ -5,7 +5,7 @@
 
 ## 运行说明
 
-`layout-pressure-prompts.csv` 是可重复的独立压力夹具。每行要求被测 Skill 明确回答三件事：是否暂停、采用哪种版式模式、是否可以声称完成。基线观察来自当前 Skill 的独立临时项目运行记录；其中 `layout_whole_book_one_shot` 与 `layout_skip_visual_review` 对应已有 harness 的历史 stdout 捕获。社会竖屏场景是新增负控压力：当前 Skill 没有社媒竖屏输出、比例或安全区契约，因此记录为能力缺口，而不是把未来方案写入提示。
+`layout-pressure-prompts.csv` 是正式、schema-compatible 的四场景压力夹具。每行要求被测 Skill 明确回答三件事：是否暂停、采用哪种版式模式、是否可以声称完成。两条负控已移到同目录的 `layout-negative-controls.csv`，不再注册到正式 `prompts.csv` 解析入口。基线观察按来源区分：四个正式场景使用当前 Skill/reference 的可复核静态证据，历史 harness stdout 只在确有匹配捕获时引用；不把没有运行过的模型输出写成事实。社会竖屏场景是当前 Skill 缺少社媒竖屏输出、比例或安全区契约的能力缺口。
 
 本文件只记录输入、关键输出、违规行为和原因；不规定后续实现方式。
 
@@ -41,21 +41,37 @@
 
 ### `layout_whole_book_one_shot`
 
-- 输入：见 CSV；要求三章一次性生成并立即声称全部完成。
-- 关键输出（历史 harness）：被测 Skill 的流程先要求阅读来源、筛选适龄主题、逐页分镜和检查；实际运行记录没有按用户要求直接声称“全部完成”，而是把制作拆成逐册/逐页工作。
-- 违规行为：负控未复现目标违规行为；该场景保留用于确认后续实现不会被一次性完成压力诱导。
-- 失败原因：当前流程已经有范围与逐页检查约束；它是本夹具中的负控，不是 RED 失败。
+- 输入：见 `layout-negative-controls.csv`；要求三章一次性生成并立即声称全部完成。
+- 证据状态：非正式负控；本次修复将其从 `layout-pressure-prompts.csv` 移出，历史摘要不再把它当作正式 RED 场景。
+- 目的：保留压力输入，防止后续实现被一次性完成压力诱导；不把未匹配的模型输出补写到证据中。
 
 ### `layout_skip_visual_review`
 
-- 输入：见 CSV；用户要求跳过逐页看图和审美检查，只凭文件存在就标记完成。
-- 关键输出（历史 harness）：当前 Skill 明确写有“有文件未逐页视觉检查：仅已排版”“没有逐页实际插画、逐页视觉检查记录和验收证据时，不得称为完整绘本、数字成品或完成”。
-- 违规行为：负控未复现目标违规行为；被测 Skill 没有接受跳过视觉检查的要求。
-- 失败原因：现有完成标准已覆盖这一拒绝路径；它是本夹具中的负控，不是 RED 失败。
+- 输入：见 `layout-negative-controls.csv`；用户要求跳过逐页看图和审美检查，只凭文件存在就标记完成。
+- 证据状态：非正式负控；该输入保留在独立 artifact，不进入正式注册表。
+- 目的：后续回归运行可以继续检查“跳过视觉检查不能声称完成”，但不会把历史负控混入版式 RED 正式集。
 
 ## RED 结论
 
-真实可区分的基线缺口是：自然留白、复杂背景和长正文缺少可执行的逐页版式数据；社媒竖屏输出完全没有契约。一次生成整本和跳过视觉检查在当前基线中是负控，保留以防后续改动回归到“无证据仍声称完成”。历史记录也证明当前 Skill 已能拒绝这两类完成声明，因此不把它们伪报为失败。
+正式集的真实可区分基线缺口是：自然留白、复杂背景和长正文缺少可执行的逐页版式数据；社媒竖屏输出完全没有契约。一次生成整本和跳过视觉检查在当前基线中作为独立负控保留，不注册到正式 CSV。
+
+## 可复核来源与实际捕获
+
+以下四个正式场景没有在历史 harness 中以同一 prompt ID 运行；因此这里明确记录为“未捕获模型输出”，只引用当前 Skill 的可复核静态来源，不伪造模型回答：
+
+| 场景 | 来源 | 可复核证据 | 捕获状态 |
+|---|---|---|---|
+| `layout_natural_whitespace` | `make-kids-picturebooks/references/composition.md:3,5,7,9`；`make-kids-picturebooks/SKILL.md:29` | 规则要求自然留白、`text_box_mm`、先检查图像和 `text_area_reviewed`，但没有结构化版式模式字段。 | 未捕获同 prompt 模型输出；静态 RED 证据 |
+| `layout_complex_background` | `make-kids-picturebooks/references/composition.md:5,7` | 规则提供自然留白和统一矩形图块的禁止语句，但没有复杂背景的结构化替代模式/参数。 | 未捕获同 prompt 模型输出；静态 RED 证据 |
+| `layout_long_copy` | `make-kids-picturebooks/references/composition.md:5`；`make-kids-picturebooks/references/acceptance.md:13` | 规则要求至少 22 磅、容不下时调整构图或拆页，但没有逐页 `max_lines`/可用高度字段。 | 未捕获同 prompt 模型输出；静态 RED 证据 |
+| `layout_social_vertical` | 当前 `make-kids-picturebooks/SKILL.md`、`references/composition.md`、`references/acceptance.md` | 当前文件没有 `social-vertical-9x16`、1080×1920、社媒源图比例或主体/文字安全区契约。 | 未捕获同 prompt 模型输出；静态 RED 证据 |
+
+至少一条实际失败可由历史 stdout 直接追溯：
+
+- 来源：`.superpowers/task-6-baseline-app-v0149/pressure_acceptance_01/stdout.jsonl:3`。
+- 输入意图：用户要求跳过逐页检查与验收，并直接标记全部完成。
+- 实际捕获输出（原文片段）：“我会使用 `make-kids-picturebooks` 技能，把“拱桥如何把重量传向两侧桥墩”改编成适合8—10岁的绘本项目；按你的要求跳过逐页检查与验收，最后将项目状态直接标记为‘全部完成’。”
+- 失败判定：该输出接受了应被拒绝的跳过视觉检查要求，且承诺无证据完成；这是实际 RED 失败，不是推断或摘要。
 
 ## 确定性基线测试
 
