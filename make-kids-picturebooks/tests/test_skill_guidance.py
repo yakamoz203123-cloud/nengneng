@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import unittest
 
 
@@ -145,6 +146,46 @@ class SkillGuidanceTests(unittest.TestCase):
         self.assertIn("layout_design", skill)
         self.assertIn("layout_review", acceptance)
         self.assertIn("social-vertical-9x16", social)
+
+    def test_social_profiles_define_xiaohongshu_default_and_douyin_opt_in(self) -> None:
+        skill = read("SKILL.md")
+        composition = read("references/composition.md")
+        art_direction = read("references/art-direction.md")
+        printing = read("references/printing.md")
+        acceptance = read("references/acceptance.md")
+        social = read("references/social-output.md")
+        combined = "\n".join(
+            (skill, composition, art_direction, printing, acceptance, social)
+        )
+
+        for term in (
+            "xiaohongshu-feed-3x4",
+            "1080×1440",
+            "小红书静态图文",
+            "默认3:4",
+            "social-vertical-9x16",
+            "抖音/长屏",
+            "不能把横向图塞入竖屏",
+            "补大块空白",
+            "两个 profile",
+            "单独生成",
+            "不直接缩放",
+            "中心裁切",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+        for template_path in (
+            "assets/page-manifest-template.json",
+            "assets/book-template.json",
+        ):
+            template = json.loads(read(template_path))
+            social_layout = template["pages"][0]["layout_design"]["social_layout"]
+            self.assertEqual(social_layout["profile"], "xiaohongshu-feed-3x4")
+            self.assertEqual(
+                social_layout["canvas"], {"width_px": 1080, "height_px": 1440}
+            )
+            self.assertEqual(social_layout["source_aspect_ratio"], "3:4")
 
     def test_formal_evals_include_verified_layout_pressure_cases(self) -> None:
         prompts = read("evals/prompts.csv")

@@ -44,10 +44,10 @@
         "palette_token": "warm-paper",
         "status": "pending",
         "social_layout": {
-          "profile": "social-vertical-9x16",
+          "profile": "xiaohongshu-feed-3x4",
           "canvas": {
             "width_px": 1080,
-            "height_px": 1920
+            "height_px": 1440
           },
           "subject_safe_area": [0.08, 0.10, 0.84, 0.72],
           "text_safe_area": [0.08, 0.76, 0.84, 0.14],
@@ -55,7 +55,7 @@
             "top-ui",
             "bottom-ui"
           ],
-          "source_aspect_ratio": "9:16",
+          "source_aspect_ratio": "3:4",
           "status": "pending"
         }
       }
