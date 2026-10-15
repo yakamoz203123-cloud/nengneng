@@ -4,6 +4,8 @@ import json
 import math
 from pathlib import Path
 
+from layout_design import validate_layout_design
+
 
 def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = False) -> list[str]:
     errors = []
@@ -66,6 +68,8 @@ def validate_page_manifest(data: dict, base_dir: Path, require_images: bool = Fa
             error(where + '.text_area', 'expected four finite coordinates in mm')
         elif area[0] < 0 or area[1] < 0 or area[2] <= 0 or area[3] <= 0:
             error(where + '.text_area', 'origin must be nonnegative and dimensions positive')
+        for message in validate_layout_design(page.get('layout_design'), require_images):
+            error(where + '.layout_design', message)
         props = page.get('props')
         if not isinstance(props, list):
             error(where + '.props', 'expected a list (empty for pages without props)')

@@ -1,10 +1,12 @@
 import copy
 import importlib.util
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 
 MODULE = Path(__file__).resolve().parents[1] / 'scripts/validate_page_manifest.py'
+sys.path.insert(0, str(MODULE.parent))
 
 
 class ManifestTests(unittest.TestCase):
@@ -34,6 +36,14 @@ class ManifestTests(unittest.TestCase):
     def test_completion_needs_image(self):
         self.assertTrue(self.validate(self.data, self.base, True))
 
+    def test_completion_requires_layout_design(self):
+        self.complete()
+        del self.data['pages'][0]['layout_design']
+
+        errors = self.validate(self.data, self.base, True)
+
+        self.assertIn('pages[1].layout_design: 完成模式需要layout_design', errors)
+
     def complete(self):
         (self.base / 'new.png').write_bytes(b'asset')
         self.data['pages'][0]['current_image_path'] = 'new.png'
@@ -45,6 +55,29 @@ class ManifestTests(unittest.TestCase):
             'next_page_hook': {'state_id': 'story_end', 'summary': 'The single-page story is complete.'},
             'text_image_match': {'status': 'passed', 'evidence': 'Reviewed text and image for page 1.'},
             'continuity_review': {'status': 'passed', 'evidence': 'Reviewed the story boundaries for page 1.'},
+            'layout_design': {
+                'layout_style_version': 'layout-v1',
+                'layout_mode': 'scene-integrated',
+                'text_anchor': 'top-left',
+                'text_treatment': 'natural-space',
+                'text_align': 'left',
+                'max_lines': 4,
+                'focal_point': 'Three blocks on the floor',
+                'text_safe_area': 'Upper-left empty wall',
+                'avoid_covering': ['child face', 'blocks'],
+                'page_rhythm': 'establishing',
+                'palette_token': 'warm-paper',
+                'status': 'passed',
+                'social_layout': {
+                    'profile': 'social-vertical-9x16',
+                    'canvas': {'width_px': 1080, 'height_px': 1920},
+                    'subject_safe_area': [0.08, 0.10, 0.84, 0.72],
+                    'text_safe_area': [0.08, 0.76, 0.84, 0.14],
+                    'avoid_regions': ['top-ui', 'bottom-ui'],
+                    'source_aspect_ratio': '9:16',
+                    'status': 'passed',
+                },
+            },
         })
 
     def test_template_declares_per_page_character_reference_path(self):
