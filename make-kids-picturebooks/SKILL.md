@@ -5,7 +5,7 @@ description: Use when the user provides an adult knowledge book or chapter and w
 
 # 宝宝知识绘本
 
-从成人知识书中筛选适合所选年龄的概念，转成孩子能跟随的原创故事与画面。章节用于定位来源，制作顺序按儿童的理解和铺垫需要安排。默认交付一份含真实插画、可直接家庭打印的绘本PDF（便携式文档格式），保存可续做进度。支持选择3—4岁、5—7岁或8—10岁，每次只制作所选年龄段，跨书沿用固定虚构儿童伙伴。
+从成人知识书中筛选适合所选年龄的概念，转成孩子能跟随的原创故事与画面。章节用于定位来源，制作顺序按儿童的理解和铺垫需要安排。默认交付一份含真实插画、可直接家庭打印的绘本PDF（便携式文档格式），保存可续做进度。支持选择3—4岁、5—7岁或8—10岁，每次只制作所选年龄段，跨书沿用固定、已批准的儿童角色；角色可以是虚构伙伴，也可以是用户明确授权的真实儿童原型，但真实儿童资料只保存在私有项目，不进入 Skill 仓库或 GitHub。
 
 ## 安全边界与停止条件
 
@@ -25,7 +25,7 @@ description: Use when the user provides an adult knowledge book or chapter and w
 
 1. 阅读 [改编规则](references/adaptation.md)。建立覆盖范围明确的书籍地图，先查看目录与相关片段、再实际读取候选概念的上下文，按所选年龄筛选、去重与排序。保存来源位置、儿童目标、适龄理由、必要铺垫、取舍状态及所需册数。可跨章节组合解释同一核心概念；难以安全、准确地故事化的内容暂缓或跳过。只有实际核验的主题进入制作队列；不为覆盖全书安排册数。
 2. 为每册保存概念卡、完整朗读故事和逐页分镜。正文要让家长直接逐页读完，包含愿望、问题、行动、转场和情感结尾；先通读检查故事，再分配页面；逐页分镜记录叙事用途并做删除／合并检查，按自然节奏选择合适的4倍数页数，不能用短句图片说明冒充完整故事。保留来源位置、关键条件、儿童目标、类比边界及独立家长说明；儿童绘本默认只含封面、故事和封底，来源、改编边界、共读建议与打印指导另存说明文件，仅在用户明确要求时附家长页；故事原创，每册一个核心概念，图像承载探索过程。概念卡记录故事事件为何体现概念、必须出现的视觉证据；逐页检查实际证据，不为迁就错误图片改掉概念成立条件。
-3. 阅读 [角色规则](references/characters.md)。复用项目中已批准并记录版本号的角色参考；首次设定在用户确认角色设定和标准图后才继续。维护稳定的 character bible，并在每页清单记录同一已批准版本的 `character_reference_path`；用户授权临时角色测试时单独标注并排除在正式系列角色和复用清单之外。
+3. 阅读 [角色规则](references/characters.md)。复用项目中已批准并记录版本号的角色参考；首次设定在用户确认角色设定和标准图后才继续。维护稳定的 character bible，并在每页清单记录同一已批准版本的 `character_reference_path`。如果角色基于真实儿童，先建立私有项目内的角色 Bible，记录 `privacy_scope: private` 和独立的 `public_release` 状态；原始照片、角色参考图和个人信息不得复制到 Skill 仓库或 GitHub。用户授权临时角色测试时单独标注并排除在正式系列角色和复用清单之外。
 4. 阅读 [艺术指导与多画风](references/art-direction.md)，保存每册风格卡；首次探索或本次要求多风格时先做同场景三方向对照并暂停等待确认，项目中已有批准方向时按版本号直接复用。同册保持视觉语言一致，不同册可采用不同方向。先完成含真实正文的样页并获得画风确认，再扩展全册。阅读 [图文构图规则](references/composition.md)和 [逐页记录](references/page-records.md)，填写 manifest continuity fields：`previous_page_state`、`current_page_entry`、`next_page_hook` 的精确 `state_id`/`summary` 形状，以及 `text_image_match`、`continuity_review` 的 `status`/`evidence` 形状。
 
    在每页正式生成插画前，必须先完成 `layout_design`：锁定正文分页、`text_box_mm`、视觉焦点、人物/道具避让对象、颜色令牌、最大行数和版式模式。三种模式只能选一种：`scene-integrated`（自然留白）、`soft-card`（柔和文字卡）或 `narrative-band`（连续叙事带）。小红书默认的 `social_layout` 还必须声明 `composition_mode: portrait-full-bleed` 和 `text_placement: in-scene`：插画是连续竖版场景，文字进入画面内部自然留白或悬浮卡，不使用底部通栏。一次导出只绑定一个 profile；同时交付两个 profile 时，分别建立 profile-specific 输出版本、源图和审核记录。

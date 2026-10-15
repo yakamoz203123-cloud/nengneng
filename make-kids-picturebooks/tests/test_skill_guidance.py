@@ -65,6 +65,18 @@ class SkillGuidanceTests(unittest.TestCase):
         self.assertIn("acceptance", acceptance)
 
 
+    def test_private_real_child_character_guidance_is_explicit(self) -> None:
+        skill = read("SKILL.md")
+        characters = read("references/characters.md")
+
+        for term in ("真实儿童", "私有项目", "privacy_scope", "public_release"):
+            with self.subTest(term=term):
+                self.assertIn(term, skill + characters)
+        self.assertIn("不进入 Skill 仓库或 GitHub", skill + characters)
+        for term in ("pending", "不等于", "approved"):
+            self.assertIn(term, skill + characters)
+
+
     def test_docs_limit_deterministic_checks_to_record_and_file_validation(self) -> None:
         combined = "\n".join(
             read(path)

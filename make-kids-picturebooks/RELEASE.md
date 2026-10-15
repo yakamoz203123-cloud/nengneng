@@ -16,6 +16,7 @@
 - 小红书静态图文默认 `xiaohongshu-feed-3x4` 输出，固定为 `1080×1440`、源图3:4；抖音/长屏显式选择独立的 `social-vertical-9x16`，固定为 `1080×1920`、源图9:16。
 - 小红书新页面要求 `portrait-full-bleed` 竖版满幅构图与 `in-scene` 画面内文字；模板和确定性门禁拒绝底部通栏文字区。
 - 正式社媒插画前增加生成器比例预检：`preflight_image_generation.py` 读取实际探针尺寸，比例不符返回 `image_generation_blocked`，禁止横图适配后继续排版。
+- 增加真实儿童原型的私有角色 Bible 规则：`privacy_scope` 与 `public_release` 分离，角色参考必须保留版本，公开 Skill／GitHub 包不包含照片、角色图或个人资料。
 
 ## 质量门迭代
 
