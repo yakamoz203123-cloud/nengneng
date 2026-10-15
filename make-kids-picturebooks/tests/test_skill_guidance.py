@@ -170,7 +170,8 @@ class SkillGuidanceTests(unittest.TestCase):
             "不能把横向图塞入竖屏",
             "补大块空白",
             "两个 profile",
-            "单独生成",
+            "一次导出只绑定一个 profile",
+            "分别建立 profile-specific 输出版本",
             "不直接缩放",
             "中心裁切",
         ):
