@@ -36,4 +36,6 @@
 
 `layout_review` 是独立的逐页人工/模型视觉审核记录，至少说明文字和画面的关系、对比、遮挡、阅读顺序与页间连续性。字段存在、脚本通过、字体嵌入或 PDF 可提取，不能声称自动审美通过；`layout_review` 缺失、证据为空或未通过时，不得进入 `digital_checked`。验收脚本只能验证结构、文件和几何条件，视觉融合、人物身份、场景可读性和 science/story consistency 仍需 human/model visual review。
 
+正式逐页插画前，必须对实际图像生成器做一次 profile 探针预检：运行 `scripts/preflight_image_generation.py` 并保存 JSON 结果。它读取生成文件的实际尺寸；提示词或参数声明不算能力证据。若结果为 `image_generation_blocked`，不得继续正式插画、排版或完成声明，不能把 `1280×720` 等横图缩放、中心裁切或补白成社媒页。
+
 社媒变体必须单独声明 profile、画布、源图比例、主体安全区、文字安全区和平台界面避让区。默认小红书静态图文使用 `social_layout.profile: "xiaohongshu-feed-3x4"`、画布 `1080×1440`、源图比例 `3:4`；抖音/长屏必须显式使用 `social_layout.profile: "social-vertical-9x16"`、画布 `1080×1920`、源图比例 `9:16`。一次导出只绑定一个 profile；同时交付两个 profile 时分别建立 profile-specific 输出版本、源图和逐页审核记录，不直接缩放/中心裁切；不能把横向图塞入竖屏后补大块空白。`social_pages` 每条记录必须包含独立的 `layout_review`，并保存具体的文字与画面关系、对比度、遮挡、视觉焦点和阅读节奏证据；缺失、泛化或未通过时拒绝验收。检查逐页 PNG/JPEG 是否实际存在、尺寸是否正确、字幕是否越界、关键对象是否安全、源图是否原生符合所选比例；不允许用打印版通过替代任一社媒 profile 的逐页审核。社媒版通过也不能反向替代打印 PDF 的字体、可提取文字和拼版检查。

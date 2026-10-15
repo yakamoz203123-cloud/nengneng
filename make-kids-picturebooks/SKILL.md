@@ -18,7 +18,7 @@ description: Use when the user provides an adult knowledge book or chapter and w
 1. 读取本次来源和已有项目，不依赖对话记忆补全书籍或进度。查找同名项目时使用文件保存环境的检索能力。
 2. 区分“筛选选题”“单册试做”“已选主题批量制作”“继续”“修改某页”。默认先阅读 [适龄选题筛选](references/topic-selection.md)，提出少量有来源依据的适龄主题及取舍理由；未指定制作范围时只将优先推荐的一册放入本次队列并完成。用户指定某章时在该范围内筛选；用户明确要求按章推进时保存 chapter_order（按章模式），仍允许不适龄内容零册。批量范围已明确时按所选主题队列完成，不逐册请求确认。
    阅读 [年龄选择与分层](references/age-bands.md)。先确定本次目标年龄：用户明确指定时直接采用；继续项目时沿用当前册或项目已选单一档位；新项目未指定或范围跨档时，只询问一次年龄选择，等待回答后再创作正文和插画，期间可读取来源。只评估并制作所选档位，本次明确要求多个年龄版本时才做多套。按所选年龄与已选概念评估所需册数；一个主题可以一册或多册，主题册数与年龄版本数分开。保存目标年龄，不将同一套正文标为适合所有年龄。
-3. 检查文本读取、图像生成、中文可嵌入字体、排版及渲染能力。图像生成能力缺失是停止条件：报告阻碍并只把已有文字成果标为 text（文字完成），不改用插画提示、分镜或占位图冒充完整绘本。
+3. 检查文本读取、图像生成、中文可嵌入字体、排版及渲染能力。图像生成能力缺失是停止条件：报告阻碍并只把已有文字成果标为 text（文字完成），不改用插画提示、分镜或占位图冒充完整绘本。对目标社媒 profile，先让实际生成器生成一张探针图，再运行 `scripts/preflight_image_generation.py` 读取实际尺寸；提示词中写了3:4或9:16不等于生成器真的支持该比例。若脚本返回 `image_generation_blocked`，立即停止正式插画、排版和完成声明，不把横图缩放、中心裁切或补白后继续。
 4. 新项目复制 [项目模板](assets/project-template.json)。用独立项目保存来源、章节评估、概念卡、角色参考、分镜、插画、版面数据及成果。生成文件使用可用的持久文件保存流程；技能资源只读，不在技能目录保存用户书籍或人物资料。
 
 ## 执行流程
@@ -32,6 +32,8 @@ description: Use when the user provides an adult knowledge book or chapter and w
 
    这一步是生成前的文字安全区锁定，不是生成后把字幕随意贴到图片上。图像提示词必须明确完整单页、按所选社媒 profile 的比例（小红书默认3:4；抖音/长屏仅在显式选择 `social-vertical-9x16` 时用9:16）、主体从上到下的纵向构图、低纹理文字区域的具体位置与纹理，并明确禁止横向条幅、禁止上下大块空白、禁止底部通栏和图像内文字。正文仍由排版层加入，以保证文字可编辑、可提取和可校验。
 
+   在开始正式逐页插画前，必须先用实际生成器完成一次目标 profile 的探针生成，并运行 `preflight_image_generation.py`；将通过的 JSON 记录保存到当前版本的审核目录。小红书探针必须实际返回3:4（例如 `768×1024` 或 `1080×1440`），抖音/长屏探针必须实际返回9:16。若实际返回 `1280×720` 等横图，状态是 `blocked`，不要反复修改提示词假装已具备竖版能力；应更换支持原生比例的生成器，或向用户索取合格源图。两个 profile 必须分别预检，不能用一个 profile 的探针替代另一个。
+
    先看 character bible 参考图，绑定人物、道具、动作与知识检查点；再按 `layout_design` 生成逐页插画。生成后必须实际查看留白、文字对比、遮挡、阅读顺序和人物连续性，保存 `layout_review` 的实际证据；小红书页还要确认主体不是横向条幅、背景从上到下连续、没有上下大块空白，文字确实位于画面内部。留白消失、焦点被遮挡或版式失去视觉融合时回到插画或版式修订。成页必须达到图文融合，不接受独立矩形图片加底部默认正文块的故事页。进行 text-image state matching，并按 [检查规则](references/review.md)做 adjacent-page pair 审核；问题页最多两轮针对性修订，仍有关键缺陷时保存阻碍。
 5. 阅读 [打印规则](references/printing.md)，填写 [版面模板](assets/book-template.json)。按 [验收与导出](references/acceptance.md)运行最终的 `export_book.py`（其中调用 `validate_exports.py`）和 acceptance 检查，生成阅读版、已经拼好的打印版及全部页面预览，实际查看每个阅读页和打印面。社媒默认按小红书静态图文 `xiaohongshu-feed-3x4` 生成逐页 PNG/JPEG，画布为 `1080×1440`，源图必须为3:4；需要抖音/长屏时必须显式选择 `social-vertical-9x16`，画布才是 `1080×1920`、源图才按9:16生成。一次导出只绑定一个 profile；同时交付两个 profile 时分别建立输出版本、源图和逐页审核记录，不直接缩放、中心裁切或补大块空白。
 6. 保存含逐页证据的检查记录，用统一验收脚本核对素材、正文、版本、字体、PDF、社媒导出和审核文件，通过后生成文件摘要并更新项目状态。社媒 `social_pages` 每条记录必须包含独立的 `layout_review`；缺失、泛化或未通过时不得进入 `digital_checked`。脚本是 deterministic gates，只检查声明的记录、文件和可测导出条件；它们 never automatic proof。`layout_design`、文件存在、字体嵌入或几何检查通过，不能声称自动审美通过；视觉身份、场景可读性、图文融合、页间连续性和 science/story consistency 仍须 human/model visual review，`layout_review` 未通过不得进入 `digital_checked`。默认只向用户交付一份已拼好的家庭打印PDF（便携式文档格式），回复附简短打印指导；用户明确选择屏幕阅读时改交阅读版，明确要求两版时才同时交付。家长说明和制作资料保留在项目中，用户要求时再提供；保留可编辑数据、插画及概念卡；可用 package_project.py 打包本册通过验收的当前素材，文件属于用户私有项目，公开发布另行审查。没有实物反馈只记录数字检查通过。
@@ -42,6 +44,7 @@ description: Use when the user provides an adult knowledge book or chapter and w
 
 ```bash
 python3 "$SKILL_DIR/scripts/project_state.py" /absolute/project/project.json
+python3 "$SKILL_DIR/scripts/preflight_image_generation.py" /absolute/probe.png --profile xiaohongshu-feed-3x4
 python3 "$SKILL_DIR/scripts/validate_page_manifest.py" /absolute/project/books/b01/page-manifest.json --require-images
 python3 "$SKILL_DIR/scripts/export_book.py" /absolute/project/books/b01/v1/layout.json /absolute/project/books/b01/v1/export
 python3 "$SKILL_DIR/scripts/accept_book.py" /absolute/project/project.json b01
@@ -68,5 +71,6 @@ python3 "$SKILL_DIR/scripts/package_project.py" /absolute/project/project.json b
 - 来源只有部分内容：只对实际读取的片段作适龄结论；目录线索标为待核验，不宣称已筛选完整本书。
 - 总页数不足4倍数：先调整有叙事用途的分页，例如拆开请求与回应；可用有用途的扉页或封底，不用家长说明、机械总结或重复画面凑页数。
 - 继续任务：核对实际文件、版本及本次主题队列，推进第一个已选未完成册；未选中或暂缓的内容不自动补做。用户要求再做一册时，从已核验适龄主题中挑选下一项并更新队列。本次队列完成只代表当前范围完成。
+- 生成器只返回固定横图：记录 `image_generation_blocked` 和实际尺寸，停止正式插画与排版；不得用缩放、中心裁切或补白伪造原生社媒比例。
 
 示例：“从这本书里挑适合5—7岁孩子的内容，给出选题和理由，先做最适合的一册，沿用已有儿童角色，生成家庭双面打印文件。”

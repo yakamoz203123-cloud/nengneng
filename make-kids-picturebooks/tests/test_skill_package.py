@@ -119,6 +119,7 @@ class SkillPackageTests(unittest.TestCase):
                     f"{skill.name}/scripts/layout_design.py",
                     f"{skill.name}/scripts/layout_styles.py",
                     f"{skill.name}/scripts/render_social.py",
+                    f"{skill.name}/scripts/preflight_image_generation.py",
                     f"{skill.name}/assets/book-template.json",
                     f"{skill.name}/assets/page-manifest-template.json",
                     f"{skill.name}/references/social-output.md",

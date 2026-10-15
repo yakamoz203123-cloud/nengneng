@@ -221,6 +221,26 @@ class SkillGuidanceTests(unittest.TestCase):
             )
             self.assertEqual(social_layout["text_placement"], "in-scene")
 
+    def test_social_image_generation_requires_native_ratio_preflight(self) -> None:
+        combined = "\n".join(
+            read(path)
+            for path in (
+                "SKILL.md",
+                "references/social-output.md",
+                "references/acceptance.md",
+            )
+        )
+
+        for term in (
+            "preflight_image_generation.py",
+            "image_generation_blocked",
+            "实际尺寸",
+            "不能缩放、中心裁切或补白",
+            "先生成一张探针图",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
     def test_formal_evals_include_verified_layout_pressure_cases(self) -> None:
         prompts = read("evals/prompts.csv")
         rubric = read("evals/rubric.md")

@@ -40,7 +40,7 @@ jobs:
         run: python -m compileall make-kids-picturebooks/scripts
 
       - name: Quick validate public skill surface
-        run: python -X utf8 -c "from pathlib import Path; root=Path('make-kids-picturebooks'); required=['SKILL.md','scripts/layout_design.py','scripts/layout_styles.py','scripts/render_social.py','assets/book-template.json','assets/page-manifest-template.json','references/social-output.md']; missing=[item for item in required if not (root/item).is_file()]; raise SystemExit('missing public skill files: '+', '.join(missing)) if missing else None"
+        run: python -X utf8 -c "from pathlib import Path; root=Path('make-kids-picturebooks'); required=['SKILL.md','scripts/layout_design.py','scripts/layout_styles.py','scripts/render_social.py','scripts/preflight_image_generation.py','assets/book-template.json','assets/page-manifest-template.json','references/social-output.md']; missing=[item for item in required if not (root/item).is_file()]; raise SystemExit('missing public skill files: '+', '.join(missing)) if missing else None"
 
       - name: Run tests
         run: python -X utf8 -W error::DeprecationWarning -m unittest discover -s make-kids-picturebooks/tests -q
