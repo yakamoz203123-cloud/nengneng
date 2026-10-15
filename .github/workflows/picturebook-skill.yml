@@ -39,12 +39,19 @@ jobs:
       - name: Compile scripts
         run: python -m compileall make-kids-picturebooks/scripts
 
+      - name: Quick validate public skill surface
+        run: python -X utf8 -c "from pathlib import Path; root=Path('make-kids-picturebooks'); required=['SKILL.md','scripts/layout_design.py','scripts/layout_styles.py','scripts/render_social.py','assets/book-template.json','assets/page-manifest-template.json','references/social-output.md']; missing=[item for item in required if not (root/item).is_file()]; raise SystemExit('missing public skill files: '+', '.join(missing)) if missing else None"
+
       - name: Run tests
         run: python -X utf8 -W error::DeprecationWarning -m unittest discover -s make-kids-picturebooks/tests -q
 
       - name: Build hosted skill archive
-        run: python -X utf8 make-kids-picturebooks/scripts/package_skill.py make-kids-picturebooks package-ci.zip --version 0.9.1
+        run: python -X utf8 make-kids-picturebooks/scripts/package_skill.py make-kids-picturebooks make-kids-picturebooks-v0.10.0-preview.zip --version 0.10.0-preview
 
-      - name: Check archive exists
+      - name: Check archive structure and manifest hashes
         shell: bash
-        run: test -s package-ci.zip
+        run: python -X utf8 -c "import hashlib,json,zipfile; from pathlib import Path; p=Path('make-kids-picturebooks-v0.10.0-preview.zip'); assert p.is_file() and p.stat().st_size > 0; z=zipfile.ZipFile(p); names=set(z.namelist()); top={n.split('/',1)[0] for n in names}; assert top == {'make-kids-picturebooks'}; m=json.loads(z.read('make-kids-picturebooks/MANIFEST.json')); assert m['version']=='0.10.0-preview'; listed={e['path']:e['sha256'] for e in m['files']}; assert set(listed)==names-{'make-kids-picturebooks/MANIFEST.json'}; assert all(hashlib.sha256(z.read(n)).hexdigest()==d for n,d in listed.items())"
+
+      - name: Check current behavior evaluation when present
+        if: ${{ hashFiles('make-kids-picturebooks/evals/results/current.jsonl') != '' }}
+        run: python -X utf8 make-kids-picturebooks/scripts/check_eval_results.py make-kids-picturebooks/evals/results/current.jsonl
