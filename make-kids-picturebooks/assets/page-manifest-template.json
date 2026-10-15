@@ -39,8 +39,10 @@
             "width_px": 1080,
             "height_px": 1440
           },
-          "subject_safe_area": [0.08, 0.10, 0.84, 0.62],
-          "text_safe_area": [0.08, 0.76, 0.84, 0.14],
+          "subject_safe_area": [0.50, 0.20, 0.42, 0.54],
+          "text_safe_area": [0.08, 0.12, 0.38, 0.24],
+          "composition_mode": "portrait-full-bleed",
+          "text_placement": "in-scene",
           "avoid_regions": [
             "top-ui",
             "bottom-ui"

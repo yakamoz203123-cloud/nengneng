@@ -27,6 +27,10 @@ def valid_xiaohongshu_social_layout():
         {
             "profile": "xiaohongshu-feed-3x4",
             "canvas": {"width_px": 1080, "height_px": 1440},
+            "subject_safe_area": [0.50, 0.20, 0.42, 0.54],
+            "text_safe_area": [0.08, 0.12, 0.38, 0.24],
+            "composition_mode": "portrait-full-bleed",
+            "text_placement": "in-scene",
             "source_aspect_ratio": "3:4",
         }
     )
@@ -158,6 +162,39 @@ class LayoutDesignTests(unittest.TestCase):
         design["social_layout"] = valid_xiaohongshu_social_layout()
 
         self.assertEqual([], validate_layout_design(design, True))
+
+    def test_xiaohongshu_requires_portrait_full_bleed_and_in_scene_text(self):
+        design = valid_layout_design()
+        design["social_layout"] = valid_xiaohongshu_social_layout()
+        design["social_layout"].pop("composition_mode")
+        design["social_layout"].pop("text_placement")
+
+        errors = validate_layout_design(design, True)
+
+        self.assertIn(
+            "完成模式要求social_layout.composition_mode为portrait-full-bleed",
+            errors,
+        )
+        self.assertIn(
+            "完成模式要求social_layout.text_placement为in-scene",
+            errors,
+        )
+
+    def test_xiaohongshu_rejects_bottom_text_strip(self):
+        design = valid_layout_design()
+        design["social_layout"] = valid_xiaohongshu_social_layout()
+        design["social_layout"].update(
+            {
+                "text_safe_area": [0.08, 0.76, 0.84, 0.14],
+            }
+        )
+
+        errors = validate_layout_design(design, True)
+
+        self.assertIn(
+            "social_layout.text_safe_area不得是底部通栏",
+            errors,
+        )
 
     def test_rejects_overlapping_social_safe_areas(self):
         design = valid_layout_design()

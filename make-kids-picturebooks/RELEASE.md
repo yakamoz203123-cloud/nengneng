@@ -14,6 +14,7 @@
 - 三种可复核的整合式文字版式：`scene-integrated`、`soft-card`、`narrative-band`；
 - 版式设计契约、逐页 `layout_review` 审核记录和版式/清单/验收一致性检查；
 - 小红书静态图文默认 `xiaohongshu-feed-3x4` 输出，固定为 `1080×1440`、源图3:4；抖音/长屏显式选择独立的 `social-vertical-9x16`，固定为 `1080×1920`、源图9:16。
+- 小红书新页面要求 `portrait-full-bleed` 竖版满幅构图与 `in-scene` 画面内文字；模板和确定性门禁拒绝底部通栏文字区。
 
 ## 质量门迭代
 

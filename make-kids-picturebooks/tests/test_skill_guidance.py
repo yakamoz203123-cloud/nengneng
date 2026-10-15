@@ -147,6 +147,26 @@ class SkillGuidanceTests(unittest.TestCase):
         self.assertIn("layout_review", acceptance)
         self.assertIn("social-vertical-9x16", social)
 
+    def test_social_guidance_requires_portrait_full_bleed_and_in_scene_text(self) -> None:
+        combined = "\n".join(
+            read(path)
+            for path in (
+                "SKILL.md",
+                "references/composition.md",
+                "references/social-output.md",
+            )
+        )
+
+        for term in (
+            "portrait-full-bleed",
+            "text_placement",
+            "in-scene",
+            "禁止横向条幅",
+            "禁止底部通栏",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
     def test_social_profiles_define_xiaohongshu_default_and_douyin_opt_in(self) -> None:
         skill = read("SKILL.md")
         readme = read("../README.md")
@@ -191,8 +211,15 @@ class SkillGuidanceTests(unittest.TestCase):
             )
             self.assertEqual(social_layout["source_aspect_ratio"], "3:4")
             self.assertEqual(
-                social_layout["subject_safe_area"], [0.08, 0.10, 0.84, 0.62]
+                social_layout["subject_safe_area"], [0.50, 0.20, 0.42, 0.54]
             )
+            self.assertEqual(
+                social_layout["text_safe_area"], [0.08, 0.12, 0.38, 0.24]
+            )
+            self.assertEqual(
+                social_layout["composition_mode"], "portrait-full-bleed"
+            )
+            self.assertEqual(social_layout["text_placement"], "in-scene")
 
     def test_formal_evals_include_verified_layout_pressure_cases(self) -> None:
         prompts = read("evals/prompts.csv")

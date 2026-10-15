@@ -53,11 +53,11 @@ class AcceptanceTests(unittest.TestCase):
    Image.new('RGB',(1800,2400),'white').save(root/'test-image.png')
    layout=read_json(root/'layout.json');manifest=read_json(root/'manifest.json');review=read_json(root/'review.json')
    for page in layout['pages']:
-    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'subject_safe_area':[0.50,0.20,0.42,0.54],'text_safe_area':[0.08,0.12,0.38,0.24],'composition_mode':'portrait-full-bleed','text_placement':'in-scene','source_aspect_ratio':'3:4'})
    for page in manifest['pages']:
-    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'subject_safe_area':[0.50,0.20,0.42,0.54],'text_safe_area':[0.08,0.12,0.38,0.24],'composition_mode':'portrait-full-bleed','text_placement':'in-scene','source_aspect_ratio':'3:4'})
    for record in review['social_pages']:
-    record.update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+    record.update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'subject_safe_area':[0.50,0.20,0.42,0.54],'text_safe_area':[0.08,0.12,0.38,0.24],'source_aspect_ratio':'3:4'})
    for path in sorted((root/'social').glob('page-*.png')):
     Image.new('RGB',(1080,1440),'white').save(path)
    write_json(root/'layout.json',layout);write_json(root/'manifest.json',manifest);write_json(root/'review.json',review)

@@ -34,6 +34,13 @@ SOCIAL_PROFILES = {
     },
 }
 DEFAULT_SOCIAL_PROFILE = "xiaohongshu-feed-3x4"
+SOCIAL_COMPOSITION_MODES = {"portrait-full-bleed"}
+SOCIAL_TEXT_PLACEMENTS = {"in-scene"}
+# New Xiaohongshu pages keep copy inside the illustrated scene rather than a
+# bottom rail. These normalized limits reject the old full-width bottom block
+# while still allowing page-specific top, side, or middle natural space.
+XHS_IN_SCENE_TEXT_MAX_TOP = 0.72
+XHS_IN_SCENE_TEXT_MAX_BOTTOM = 0.88
 # Backward-compatible aliases for callers that imported the original 9:16 constants.
 SOCIAL_PROFILE = "social-vertical-9x16"
 SOCIAL_CANVAS = SOCIAL_PROFILES[SOCIAL_PROFILE]["canvas"]
@@ -190,6 +197,41 @@ def _validate_social_layout(value, require_complete, errors):
             errors.append(
                 f"social_layout.canvas必须是{canvas['width_px']}×{canvas['height_px']}"
             )
+    if value.get("profile") == DEFAULT_SOCIAL_PROFILE:
+        if require_complete:
+            _require_field(
+                value,
+                "composition_mode",
+                errors,
+                "social_layout.composition_mode",
+            )
+            _require_field(
+                value,
+                "text_placement",
+                errors,
+                "social_layout.text_placement",
+            )
+        if (
+            "composition_mode" in value
+            and value["composition_mode"] not in SOCIAL_COMPOSITION_MODES
+        ):
+            errors.append(
+                "social_layout.composition_mode必须是portrait-full-bleed"
+            )
+        elif (
+            require_complete
+            and value.get("composition_mode") != "portrait-full-bleed"
+        ):
+            errors.append(
+                "完成模式要求social_layout.composition_mode为portrait-full-bleed"
+            )
+        if (
+            "text_placement" in value
+            and value["text_placement"] not in SOCIAL_TEXT_PLACEMENTS
+        ):
+            errors.append("social_layout.text_placement必须是in-scene")
+        elif require_complete and value.get("text_placement") != "in-scene":
+            errors.append("完成模式要求social_layout.text_placement为in-scene")
     for field in ("subject_safe_area", "text_safe_area"):
         if field in value:
             _validate_normalized_area(value[field], f"social_layout.{field}", errors)
@@ -219,6 +261,19 @@ def _validate_social_layout(value, require_complete, errors):
             "social_layout.source_aspect_ratio必须是"
             f"{profile_config['source_aspect_ratio']}"
         )
+    if (
+        value.get("profile") == DEFAULT_SOCIAL_PROFILE
+        and value.get("text_placement") == "in-scene"
+        and isinstance(text_area, list)
+        and len(text_area) == 4
+        and all(_finite_number(item) for item in text_area)
+    ):
+        _, text_y, _, text_height = text_area
+        if (
+            text_y >= XHS_IN_SCENE_TEXT_MAX_TOP
+            or text_y + text_height > XHS_IN_SCENE_TEXT_MAX_BOTTOM
+        ):
+            errors.append("social_layout.text_safe_area不得是底部通栏")
     if "status" in value and value["status"] not in STATUSES:
         errors.append("social_layout.status必须是pending、passed或failed")
     elif require_complete and value.get("status") != "passed":
