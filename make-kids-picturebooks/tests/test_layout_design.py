@@ -13,7 +13,7 @@ def valid_social_layout():
     return {
         "profile": "social-vertical-9x16",
         "canvas": {"width_px": 1080, "height_px": 1920},
-        "subject_safe_area": [0.08, 0.10, 0.84, 0.72],
+        "subject_safe_area": [0.08, 0.10, 0.84, 0.62],
         "text_safe_area": [0.08, 0.76, 0.84, 0.14],
         "avoid_regions": ["top-ui", "bottom-ui"],
         "source_aspect_ratio": "9:16",
@@ -158,6 +158,17 @@ class LayoutDesignTests(unittest.TestCase):
         design["social_layout"] = valid_xiaohongshu_social_layout()
 
         self.assertEqual([], validate_layout_design(design, True))
+
+    def test_rejects_overlapping_social_safe_areas(self):
+        design = valid_layout_design()
+        design["social_layout"]["subject_safe_area"] = [0.08, 0.10, 0.84, 0.72]
+
+        errors = validate_layout_design(design, True)
+
+        self.assertIn(
+            "social_layout.subject_safe_area与text_safe_area不得重叠",
+            errors,
+        )
 
     def test_rejects_xiaohongshu_social_layout_with_wrong_canvas(self):
         design = valid_layout_design()

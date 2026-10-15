@@ -11,7 +11,7 @@
 
 小红书静态图文默认3:4。一次导出只绑定一个 profile；如果同时交付两个 profile，必须分别建立 profile-specific 输出版本、源图和审核记录，不能在同一条 `social_layout` 记录里混用。不得直接缩放、中心裁切或补大块空白；比例不符时必须按目标 profile 重新构图并生成源图，不能用“人工适配决定”替代这个要求。可以沿用角色参考、主色和故事状态，但视觉焦点、主体安全区、文字安全区、平台界面避让区和图像提示词必须按 profile 分别设计。
 
-新页面省略渲染器的 `profile` 参数时，默认使用页面记录的 `social_layout.profile`；因此已有明确记录的 `social-vertical-9x16` 项目仍会沿用9:16。新页面若未指定 profile 才使用小红书3:4默认值。
+调用渲染器时可以省略函数的 `profile` 参数；此时优先沿用页面已有的 `social_layout.profile`，因此明确记录为 `social-vertical-9x16` 的旧项目仍会沿用9:16。新页面的 `layout_design.social_layout.profile` 仍必须明确填写，项目模板默认填入小红书3:4。
 
 ## 生成前的契约
 
@@ -35,7 +35,7 @@
 {
   "profile": "social-vertical-9x16",
   "canvas": {"width_px": 1080, "height_px": 1920},
-  "subject_safe_area": [0.08, 0.10, 0.84, 0.72],
+  "subject_safe_area": [0.08, 0.10, 0.84, 0.62],
   "text_safe_area": [0.08, 0.76, 0.84, 0.14],
   "avoid_regions": ["top-ui", "bottom-ui"],
   "source_aspect_ratio": "9:16",

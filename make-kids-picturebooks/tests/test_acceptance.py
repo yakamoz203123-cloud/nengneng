@@ -6,7 +6,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 SKILL=Path(__file__).resolve().parents[1]
 
 def social_layout():
- return {'profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'subject_safe_area':[0.08,0.10,0.84,0.72],'text_safe_area':[0.08,0.76,0.84,0.14],'avoid_regions':['top-ui','bottom-ui'],'source_aspect_ratio':'9:16','status':'passed'}
+ return {'profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'subject_safe_area':[0.08,0.10,0.84,0.62],'text_safe_area':[0.08,0.76,0.84,0.14],'avoid_regions':['top-ui','bottom-ui'],'source_aspect_ratio':'9:16','status':'passed'}
 
 def layout_design(page):
  return {'layout_style_version':'layout-v1','layout_mode':'scene-integrated','text_anchor':'top-left','text_treatment':'natural-space','text_align':'left','max_lines':4,'focal_point':f'第{page}页孩子手中的纸飞机','text_safe_area':'左上方浅色墙面','avoid_covering':['孩子的脸部','纸飞机'],'page_rhythm':'action','palette_token':'warm-paper','status':'passed','social_layout':social_layout()}
@@ -41,7 +41,7 @@ def complete_project(root, blank_page=None):
  export_book(root/'layout.json',root/'export')
  (root/'social').mkdir()
  for i in range(1,5):Image.new('RGB',(1080,1920),'white').save(root/f'social/page-{i:02}.png')
- write('review.json',{'reading_pages':[{'page':i,'status':'passed','evidence':f'第{i}页已查看当前PDF渲染图。','image_path':f'export/reading-pages/page-{i:02}.png','layout_review':layout_review(i)} for i in range(1,5)],'print_sides':[{'side':i,'status':'passed','evidence':f'第{i}个打印面已核对配对、方向和边距。','image_path':f'export/print-pages/page-{i:02}.png'} for i in range(1,3)],'social_pages':[{'page':i,'status':'rendered','output_path':f'social/page-{i:02}.png','profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'source_aspect_ratio':'9:16','subject_safe_area':[0.08,0.10,0.84,0.72],'text_safe_area':[0.08,0.76,0.84,0.14],'layout_review':social_layout_review(i)} for i in range(1,5)],'unresolved_digital_defects':[]})
+ write('review.json',{'reading_pages':[{'page':i,'status':'passed','evidence':f'第{i}页已查看当前PDF渲染图。','image_path':f'export/reading-pages/page-{i:02}.png','layout_review':layout_review(i)} for i in range(1,5)],'print_sides':[{'side':i,'status':'passed','evidence':f'第{i}个打印面已核对配对、方向和边距。','image_path':f'export/print-pages/page-{i:02}.png'} for i in range(1,3)],'social_pages':[{'page':i,'status':'rendered','output_path':f'social/page-{i:02}.png','profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'source_aspect_ratio':'9:16','subject_safe_area':[0.08,0.10,0.84,0.62],'text_safe_area':[0.08,0.76,0.84,0.14],'layout_review':social_layout_review(i)} for i in range(1,5)],'unresolved_digital_defects':[]})
  write('project.json',{'schema_version':1,'target_age_bands':['5-7'],'source':{'path':'source.txt','version':'v1','coverage':'synthetic'},'characters_version':'v1','characters_path':'characters','books':[{'id':'b1','age_band':'5-7','source_version':'v1','characters_version':'v1','status':'laid_out','artifacts':{'concept':'concept.json','story':'story.txt','storyboard':'storyboard.json','layout':'layout.json','page_manifest':'manifest.json','reading_pdf':'export/reading.pdf','print_pdf':'export/print.pdf','review':'review.json'}}]})
  return root/'project.json'
 

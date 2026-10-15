@@ -22,7 +22,7 @@ class CompleteWorkflowTests(unittest.TestCase):
         write('font-provenance.txt','synthetic font provenance')
         Image.new('RGB',(1620,2880),'white').save(r/'test-image.png')
         def social_layout():
-            return {'profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'subject_safe_area':[0.08,0.10,0.84,0.72],'text_safe_area':[0.08,0.76,0.84,0.14],'avoid_regions':['top-ui','bottom-ui'],'source_aspect_ratio':'9:16','status':'passed'}
+            return {'profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'subject_safe_area':[0.08,0.10,0.84,0.62],'text_safe_area':[0.08,0.76,0.84,0.14],'avoid_regions':['top-ui','bottom-ui'],'source_aspect_ratio':'9:16','status':'passed'}
         def layout_design(page):
             return {'layout_style_version':'layout-v1','layout_mode':'soft-card' if page==2 else 'scene-integrated','text_anchor':'top-left','text_treatment':'soft-card' if page==2 else 'natural-space','text_align':'left','max_lines':4,'focal_point':f'第{page}页孩子手中的纸飞机','text_safe_area':'左上方浅色墙面','avoid_covering':['孩子的脸部','纸飞机'],'page_rhythm':'action','palette_token':'warm-paper','status':'passed','social_layout':social_layout()}
         pages=[{'number':i,'kind':kind,'text':'小朋友。','image':'test-image.png','image_box_mm':[10,10,128,190],'text_box_mm':[14,120,120,76],'image_role':'background','text_area_reviewed':True,'layout_design':layout_design(i)} for i,kind in enumerate(('cover','story','story','back'),1)]

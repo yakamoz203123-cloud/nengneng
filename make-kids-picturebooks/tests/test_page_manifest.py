@@ -71,7 +71,7 @@ class ManifestTests(unittest.TestCase):
                 'social_layout': {
                     'profile': 'social-vertical-9x16',
                     'canvas': {'width_px': 1080, 'height_px': 1920},
-                    'subject_safe_area': [0.08, 0.10, 0.84, 0.72],
+                    'subject_safe_area': [0.08, 0.10, 0.84, 0.62],
                     'text_safe_area': [0.08, 0.76, 0.84, 0.14],
                     'avoid_regions': ['top-ui', 'bottom-ui'],
                     'source_aspect_ratio': '9:16',

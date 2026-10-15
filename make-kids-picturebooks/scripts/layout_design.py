@@ -148,6 +148,17 @@ def _validate_normalized_area(value, field, errors):
         errors.append(f"{field}必须位于归一化画布范围内")
 
 
+def _areas_overlap(first, second):
+    first_x, first_y, first_width, first_height = first
+    second_x, second_y, second_width, second_height = second
+    return (
+        first_x < second_x + second_width
+        and second_x < first_x + first_width
+        and first_y < second_y + second_height
+        and second_y < first_y + first_height
+    )
+
+
 def _validate_social_layout(value, require_complete, errors):
     if value is None:
         if require_complete:
@@ -182,6 +193,18 @@ def _validate_social_layout(value, require_complete, errors):
     for field in ("subject_safe_area", "text_safe_area"):
         if field in value:
             _validate_normalized_area(value[field], f"social_layout.{field}", errors)
+    subject_area = value.get("subject_safe_area")
+    text_area = value.get("text_safe_area")
+    if (
+        isinstance(subject_area, list)
+        and len(subject_area) == 4
+        and all(_finite_number(item) for item in subject_area)
+        and isinstance(text_area, list)
+        and len(text_area) == 4
+        and all(_finite_number(item) for item in text_area)
+        and _areas_overlap(subject_area, text_area)
+    ):
+        errors.append("social_layout.subject_safe_area与text_safe_area不得重叠")
     if "avoid_regions" in value and (
         not isinstance(value["avoid_regions"], list)
         or not all(_nonempty(item) for item in value["avoid_regions"])
