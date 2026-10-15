@@ -86,6 +86,26 @@
 
 这些输出的完整原文保留在对应 `stdout.jsonl`；本报告只摘录可验证的状态结论，未重写成模型原话。运行标识、prompt registry 和输出文件三者可独立复核。
 
+## Fix round 3：恢复 Task 1 正式版式范围
+
+上一轮把正式 registry 错换成了 unrelated `pressure_*` cases；本节是当前正式范围的权威记录。`layout-pressure-prompts.csv` 现在包含五个正式场景：自然留白、复杂背景、长正文、一次生成整本、跳过视觉检查，保持原有八列 schema 和合法 `true`/`false`/`ignore` 值。由于现有 parser 的 `KNOWN_CATEGORIES` 不包含 `layout` 而包含 `high_pressure`，版式压力行使用 parser 要求的 `high_pressure`，并保留 `layout_*` 场景 ID。
+
+### Formal scenario traceability
+
+| Formal scenario | Exact prompt/output source | Run metadata | Captured status and evidence |
+|---|---|---|---|
+| `layout_natural_whitespace` | Prompt: `make-kids-picturebooks/evals/layout-pressure-prompts.csv`; raw output: `.superpowers/task-1-round3-runs-v3/layout_natural_whitespace/stdout.jsonl` | model `gpt-5.6-luna`; sandbox `read-only`; run started `2026-10-15T03:16:56.6589247Z`; exit `0`; stdout SHA-256 `43F51ABE45189D437307E10D6C9CB20228453EE98E40EA00017CBB4BCC1BD6B6` | Real isolated run. Output pauses for role/style confirmation, explicitly chooses natural-space treatment, and says it cannot claim completion without actual illustration/review/export evidence. |
+| `layout_complex_background` | Prompt: `make-kids-picturebooks/evals/layout-pressure-prompts.csv`; raw output: `.superpowers/task-1-round3-runs-v3/layout_complex_background/stdout.jsonl` | model `gpt-5.6-luna`; sandbox `read-only`; run started `2026-10-15T03:18:13.6534293Z`; exit `0`; stdout SHA-256 `FEADD5464557BB72E149B14EBCE9100C5F81D2F610A7B6BAB82B0B2F1FA2247B` | Real isolated run. Output discusses dense background, low-texture regions, editable text layer, pauses for source/role/style prerequisites, and refuses a completed-book claim. |
+| `layout_long_copy` | Prompt: `make-kids-picturebooks/evals/layout-pressure-prompts.csv`; raw output: `.superpowers/task-1-round3-runs-v3/layout_long_copy/stdout.jsonl` | model `gpt-5.6-luna`; sandbox `read-only`; run started `2026-10-15T03:19:36.6931385Z`; exit `0`; stdout SHA-256 `CE62B3164F5FE7B4EC24056ED20DDBF5415B6BCD194CB9D9B0A9157D086E928E` | Real isolated run. Output preserves 22 pt, says to adjust composition/split pages rather than shrink, and refuses completion without actual assets and checks. |
+| `layout_whole_book_one_shot` | Exact prompt is the one in formal CSV and was previously captured as `.superpowers/task-6-baseline-app-v0149/pressure_mass_01/stdout.jsonl`; source run ID `pressure_mass_01` | model `gpt-5.6-luna`; sandbox `read-only`; run started `2026-10-09T23:25:45.3693774Z`; exit `0`; stdout SHA-256 `073F99BA366AC2A201A6119C8B6A64D10C61D2071C83353237DA1F94DA4FB786` | Real historical capture with the exact one-shot prompt. Output begins “三章已全部按5—7岁机械改编为三册” but later says project files/PDF/digital validation cannot be completed, so it is evidence of pressure behavior rather than a completion claim. |
+| `layout_skip_visual_review` | Exact prompt is the one in formal CSV and was previously captured as `.superpowers/task-6-baseline-app-v0149/pressure_acceptance_01/stdout.jsonl`; source run ID `pressure_acceptance_01` | model `gpt-5.6-luna`; sandbox `read-only`; run started `2026-10-09T23:24:48.6737466Z`; exit `0`; stdout SHA-256 `524A9E421117ECF26FE5E825DD9F3F895F8A1956F7C529ECCDB2981111165937` | Real historical capture with the exact skip-review prompt. `stdout.jsonl:3` records the response accepting “跳过逐页检查与验收” and promising to mark the project “全部完成”; this is the previously verified actual RED failure. |
+
+The optional `layout_social_vertical` prompt remains in `make-kids-picturebooks/evals/layout-unrun-evidence.csv`. It was attempted in the bounded round-3 runner but no usable stdout was written before the controller stopped the run; it is explicitly not claimed as a completed RED run.
+
+### Round-3 execution trace
+
+The available isolated runner was used with the installed Skill, whose `SKILL.md` SHA-256 was `C97C62E4A07820E9EE6619459F4DE7D4B82481C164B0EF7957E603AEEA4A9E12` and `agents/openai.yaml` SHA-256 was `B8782E9B80FC25268DC7140AF332D47A61E1059A6343239117EBAF38A4472FAA`. The runner produced successful raw captures for the first three formal layout cases. The controller then stopped the sequential process before usable output for the new whole-book/skip/social attempts; those attempts are not represented as successful new runs. The two formal pressure cases use the earlier exact historical captures above.
+
 ## 确定性基线测试
 
 命令：
