@@ -174,6 +174,7 @@ class SkillGuidanceTests(unittest.TestCase):
             "分别建立 profile-specific 输出版本",
             "不直接缩放",
             "中心裁切",
+            "`social_pages` 每条记录必须包含独立的 `layout_review`",
         ):
             with self.subTest(term=term):
                 self.assertIn(term, combined)
@@ -189,6 +190,9 @@ class SkillGuidanceTests(unittest.TestCase):
                 social_layout["canvas"], {"width_px": 1080, "height_px": 1440}
             )
             self.assertEqual(social_layout["source_aspect_ratio"], "3:4")
+            self.assertEqual(
+                social_layout["subject_safe_area"], [0.08, 0.10, 0.84, 0.62]
+            )
 
     def test_formal_evals_include_verified_layout_pressure_cases(self) -> None:
         prompts = read("evals/prompts.csv")

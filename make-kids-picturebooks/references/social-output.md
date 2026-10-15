@@ -11,6 +11,8 @@
 
 小红书静态图文默认3:4。一次导出只绑定一个 profile；如果同时交付两个 profile，必须分别建立 profile-specific 输出版本、源图和审核记录，不能在同一条 `social_layout` 记录里混用。不得直接缩放、中心裁切或补大块空白；比例不符时必须按目标 profile 重新构图并生成源图，不能用“人工适配决定”替代这个要求。可以沿用角色参考、主色和故事状态，但视觉焦点、主体安全区、文字安全区、平台界面避让区和图像提示词必须按 profile 分别设计。
 
+新页面省略渲染器的 `profile` 参数时，默认使用页面记录的 `social_layout.profile`；因此已有明确记录的 `social-vertical-9x16` 项目仍会沿用9:16。新页面若未指定 profile 才使用小红书3:4默认值。
+
 ## 生成前的契约
 
 每页 `layout_design.social_layout` 至少记录 profile、画布、主体安全区、文字安全区、避让区、源图比例和状态。默认小红书示例：
@@ -19,7 +21,7 @@
 {
   "profile": "xiaohongshu-feed-3x4",
   "canvas": {"width_px": 1080, "height_px": 1440},
-  "subject_safe_area": [0.08, 0.10, 0.84, 0.68],
+  "subject_safe_area": [0.08, 0.10, 0.84, 0.62],
   "text_safe_area": [0.08, 0.76, 0.84, 0.14],
   "avoid_regions": ["top-ui", "bottom-ui"],
   "source_aspect_ratio": "3:4",
@@ -53,7 +55,7 @@
 
 ## 逐页审核
 
-导出后实际查看每一页，并在 `layout_review` 或社媒审核记录中保存证据：
+导出后实际查看每一页，并在 `layout_review` 或社媒审核记录中保存证据。写入 `review.json` 时，`social_pages` 每条记录必须包含独立的 `layout_review`，结构与阅读页审核相同；状态必须为 `passed`，证据必须具体描述文字、主体、遮挡、对比度和节奏，不能只写“已检查”或“通过”：
 
 - 小红书默认画布确为 `1080×1440`、源图为3:4；抖音/长屏画布确为 `1080×1920`、源图为9:16；
 - 主体和字幕没有进入所选 profile 的顶部/底部避让区；
