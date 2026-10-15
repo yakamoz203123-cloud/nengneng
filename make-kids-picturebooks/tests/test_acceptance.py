@@ -14,6 +14,9 @@ def layout_design(page):
 def layout_review(page):
  return {'status':'passed','evidence':f'第{page}页正文位于左上方浅色墙面，未遮挡孩子的脸部和纸飞机。','text_image_relationship':'integrated','contrast':'passed','focal_point_clear':True,'occlusion':'none','rhythm_reason':f'第{page}页沿用左上文字与右下主体的动作节奏。'}
 
+def social_layout_review(page):
+ return {'status':'passed','evidence':f'社媒第{page}页文字位于左上方浅色安全区，未遮挡孩子脸部、纸飞机和动作焦点。','text_image_relationship':'integrated','contrast':'passed','focal_point_clear':True,'occlusion':'none','rhythm_reason':f'社媒第{page}页保持左上文字与右下主体的视觉节奏。'}
+
 def complete_project(root, blank_page=None):
  def write(path,data):
   (root/path).write_text(json.dumps(data,ensure_ascii=False) if not isinstance(data,str) else data,encoding='utf-8')
@@ -38,7 +41,7 @@ def complete_project(root, blank_page=None):
  export_book(root/'layout.json',root/'export')
  (root/'social').mkdir()
  for i in range(1,5):Image.new('RGB',(1080,1920),'white').save(root/f'social/page-{i:02}.png')
- write('review.json',{'reading_pages':[{'page':i,'status':'passed','evidence':f'第{i}页已查看当前PDF渲染图。','image_path':f'export/reading-pages/page-{i:02}.png','layout_review':layout_review(i)} for i in range(1,5)],'print_sides':[{'side':i,'status':'passed','evidence':f'第{i}个打印面已核对配对、方向和边距。','image_path':f'export/print-pages/page-{i:02}.png'} for i in range(1,3)],'social_pages':[{'page':i,'status':'rendered','output_path':f'social/page-{i:02}.png','profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'source_aspect_ratio':'9:16','subject_safe_area':[0.08,0.10,0.84,0.72],'text_safe_area':[0.08,0.76,0.84,0.14]} for i in range(1,5)],'unresolved_digital_defects':[]})
+ write('review.json',{'reading_pages':[{'page':i,'status':'passed','evidence':f'第{i}页已查看当前PDF渲染图。','image_path':f'export/reading-pages/page-{i:02}.png','layout_review':layout_review(i)} for i in range(1,5)],'print_sides':[{'side':i,'status':'passed','evidence':f'第{i}个打印面已核对配对、方向和边距。','image_path':f'export/print-pages/page-{i:02}.png'} for i in range(1,3)],'social_pages':[{'page':i,'status':'rendered','output_path':f'social/page-{i:02}.png','profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'source_aspect_ratio':'9:16','subject_safe_area':[0.08,0.10,0.84,0.72],'text_safe_area':[0.08,0.76,0.84,0.14],'layout_review':social_layout_review(i)} for i in range(1,5)],'unresolved_digital_defects':[]})
  write('project.json',{'schema_version':1,'target_age_bands':['5-7'],'source':{'path':'source.txt','version':'v1','coverage':'synthetic'},'characters_version':'v1','characters_path':'characters','books':[{'id':'b1','age_band':'5-7','source_version':'v1','characters_version':'v1','status':'laid_out','artifacts':{'concept':'concept.json','story':'story.txt','storyboard':'storyboard.json','layout':'layout.json','page_manifest':'manifest.json','reading_pdf':'export/reading.pdf','print_pdf':'export/print.pdf','review':'review.json'}}]})
  return root/'project.json'
 
@@ -96,6 +99,47 @@ class AcceptanceTests(unittest.TestCase):
    root=Path(td);project_path=complete_project(root);review=read_json(root/'review.json');review['social_pages'][0]['profile']='print';write_json(root/'review.json',review)
    errors=check_book(project_path,'b1')['errors']
    self.assertTrue(any('社媒' in error and 'profile' in error for error in errors),errors)
+ def test_acceptance_rejects_mixed_social_profiles_across_book(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);layout=read_json(root/'layout.json');manifest=read_json(root/'manifest.json');review=read_json(root/'review.json')
+   Image.new('RGB',(1800,2400),'white').save(root/'test-image-xhs.png');Image.new('RGB',(1080,1440),'white').save(root/'social/page-02-xhs.png')
+   xhs={'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'}
+   for document,key in ((layout,'image'),(manifest,'current_image_path')):
+    document['pages'][1]['layout_design']['social_layout'].update(xhs)
+    document['pages'][1][key]='test-image-xhs.png'
+   review['social_pages'][1].update(xhs);review['social_pages'][1]['output_path']='social/page-02-xhs.png'
+   write_json(root/'layout.json',layout);write_json(root/'manifest.json',manifest);write_json(root/'review.json',review)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('profile' in error and '同一个' in error for error in errors),errors)
+ def test_acceptance_rejects_empty_social_profile(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);layout=read_json(root/'layout.json');manifest=read_json(root/'manifest.json');review=read_json(root/'review.json')
+   for document in (layout,manifest):
+    for page in document['pages']:page['layout_design']['social_layout']['profile']=''
+   for record in review['social_pages']:record['profile']=''
+   write_json(root/'layout.json',layout);write_json(root/'manifest.json',manifest);write_json(root/'review.json',review)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('profile' in error and '非空' in error for error in errors),errors)
+ def test_acceptance_rejects_missing_social_layout_review(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);review=read_json(root/'review.json');del review['social_pages'][0]['layout_review'];write_json(root/'review.json',review)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('社媒页1' in error and 'layout_review' in error for error in errors),errors)
+ def test_acceptance_rejects_generic_social_layout_review_evidence(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);review=read_json(root/'review.json');review['social_pages'][0]['layout_review']['evidence']='已检查';write_json(root/'review.json',review)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('社媒页1' in error and 'layout_review.evidence' in error for error in errors),errors)
+ def test_acceptance_rejects_failed_social_layout_review(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root);review=read_json(root/'review.json');review['social_pages'][0]['layout_review']['status']='failed';write_json(root/'review.json',review)
+   errors=check_book(project_path,'b1')['errors']
+   self.assertTrue(any('社媒页1' in error and 'status' in error for error in errors),errors)
  def test_acceptance_rejects_missing_social_render_file(self):
   from accept_book import check_book
   with tempfile.TemporaryDirectory() as td:

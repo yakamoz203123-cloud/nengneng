@@ -59,16 +59,18 @@ def layout_design_errors(value,number,label):
     for message in validate_layout_design(value,True):errors.append(f'页{number}: {label}: {message}')
     return errors
 
-def layout_review_errors(value,number):
+def layout_review_errors(value,number,label='reading_pages'):
     errors=[]
-    if value is None:errors.append(f'reading_pages {number}: 缺少完整版式审核（layout_review）')
-    for message in validate_layout_review(value,True):errors.append(f'reading_pages {number}: {message}')
+    prefix=f'{label} {number}' if label=='reading_pages' else f'{label}{number}'
+    if value is None:errors.append(f'{prefix}: 缺少完整版式审核（layout_review）')
+    for message in validate_layout_review(value,True):errors.append(f'{prefix}: {message}')
     return errors
 
 def social_render_errors(record,number,design,source_image,track):
     errors=[]
     label=f'社媒页{number}'
     if not isinstance(record,dict):return [f'{label}: 缺少社媒渲染记录']
+    errors.extend(layout_review_errors(record.get('layout_review'),number,'社媒页'))
     social=design.get('social_layout') if isinstance(design,dict) else None
     if not isinstance(social,dict):return [f'{label}: 缺少social_layout，无法验证社媒输出']
     profile=social.get('profile')
@@ -104,6 +106,25 @@ def social_render_errors(record,number,design,source_image,track):
         with Image.open(output) as image:
             if profile_config is not None and image.size!=(profile_config['canvas']['width_px'],profile_config['canvas']['height_px']):errors.append(f'{label}: 渲染文件必须是{profile_config["canvas"]["width_px"]}×{profile_config["canvas"]["height_px"]}')
     except (OSError,ValueError) as exc:errors.append(f'{label}: 渲染文件不可读取: {exc}')
+    return errors
+
+def social_profile_errors(pages,social_records):
+    errors=[];profiles=[]
+    for number,page in enumerate(pages,1):
+        design=page.get('layout_design') if isinstance(page,dict) else None
+        social=design.get('social_layout') if isinstance(design,dict) else None
+        profile=social.get('profile') if isinstance(social,dict) else None
+        if not isinstance(profile,str) or not profile.strip():
+            errors.append(f'页{number}: social_layout.profile必须是非空值')
+        else:profiles.append(profile)
+    if isinstance(social_records,list):
+        for number,record in enumerate(social_records,1):
+            profile=record.get('profile') if isinstance(record,dict) else None
+            if not isinstance(profile,str) or not profile.strip():
+                errors.append(f'社媒页{number}: profile必须是非空值')
+            else:profiles.append(profile)
+    if profiles and len(set(profiles))!=1:
+        errors.append('本次check_book的全部layout pages和social_pages必须绑定同一个非空profile')
     return errors
 
 def verify_receipt(project,book,base):
@@ -244,6 +265,7 @@ def check_book(project_path,book_id):
                 record=next((item for item in social_records if isinstance(item,dict) and item.get('page')==number),None)
                 page=pages[number-1]
                 errors.extend(social_render_errors(record,number,page.get('layout_design'),source_images.get(number),track))
+        errors.extend(social_profile_errors(pages,social_records))
         if review.get('unresolved_digital_defects'):errors.append('仍有未解决数字缺陷')
         dims=layout.get('page_mm',[148,210])
         reading_path=artifact('reading_pdf');printing_path=artifact('print_pdf')
