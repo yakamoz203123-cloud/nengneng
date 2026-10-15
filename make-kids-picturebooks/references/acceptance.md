@@ -29,3 +29,11 @@
 运行 `accept_book.py` 重新检查最终素材、导出物和审核记录；所有检查通过后以 `--accept` 保存新 acceptance 记录，状态才设为digital_checked（数字检查通过）。验收记录包含源文件、角色参考、正文、分镜、当前插画、提示、版面、字体、PDF和审核证据的摘要。修改任一资产后重新导出和审核，用新版本验收，不修改旧摘要来绕过检查。脚本是 deterministic gates，只核对可检查的结构和文件，never automatic proof；visual identity、scene readability、science/story consistency 仍由 human/model visual review 负责。
 
 运行 project_state.py 时检查验收摘要，文件缺失或变更返回revalidate（重新验收）。在selected_topics（适龄主题模式）下只推进本次已选册队列，队列结束不自动续做未读章节或未选候选项。新项目默认此模式；旧项目缺少模式时脚本保留旧行为，执行者先按本次用户要求保存模式和主题队列，保留旧作品。用户点名修改旧册时先将该册加入本次队列。按章模式须有明确范围依据。
+
+## 版式与社媒验收门禁
+
+使用新版式时，`page-manifest.json` 与 `layout.json` 的每页 `layout_design`、`text_box_mm` 和正文必须一致。`layout_design` 必须完整声明 `scene-integrated`、`soft-card` 或 `narrative-band` 之一、文字安全区、视觉焦点、最大行数、避让对象和颜色令牌；生成前没有这些记录，不能开始正式逐页插画。图像提示词必须要求完整单页且图像不得生成文字或伪文字，正文后置到可编辑文字层。
+
+`layout_review` 是独立的逐页人工/模型视觉审核记录，至少说明文字和画面的关系、对比、遮挡、阅读顺序与页间连续性。字段存在、脚本通过、字体嵌入或 PDF 可提取，不能声称自动审美通过；`layout_review` 缺失、证据为空或未通过时，不得进入 `digital_checked`。验收脚本只能验证结构、文件和几何条件，视觉融合、人物身份、场景可读性和 science/story consistency 仍需 human/model visual review。
+
+社媒变体必须单独声明 `social_layout.profile: "social-vertical-9x16"`、画布 `1080×1920`、源图比例 `9:16`、主体安全区、文字安全区和顶部/底部避让区。检查逐页 PNG/JPEG 是否实际存在、尺寸是否正确、字幕是否越界、关键对象是否安全、源图是否原生竖屏；不允许把印刷页默认中心裁切成竖屏，也不允许用打印版通过替代社媒版审核。社媒版通过也不能反向替代打印 PDF 的字体、可提取文字和拼版检查。

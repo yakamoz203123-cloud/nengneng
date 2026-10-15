@@ -113,3 +113,52 @@ class SkillGuidanceTests(unittest.TestCase):
     def test_agent_metadata_avoids_unsupported_api_product(self) -> None:
         metadata = read("agents/openai.yaml")
         self.assertNotIn("\n  - api\n", metadata)
+
+    def test_layout_and_social_guidance_contract_is_explicit(self) -> None:
+        skill = read("SKILL.md")
+        composition = read("references/composition.md")
+        art_direction = read("references/art-direction.md")
+        printing = read("references/printing.md")
+        acceptance = read("references/acceptance.md")
+        social = read("references/social-output.md")
+        combined = "\n".join(
+            (skill, composition, art_direction, printing, acceptance, social)
+        )
+
+        for term in (
+            "layout_design",
+            "scene-integrated",
+            "soft-card",
+            "narrative-band",
+            "图像不得生成文字",
+            "生成前锁定文字安全区",
+            "layout_review",
+            "social-vertical-9x16",
+            "1080×1920",
+            "技术分层",
+            "视觉融合",
+            "不能声称自动审美通过",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+        self.assertIn("layout_design", skill)
+        self.assertIn("layout_review", acceptance)
+        self.assertIn("social-vertical-9x16", social)
+
+    def test_formal_evals_include_verified_layout_pressure_cases(self) -> None:
+        prompts = read("evals/prompts.csv")
+        rubric = read("evals/rubric.md")
+
+        for case_id in (
+            "layout_natural_whitespace",
+            "layout_complex_background",
+            "layout_long_copy",
+            "layout_whole_book_one_shot",
+            "layout_skip_visual_review",
+        ):
+            with self.subTest(case_id=case_id):
+                self.assertIn(case_id, prompts)
+
+        self.assertIn("baseline", rubric)
+        self.assertIn("不能把 baseline 结果", rubric)
