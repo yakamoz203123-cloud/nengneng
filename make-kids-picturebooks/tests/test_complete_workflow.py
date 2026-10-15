@@ -32,7 +32,7 @@ class CompleteWorkflowTests(unittest.TestCase):
         write('prompt.txt','synthetic test only');export_book(r/'layout.json',r/'export')
         (r/'social').mkdir()
         for i,page in enumerate(pages,1):
-            render_social_page({'image_path':r/'test-image.png','text':page['text'],'font_path':r/'font.ttf','layout_design':page['layout_design']},r/'social'/f'page-{i:02}.png')
+            render_social_page({'image_path':r/'test-image.png','text':page['text'],'font_path':r/'font.ttf','layout_design':page['layout_design']},r/'social'/f'page-{i:02}.png',profile='social-vertical-9x16')
         def layout_review(page):
             return {'status':'passed','evidence':f'第{page}页文字位于左上留白，未遮挡人物脸部和纸飞机。','text_image_relationship':'integrated','contrast':'passed','focal_point_clear':True,'occlusion':'none','rhythm_reason':f'第{page}页维持左上文字与右下主体的动作节奏。'}
         write('review.json',{'reading_pages':[{'page':i,'status':'passed','evidence':'synthetic test only','image_path':f'export/reading-pages/page-{i:02}.png','layout_review':layout_review(i)} for i in range(1,5)],'print_sides':[{'side':i,'status':'passed','evidence':'synthetic test only','image_path':f'export/print-pages/page-{i:02}.png'} for i in range(1,3)],'social_pages':[{'page':i,'status':'rendered','output_path':f'social/page-{i:02}.png','profile':'social-vertical-9x16','canvas':{'width_px':1080,'height_px':1920},'source_aspect_ratio':'9:16','subject_safe_area':page['layout_design']['social_layout']['subject_safe_area'],'text_safe_area':page['layout_design']['social_layout']['text_safe_area']} for i,page in enumerate(pages,1)],'unresolved_digital_defects':[]})
@@ -106,7 +106,7 @@ class CompleteWorkflowTests(unittest.TestCase):
             social_dir=f'{export_dir}-social'
             (self.root/social_dir).mkdir()
             for i,page in enumerate(layout['pages'],1):
-                render_social_page({'image_path':self.root/'test-image.png','text':page['text'],'font_path':self.root/'font.ttf','layout_design':page['layout_design']},self.root/social_dir/f'page-{i:02}.png')
+                render_social_page({'image_path':self.root/'test-image.png','text':page['text'],'font_path':self.root/'font.ttf','layout_design':page['layout_design']},self.root/social_dir/f'page-{i:02}.png',profile='social-vertical-9x16')
             for i,record in enumerate(review['social_pages'],1):record['output_path']=f'{social_dir}/page-{i:02}.png'
             (self.root/'review.json').write_text(json.dumps(review,ensure_ascii=False),encoding='utf-8')
             project=read(self.root/'project.json');artifacts=project['books'][0]['artifacts']

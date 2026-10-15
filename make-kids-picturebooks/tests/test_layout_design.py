@@ -21,6 +21,18 @@ def valid_social_layout():
     }
 
 
+def valid_xiaohongshu_social_layout():
+    layout = valid_social_layout()
+    layout.update(
+        {
+            "profile": "xiaohongshu-feed-3x4",
+            "canvas": {"width_px": 1080, "height_px": 1440},
+            "source_aspect_ratio": "3:4",
+        }
+    )
+    return layout
+
+
 def valid_layout_design():
     return {
         "layout_style_version": "layout-v1",
@@ -140,6 +152,41 @@ class LayoutDesignTests(unittest.TestCase):
 
     def test_accepts_valid_social_layout(self):
         self.assertEqual([], validate_layout_design(valid_layout_design(), True))
+
+    def test_accepts_xiaohongshu_social_layout(self):
+        design = valid_layout_design()
+        design["social_layout"] = valid_xiaohongshu_social_layout()
+
+        self.assertEqual([], validate_layout_design(design, True))
+
+    def test_rejects_xiaohongshu_social_layout_with_wrong_canvas(self):
+        design = valid_layout_design()
+        design["social_layout"] = valid_xiaohongshu_social_layout()
+        design["social_layout"]["canvas"] = {"width_px": 1080, "height_px": 1920}
+
+        self.assertIn(
+            "social_layout.canvas必须是1080×1440",
+            validate_layout_design(design, True),
+        )
+
+    def test_rejects_xiaohongshu_social_layout_with_wrong_aspect_ratio(self):
+        design = valid_layout_design()
+        design["social_layout"] = valid_xiaohongshu_social_layout()
+        design["social_layout"]["source_aspect_ratio"] = "9:16"
+
+        self.assertIn(
+            "social_layout.source_aspect_ratio必须是3:4",
+            validate_layout_design(design, True),
+        )
+
+    def test_rejects_unknown_social_profile_with_stable_error(self):
+        design = valid_layout_design()
+        design["social_layout"]["profile"] = "unknown-social-profile"
+
+        self.assertIn(
+            "social_layout.profile必须是受支持的社媒profile",
+            validate_layout_design(design, True),
+        )
 
     def test_rejects_social_layout_out_of_bounds(self):
         design = valid_layout_design()

@@ -1,4 +1,4 @@
-"""Render one reviewed 9:16 social page without cropping a print page."""
+"""Render one reviewed social page without cropping a print page."""
 
 import math
 import os
@@ -7,7 +7,12 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from layout_design import SOCIAL_CANVAS, SOCIAL_PROFILE, validate_layout_design
+from layout_design import (
+    DEFAULT_SOCIAL_PROFILE,
+    get_social_profile,
+    image_matches_aspect_ratio,
+    validate_layout_design,
+)
 from layout_styles import (
     SOCIAL_BAND_RADIUS_PX,
     SOCIAL_CARD_RADIUS_PX,
@@ -49,12 +54,13 @@ def _wrap_text(text, draw, font, width):
     return lines
 
 
-def render_social_page(page, output_path, profile="social-vertical-9x16") -> Path:
-    """Render a separate 1080x1920 PNG/JPEG after deterministic geometry checks."""
+def render_social_page(page, output_path, profile=DEFAULT_SOCIAL_PROFILE) -> Path:
+    """Render a separate profile-sized PNG/JPEG after deterministic geometry checks."""
     if not isinstance(page, dict):
         raise ValueError("社媒页面必须是对象")
-    if profile != SOCIAL_PROFILE:
-        raise ValueError("仅支持social-vertical-9x16")
+    profile_config = get_social_profile(profile)
+    if profile_config is None:
+        raise ValueError("不支持的社媒profile")
 
     layout_design = page.get("layout_design")
     errors = validate_layout_design(layout_design, require_complete=True)
@@ -77,12 +83,18 @@ def render_social_page(page, output_path, profile="social-vertical-9x16") -> Pat
     if not image_path.is_file():
         raise ValueError("社媒源图不存在")
 
-    width = SOCIAL_CANVAS["width_px"]
-    height = SOCIAL_CANVAS["height_px"]
+    canvas = profile_config["canvas"]
+    width = canvas["width_px"]
+    height = canvas["height_px"]
     with Image.open(image_path) as source:
         source.load()
-        if source.width * 16 != source.height * 9:
-            raise ValueError("社媒源图必须是9:16，不能默认中心裁切印刷页")
+        source_aspect_ratio = profile_config["source_aspect_ratio"]
+        if not image_matches_aspect_ratio(
+            source.width, source.height, source_aspect_ratio
+        ):
+            raise ValueError(
+                f"社媒源图必须是{source_aspect_ratio}，不能默认中心裁切印刷页"
+            )
         rendered = source.convert("RGB").resize((width, height), Image.Resampling.LANCZOS)
 
     text = page.get("text", "")

@@ -43,6 +43,23 @@ def complete_project(root, blank_page=None):
  return root/'project.json'
 
 class AcceptanceTests(unittest.TestCase):
+ def test_acceptance_allows_xiaohongshu_social_profile(self):
+  from accept_book import check_book
+  with tempfile.TemporaryDirectory() as td:
+   root=Path(td);project_path=complete_project(root)
+   Image.new('RGB',(1800,2400),'white').save(root/'test-image.png')
+   layout=read_json(root/'layout.json');manifest=read_json(root/'manifest.json');review=read_json(root/'review.json')
+   for page in layout['pages']:
+    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+   for page in manifest['pages']:
+    page['layout_design']['social_layout'].update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+   for record in review['social_pages']:
+    record.update({'profile':'xiaohongshu-feed-3x4','canvas':{'width_px':1080,'height_px':1440},'source_aspect_ratio':'3:4'})
+   for path in sorted((root/'social').glob('page-*.png')):
+    Image.new('RGB',(1080,1440),'white').save(path)
+   write_json(root/'layout.json',layout);write_json(root/'manifest.json',manifest);write_json(root/'review.json',review)
+   self.assertEqual(check_book(project_path,'b1')['errors'],[])
+
  def test_acceptance_rejects_missing_layout_design(self):
   from accept_book import check_book
   with tempfile.TemporaryDirectory() as td:

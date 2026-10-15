@@ -9,7 +9,7 @@ import pymupdf as fitz
 from asset_registry import collect_declared_assets
 from project_paths import normalize_relative_path,resolve_project_file
 from validate_page_manifest import validate_page_manifest
-from layout_design import SOCIAL_CANVAS,SOCIAL_PROFILE,SOCIAL_SOURCE_ASPECT_RATIO,validate_layout_design,validate_layout_review
+from layout_design import get_social_profile,image_matches_aspect_ratio,validate_layout_design,validate_layout_review
 from impose_booklet import booklet_pairs,MM
 from validate_exports import allowed_empty_pages,minimum_print_text_size,validation_errors
 
@@ -71,11 +71,18 @@ def social_render_errors(record,number,design,source_image,track):
     if not isinstance(record,dict):return [f'{label}: 缺少社媒渲染记录']
     social=design.get('social_layout') if isinstance(design,dict) else None
     if not isinstance(social,dict):return [f'{label}: 缺少social_layout，无法验证社媒输出']
+    profile=social.get('profile')
+    profile_config=get_social_profile(profile)
     if record.get('page')!=number:errors.append(f'{label}: 页码不连续')
     if record.get('status') not in ('rendered','passed'):errors.append(f'{label}: 渲染状态必须是rendered或passed')
-    if record.get('profile')!=SOCIAL_PROFILE:errors.append(f'{label}: profile必须是{SOCIAL_PROFILE}')
-    if record.get('canvas')!=SOCIAL_CANVAS:errors.append(f'{label}: canvas必须是1080×1920')
-    if record.get('source_aspect_ratio')!=SOCIAL_SOURCE_ASPECT_RATIO:errors.append(f'{label}: 源图比例必须是9:16')
+    if profile_config is None:
+        errors.append(f'{label}: profile必须是受支持的社媒profile')
+    else:
+        canvas=profile_config['canvas']
+        source_aspect_ratio=profile_config['source_aspect_ratio']
+        if record.get('canvas')!=canvas:errors.append(f'{label}: canvas必须是{canvas["width_px"]}×{canvas["height_px"]}')
+        if record.get('source_aspect_ratio')!=source_aspect_ratio:errors.append(f'{label}: 源图比例必须是{source_aspect_ratio}')
+    if record.get('profile')!=profile:errors.append(f'{label}: profile与layout.json不一致')
     for field in ('subject_safe_area','text_safe_area'):
         if record.get(field)!=social.get(field):errors.append(f'{label}: {field}与layout.json不一致')
     if source_image is None or not source_image.is_file():
@@ -84,7 +91,7 @@ def social_render_errors(record,number,design,source_image,track):
         from PIL import Image
         try:
             with Image.open(source_image) as image:
-                if image.width*16!=image.height*9:errors.append(f'{label}: 源图必须是9:16，禁止用印刷页中心裁切冒充')
+                if profile_config is not None and not image_matches_aspect_ratio(image.width,image.height,profile_config['source_aspect_ratio']):errors.append(f'{label}: 源图必须是{profile_config["source_aspect_ratio"]}，禁止用印刷页中心裁切冒充')
         except (OSError,ValueError) as exc:errors.append(f'{label}: 源图不可读取: {exc}')
     output_value=record.get('output_path')
     if not isinstance(output_value,(str,Path)) or not str(output_value).strip():
@@ -95,7 +102,7 @@ def social_render_errors(record,number,design,source_image,track):
     from PIL import Image
     try:
         with Image.open(output) as image:
-            if image.size!=(SOCIAL_CANVAS['width_px'],SOCIAL_CANVAS['height_px']):errors.append(f'{label}: 渲染文件必须是1080×1920')
+            if profile_config is not None and image.size!=(profile_config['canvas']['width_px'],profile_config['canvas']['height_px']):errors.append(f'{label}: 渲染文件必须是{profile_config["canvas"]["width_px"]}×{profile_config["canvas"]["height_px"]}')
     except (OSError,ValueError) as exc:errors.append(f'{label}: 渲染文件不可读取: {exc}')
     return errors
 

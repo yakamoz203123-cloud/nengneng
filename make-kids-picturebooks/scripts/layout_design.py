@@ -23,9 +23,21 @@ TEXT_ALIGNS = {"left", "center"}
 PAGE_RHYTHMS = {"establishing", "action", "pause", "turn", "resolution"}
 PALETTE_TOKENS = {"warm-paper", "cool-sky", "soft-leaf"}
 STATUSES = {"pending", "passed", "failed"}
+SOCIAL_PROFILES = {
+    "xiaohongshu-feed-3x4": {
+        "canvas": {"width_px": 1080, "height_px": 1440},
+        "source_aspect_ratio": "3:4",
+    },
+    "social-vertical-9x16": {
+        "canvas": {"width_px": 1080, "height_px": 1920},
+        "source_aspect_ratio": "9:16",
+    },
+}
+DEFAULT_SOCIAL_PROFILE = "xiaohongshu-feed-3x4"
+# Backward-compatible aliases for callers that imported the original 9:16 constants.
 SOCIAL_PROFILE = "social-vertical-9x16"
-SOCIAL_CANVAS = {"width_px": 1080, "height_px": 1920}
-SOCIAL_SOURCE_ASPECT_RATIO = "9:16"
+SOCIAL_CANVAS = SOCIAL_PROFILES[SOCIAL_PROFILE]["canvas"]
+SOCIAL_SOURCE_ASPECT_RATIO = SOCIAL_PROFILES[SOCIAL_PROFILE]["source_aspect_ratio"]
 REVIEW_RELATIONSHIPS = {"integrated", "soft-card", "narrative-band"}
 REVIEW_CONTRASTS = {"passed", "failed"}
 GENERIC_FOCAL_POINTS = {
@@ -109,6 +121,20 @@ def _require_field(value, key, errors, label=None):
         errors.append(f"缺少{label or key}")
 
 
+def get_social_profile(profile):
+    if not isinstance(profile, str):
+        return None
+    return SOCIAL_PROFILES.get(profile)
+
+
+def image_matches_aspect_ratio(width, height, aspect_ratio):
+    try:
+        numerator, denominator = (int(part) for part in aspect_ratio.split(":", 1))
+    except (AttributeError, TypeError, ValueError):
+        return False
+    return width * denominator == height * numerator
+
+
 def _validate_normalized_area(value, field, errors):
     if (
         not isinstance(value, list)
@@ -144,10 +170,15 @@ def _validate_social_layout(value, require_complete, errors):
         for field in required:
             _require_field(value, field, errors, f"social_layout.{field}")
 
-    if "profile" in value and value["profile"] != SOCIAL_PROFILE:
-        errors.append("social_layout.profile必须是social-vertical-9x16")
-    if "canvas" in value and value["canvas"] != SOCIAL_CANVAS:
-        errors.append("social_layout.canvas必须是1080×1920")
+    profile_config = get_social_profile(value.get("profile"))
+    if "profile" in value and profile_config is None:
+        errors.append("social_layout.profile必须是受支持的社媒profile")
+    if profile_config is not None:
+        canvas = profile_config["canvas"]
+        if "canvas" in value and value["canvas"] != canvas:
+            errors.append(
+                f"social_layout.canvas必须是{canvas['width_px']}×{canvas['height_px']}"
+            )
     for field in ("subject_safe_area", "text_safe_area"):
         if field in value:
             _validate_normalized_area(value[field], f"social_layout.{field}", errors)
@@ -157,10 +188,14 @@ def _validate_social_layout(value, require_complete, errors):
     ):
         errors.append("social_layout.avoid_regions必须是非空字符串列表")
     if (
-        "source_aspect_ratio" in value
-        and value["source_aspect_ratio"] != SOCIAL_SOURCE_ASPECT_RATIO
+        profile_config is not None
+        and "source_aspect_ratio" in value
+        and value["source_aspect_ratio"] != profile_config["source_aspect_ratio"]
     ):
-        errors.append("social_layout.source_aspect_ratio必须是9:16")
+        errors.append(
+            "social_layout.source_aspect_ratio必须是"
+            f"{profile_config['source_aspect_ratio']}"
+        )
     if "status" in value and value["status"] not in STATUSES:
         errors.append("social_layout.status必须是pending、passed或failed")
     elif require_complete and value.get("status") != "passed":
