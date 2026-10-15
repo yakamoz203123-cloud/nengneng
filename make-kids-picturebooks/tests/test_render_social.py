@@ -86,6 +86,17 @@ class SocialRenderTests(unittest.TestCase):
         with Image.open(output) as rendered:
             self.assertEqual((1080, 1920), rendered.size)
 
+    def test_social_renderer_explicit_9x16_rejects_3x4_source(self):
+        self.page["layout_design"] = valid_layout_design("social-vertical-9x16")
+        Image.new("RGB", (900, 1200), (120, 160, 200)).save(self.source)
+
+        with self.assertRaisesRegex(ValueError, "源图必须是9:16"):
+            render_social_page(
+                self.page,
+                self.root / "wrong-source-page-01.png",
+                profile="social-vertical-9x16",
+            )
+
     def test_social_renderer_rejects_text_outside_safe_area(self):
         self.page["layout_design"]["social_layout"]["text_safe_area"] = [0.08, 0.82, 0.84, 0.015]
         self.page["text"] = "这是一段无法放入过小字幕安全区的文字。"

@@ -149,13 +149,15 @@ class SkillGuidanceTests(unittest.TestCase):
 
     def test_social_profiles_define_xiaohongshu_default_and_douyin_opt_in(self) -> None:
         skill = read("SKILL.md")
+        readme = read("../README.md")
+        rubric = read("evals/rubric.md")
         composition = read("references/composition.md")
         art_direction = read("references/art-direction.md")
         printing = read("references/printing.md")
         acceptance = read("references/acceptance.md")
         social = read("references/social-output.md")
         combined = "\n".join(
-            (skill, composition, art_direction, printing, acceptance, social)
+            (skill, readme, rubric, composition, art_direction, printing, acceptance, social)
         )
 
         for term in (
