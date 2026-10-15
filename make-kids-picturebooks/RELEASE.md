@@ -17,6 +17,7 @@
 - 小红书新页面要求 `portrait-full-bleed` 竖版满幅构图与 `in-scene` 画面内文字；模板和确定性门禁拒绝底部通栏文字区。
 - 正式社媒插画前增加生成器比例预检：`preflight_image_generation.py` 读取实际探针尺寸，比例不符返回 `image_generation_blocked`，禁止横图适配后继续排版。
 - 增加真实儿童原型的私有角色 Bible 规则：`privacy_scope` 与 `public_release` 分离，角色参考必须保留版本，公开 Skill／GitHub 包不包含照片、角色图或个人资料。
+- 增加快速出图协议：展示型角色页与干净生产参考图分离，先完成 `layout_design`，按每页一次生成、两页一批推进，先检查已有结果后再决定是否重试，避免重复提交长任务。
 
 ## 质量门迭代
 

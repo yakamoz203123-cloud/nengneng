@@ -77,6 +77,40 @@ class SkillGuidanceTests(unittest.TestCase):
             self.assertIn(term, skill + characters)
 
 
+    def test_fast_image_generation_protocol_is_explicit(self) -> None:
+        combined = "\n".join(
+            read(path)
+            for path in (
+                "SKILL.md",
+                "references/characters.md",
+                "references/social-output.md",
+            )
+        )
+
+        for term in (
+            "快速出图协议",
+            "production_reference_path",
+            "先完成 `layout_design` 再调用图像生成器",
+            "每页一次生成",
+            "两页一批",
+            "不要重复提交",
+            "先检查已有结果",
+            "稳定基础提示词",
+        ):
+            with self.subTest(term=term):
+                self.assertIn(term, combined)
+
+
+    def test_page_manifest_template_exposes_private_production_reference_slot(self) -> None:
+        template = json.loads(read("assets/page-manifest-template.json"))
+        page = template["pages"][0]
+
+        self.assertEqual(
+            page["production_reference_path"],
+            "characters/v1/production-reference.png",
+        )
+
+
     def test_docs_limit_deterministic_checks_to_record_and_file_validation(self) -> None:
         combined = "\n".join(
             read(path)

@@ -4,7 +4,7 @@
 
 清单 age_band（年龄档）必须填写已选的 "3-4"、"5-7" 或 "8-10"，与本册记录一致；模板空值用于提醒先选择，不能通过校验。旧册的 "5-6" 保留兼容，不自动扩大年龄范围。一份清单对应一册的一个年龄版本，不能填多个档位。
 
-每页保存正文版本、角色版本、稳定的 `character_reference_path`（本页实际使用的已批准 character bible 路径）、文字区域（与版面相同，左下角起算，毫米）、当前提示词路径、当前图像路径、道具及知识检查。道具编号同页唯一，数量为非负整数；记录位置、当前状态及相对前页的变化。泡泡等动态对象不要求每帧同数，但器具数量和影响知识的结构必须明确。
+每页保存正文版本、角色版本、稳定的 `character_reference_path`（本页实际使用的已批准 character bible 路径）、以及正式生成时使用的项目相对 `production_reference_path`（与 Bible 同版本的干净生产参考图）、文字区域（与版面相同，左下角起算，毫米）、当前提示词路径、当前图像路径、道具及知识检查。道具编号同页唯一，数量为非负整数；记录位置、当前状态及相对前页的变化。泡泡等动态对象不要求每帧同数，但器具数量和影响知识的结构必须明确。旧项目若没有独立生产参考图，先补建并批准后再进入新的正式生成批次，不把展示型角色设定页默认为生产参考。
 
 完成页必须填写 manifest continuity fields：`previous_page_state`、`current_page_entry` 和 `next_page_hook` 都是且仅是 `{"state_id":"稳定状态标识","summary":"可核对的本页状态说明"}`；相邻页中前页 `next_page_hook.state_id` 必须等于后页 `current_page_entry.state_id`。`text_image_match` 和 `continuity_review` 都是且仅是 `{"status":"pending|passed|failed","evidence":"实际观察的证据"}`。规划时可用 pending 与空证据；成书前必须为 passed 并填写实际证据，不添加其他字段，不改 schema_version。
 

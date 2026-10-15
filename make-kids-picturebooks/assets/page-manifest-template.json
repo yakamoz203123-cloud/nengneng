@@ -11,6 +11,7 @@
       "current_image_path": null,
       "characters_version": "v1",
       "character_reference_path": "characters/v1/character-reference.png",
+      "production_reference_path": "characters/v1/production-reference.png",
       "text_area": [
         14,
         110,
